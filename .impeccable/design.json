@@ -1,0 +1,572 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T12:06:23.370Z",
+  "title": "Design System: PENA",
+  "extensions": {
+    "colorMeta": {
+      "rail-goldenrod": {
+        "role": "primary",
+        "displayName": "Goldenrod Rail",
+        "canonical": "#E7B53B",
+        "oklch": "oklch(79.8% 0.144 85.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.022 85.4)",
+          "oklch(26.0% 0.058 85.4)",
+          "oklch(37.0% 0.097 85.4)",
+          "oklch(48.0% 0.137 85.4)",
+          "oklch(60.0% 0.144 85.4)",
+          "oklch(72.0% 0.101 85.4)",
+          "oklch(84.0% 0.058 85.4)",
+          "oklch(95.0% 0.022 85.4)"
+        ]
+      },
+      "ink-blue": {
+        "role": "primary",
+        "displayName": "Biru Tinta",
+        "canonical": "#1F3A8A",
+        "oklch": "oklch(37.9% 0.137 265.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.021 265.9)",
+          "oklch(26.0% 0.055 265.9)",
+          "oklch(37.0% 0.093 265.9)",
+          "oklch(48.0% 0.131 265.9)",
+          "oklch(60.0% 0.137 265.9)",
+          "oklch(72.0% 0.096 265.9)",
+          "oklch(84.0% 0.055 265.9)",
+          "oklch(95.0% 0.021 265.9)"
+        ]
+      },
+      "ink-blue-deep": {
+        "role": "primary",
+        "displayName": "Biru Tinta Tua",
+        "canonical": "#182E70",
+        "oklch": "oklch(32.8% 0.118 266.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.018 266.0)",
+          "oklch(26.0% 0.047 266.0)",
+          "oklch(37.0% 0.079 266.0)",
+          "oklch(48.0% 0.112 266.0)",
+          "oklch(60.0% 0.118 266.0)",
+          "oklch(72.0% 0.082 266.0)",
+          "oklch(84.0% 0.047 266.0)",
+          "oklch(95.0% 0.018 266.0)"
+        ]
+      },
+      "ink-blue-wash": {
+        "role": "primary",
+        "displayName": "Biru Tinta Pucat",
+        "canonical": "#E6EBF7",
+        "oklch": "oklch(94.0% 0.017 267.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 267.8)",
+          "oklch(26.0% 0.007 267.8)",
+          "oklch(37.0% 0.012 267.8)",
+          "oklch(48.0% 0.016 267.8)",
+          "oklch(60.0% 0.017 267.8)",
+          "oklch(72.0% 0.012 267.8)",
+          "oklch(84.0% 0.007 267.8)",
+          "oklch(95.0% 0.003 267.8)"
+        ]
+      },
+      "bottle-green": {
+        "role": "secondary",
+        "displayName": "Hijau Botol",
+        "canonical": "#1F6B46",
+        "oklch": "oklch(47.1% 0.095 157.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.014 157.9)",
+          "oklch(26.0% 0.038 157.9)",
+          "oklch(37.0% 0.064 157.9)",
+          "oklch(48.0% 0.091 157.9)",
+          "oklch(60.0% 0.095 157.9)",
+          "oklch(72.0% 0.067 157.9)",
+          "oklch(84.0% 0.038 157.9)",
+          "oklch(95.0% 0.014 157.9)"
+        ]
+      },
+      "bottle-green-wash": {
+        "role": "secondary",
+        "displayName": "Hijau Botol Pucat",
+        "canonical": "#E2F0E8",
+        "oklch": "oklch(94.2% 0.018 161.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 161.1)",
+          "oklch(26.0% 0.007 161.1)",
+          "oklch(37.0% 0.012 161.1)",
+          "oklch(48.0% 0.017 161.1)",
+          "oklch(60.0% 0.018 161.1)",
+          "oklch(72.0% 0.013 161.1)",
+          "oklch(84.0% 0.007 161.1)",
+          "oklch(95.0% 0.003 161.1)"
+        ]
+      },
+      "vermilion": {
+        "role": "secondary",
+        "displayName": "Vermilion",
+        "canonical": "#C2381A",
+        "oklch": "oklch(54.4% 0.180 33.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.027 33.6)",
+          "oklch(26.0% 0.072 33.6)",
+          "oklch(37.0% 0.121 33.6)",
+          "oklch(48.0% 0.171 33.6)",
+          "oklch(60.0% 0.180 33.6)",
+          "oklch(72.0% 0.126 33.6)",
+          "oklch(84.0% 0.072 33.6)",
+          "oklch(95.0% 0.027 33.6)"
+        ]
+      },
+      "vermilion-wash": {
+        "role": "secondary",
+        "displayName": "Vermilion Pucat",
+        "canonical": "#FBE6E0",
+        "oklch": "oklch(94.0% 0.024 36.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.004 36.5)",
+          "oklch(26.0% 0.010 36.5)",
+          "oklch(37.0% 0.017 36.5)",
+          "oklch(48.0% 0.023 36.5)",
+          "oklch(60.0% 0.024 36.5)",
+          "oklch(72.0% 0.017 36.5)",
+          "oklch(84.0% 0.010 36.5)",
+          "oklch(95.0% 0.004 36.5)"
+        ]
+      },
+      "highlighter": {
+        "role": "tertiary",
+        "displayName": "Stabilo",
+        "canonical": "#FBF0D2",
+        "oklch": "oklch(95.6% 0.041 90.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.006 90.2)",
+          "oklch(26.0% 0.016 90.2)",
+          "oklch(37.0% 0.028 90.2)",
+          "oklch(48.0% 0.039 90.2)",
+          "oklch(60.0% 0.041 90.2)",
+          "oklch(72.0% 0.029 90.2)",
+          "oklch(84.0% 0.016 90.2)",
+          "oklch(95.0% 0.006 90.2)"
+        ]
+      },
+      "station-board": {
+        "role": "tertiary",
+        "displayName": "Papan Stasiun",
+        "canonical": "#263238",
+        "oklch": "oklch(30.9% 0.019 229.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 229.8)",
+          "oklch(26.0% 0.008 229.8)",
+          "oklch(37.0% 0.013 229.8)",
+          "oklch(48.0% 0.018 229.8)",
+          "oklch(60.0% 0.019 229.8)",
+          "oklch(72.0% 0.014 229.8)",
+          "oklch(84.0% 0.008 229.8)",
+          "oklch(95.0% 0.003 229.8)"
+        ]
+      },
+      "station-board-row": {
+        "role": "tertiary",
+        "displayName": "Baris Papan",
+        "canonical": "#34434B",
+        "oklch": "oklch(37.3% 0.024 231.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.004 231.5)",
+          "oklch(26.0% 0.009 231.5)",
+          "oklch(37.0% 0.016 231.5)",
+          "oklch(48.0% 0.023 231.5)",
+          "oklch(60.0% 0.024 231.5)",
+          "oklch(72.0% 0.017 231.5)",
+          "oklch(84.0% 0.009 231.5)",
+          "oklch(95.0% 0.004 231.5)"
+        ]
+      },
+      "board-green": {
+        "role": "tertiary",
+        "displayName": "Hijau Papan",
+        "canonical": "#9ED5B6",
+        "oklch": "oklch(82.6% 0.072 159.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.011 159.6)",
+          "oklch(26.0% 0.029 159.6)",
+          "oklch(37.0% 0.048 159.6)",
+          "oklch(48.0% 0.068 159.6)",
+          "oklch(60.0% 0.072 159.6)",
+          "oklch(72.0% 0.050 159.6)",
+          "oklch(84.0% 0.029 159.6)",
+          "oklch(95.0% 0.011 159.6)"
+        ]
+      },
+      "board-vermilion": {
+        "role": "tertiary",
+        "displayName": "Vermilion Papan",
+        "canonical": "#F2A391",
+        "oklch": "oklch(78.8% 0.098 33.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.015 33.4)",
+          "oklch(26.0% 0.039 33.4)",
+          "oklch(37.0% 0.066 33.4)",
+          "oklch(48.0% 0.093 33.4)",
+          "oklch(60.0% 0.098 33.4)",
+          "oklch(72.0% 0.069 33.4)",
+          "oklch(84.0% 0.039 33.4)",
+          "oklch(95.0% 0.015 33.4)"
+        ]
+      },
+      "board-text-muted": {
+        "role": "tertiary",
+        "displayName": "Teks Papan Redup",
+        "canonical": "#B9C5CB",
+        "oklch": "oklch(81.6% 0.016 229.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 229.0)",
+          "oklch(26.0% 0.006 229.0)",
+          "oklch(37.0% 0.011 229.0)",
+          "oklch(48.0% 0.015 229.0)",
+          "oklch(60.0% 0.016 229.0)",
+          "oklch(72.0% 0.011 229.0)",
+          "oklch(84.0% 0.006 229.0)",
+          "oklch(95.0% 0.002 229.0)"
+        ]
+      },
+      "carbon": {
+        "role": "neutral",
+        "displayName": "Karbon",
+        "canonical": "#1D1D1B",
+        "oklch": "oklch(23.0% 0.004 106.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 0)",
+          "oklch(26.0% 0.002 0)",
+          "oklch(37.0% 0.003 106.7)",
+          "oklch(48.0% 0.004 106.7)",
+          "oklch(60.0% 0.004 106.7)",
+          "oklch(72.0% 0.003 106.7)",
+          "oklch(84.0% 0.002 0)",
+          "oklch(95.0% 0.001 0)"
+        ]
+      },
+      "ticket-cream": {
+        "role": "neutral",
+        "displayName": "Krem Tiket",
+        "canonical": "#F6F2E4",
+        "oklch": "oklch(96.0% 0.019 93.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 93.7)",
+          "oklch(26.0% 0.008 93.7)",
+          "oklch(37.0% 0.013 93.7)",
+          "oklch(48.0% 0.018 93.7)",
+          "oklch(60.0% 0.019 93.7)",
+          "oklch(72.0% 0.013 93.7)",
+          "oklch(84.0% 0.008 93.7)",
+          "oklch(95.0% 0.003 93.7)"
+        ]
+      },
+      "platform-paper": {
+        "role": "neutral",
+        "displayName": "Kertas Peron",
+        "canonical": "#F4F4F1",
+        "oklch": "oklch(96.6% 0.004 106.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 0)",
+          "oklch(26.0% 0.002 0)",
+          "oklch(37.0% 0.003 106.5)",
+          "oklch(48.0% 0.004 106.5)",
+          "oklch(60.0% 0.004 106.5)",
+          "oklch(72.0% 0.003 106.5)",
+          "oklch(84.0% 0.002 0)",
+          "oklch(95.0% 0.001 0)"
+        ]
+      },
+      "sheet-white": {
+        "role": "neutral",
+        "displayName": "Putih Lembar",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.000 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0)",
+          "oklch(26.0% 0.000 0)",
+          "oklch(37.0% 0.000 0)",
+          "oklch(48.0% 0.000 0)",
+          "oklch(60.0% 0.000 0)",
+          "oklch(72.0% 0.000 0)",
+          "oklch(84.0% 0.000 0)",
+          "oklch(95.0% 0.000 0)"
+        ]
+      },
+      "raised-stone": {
+        "role": "neutral",
+        "displayName": "Batu Terangkat",
+        "canonical": "#ECEBE6",
+        "oklch": "oklch(93.9% 0.007 97.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 0)",
+          "oklch(26.0% 0.003 97.4)",
+          "oklch(37.0% 0.005 97.4)",
+          "oklch(48.0% 0.006 97.4)",
+          "oklch(60.0% 0.007 97.4)",
+          "oklch(72.0% 0.005 97.4)",
+          "oklch(84.0% 0.003 97.4)",
+          "oklch(95.0% 0.001 0)"
+        ]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Grafit",
+        "canonical": "#56554F",
+        "oklch": "oklch(44.9% 0.010 99.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 0)",
+          "oklch(26.0% 0.004 99.1)",
+          "oklch(37.0% 0.007 99.1)",
+          "oklch(48.0% 0.009 99.1)",
+          "oklch(60.0% 0.010 99.1)",
+          "oklch(72.0% 0.007 99.1)",
+          "oklch(84.0% 0.004 99.1)",
+          "oklch(95.0% 0.001 0)"
+        ]
+      },
+      "pencil-grey": {
+        "role": "neutral",
+        "displayName": "Pensil",
+        "canonical": "#6B6A64",
+        "oklch": "oklch(52.3% 0.009 99.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.001 0)",
+          "oklch(26.0% 0.004 99.0)",
+          "oklch(37.0% 0.006 99.0)",
+          "oklch(48.0% 0.009 99.0)",
+          "oklch(60.0% 0.009 99.0)",
+          "oklch(72.0% 0.007 99.0)",
+          "oklch(84.0% 0.004 99.0)",
+          "oklch(95.0% 0.001 0)"
+        ]
+      },
+      "rule-grey": {
+        "role": "neutral",
+        "displayName": "Garis",
+        "canonical": "#D9D7CF",
+        "oklch": "oklch(87.8% 0.011 95.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.002 0)",
+          "oklch(26.0% 0.004 95.2)",
+          "oklch(37.0% 0.007 95.2)",
+          "oklch(48.0% 0.011 95.2)",
+          "oklch(60.0% 0.011 95.2)",
+          "oklch(72.0% 0.008 95.2)",
+          "oklch(84.0% 0.004 95.2)",
+          "oklch(95.0% 0.002 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Judul landing (96/80/56 px), masuk (64/40 px), galat (56/40 px)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Judul bagian landing."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Judul halaman dan panel di aplikasi; sama ukurannya dengan isi."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Semua teks antarmuka, angka tabular."
+      },
+      "body-strong": {
+        "displayName": "Body Strong",
+        "purpose": "Nama, perihal, label isian, tombol."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Strip kode kapital kondensed."
+      },
+      "column-head": {
+        "displayName": "Column Head",
+        "purpose": "Kepala kolom dan judul kecil kapital."
+      },
+      "paper": {
+        "displayName": "Paper",
+        "purpose": "Isi kertas surat; 14/21 di HP."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper",
+        "value": "0 1px 2px rgb(29 29 27 / 0.06), 0 8px 24px rgb(29 29 27 / 0.08)",
+        "purpose": "Kertas surat dan menu akun HP."
+      },
+      {
+        "name": "board",
+        "value": "0 12px 32px rgb(29 29 27 / 0.25)",
+        "purpose": "Papan jadwal contoh di landing."
+      }
+    ],
+    "motion": [
+      {
+        "name": "color-transition",
+        "value": "150ms ease-out",
+        "purpose": "Satu-satunya gerak: perubahan warna saat hover pada tombol, isian, dan tautan."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Isian data dua kolom, padding kertas penuh."
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Rail kiri muncul; bilah atas dan tab bar HP hilang."
+      },
+      {
+        "name": "xl",
+        "value": "1280px",
+        "purpose": "Susunan dua kolom (kertas + jadwal/pelat)."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Satu aksi utama per area keputusan: Ajukan, Setujui, Buat tautan.",
+      "html": "<button class=\"ds-btn-primary\">Ajukan untuk review</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:4px;font:600 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;background:#1F3A8A;color:#FFFFFF;border:1px solid #1F3A8A;} .ds-btn-primary:hover{background:#182E70;border-color:#182E70;} .ds-btn-primary:focus-visible{outline:3px solid #1D1D1B;outline-offset:2px;}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Aksi pendamping: Ubah draf, Kembali, Lihat cara kerja.",
+      "html": "<button class=\"ds-btn-secondary\">Ubah draf</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:4px;font:600 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;background:#FFFFFF;color:#1D1D1B;border:1px solid #1D1D1B;} .ds-btn-secondary:hover{background:#ECEBE6;} .ds-btn-secondary:focus-visible{outline:3px solid #1F3A8A;outline-offset:2px;}"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Aksi merusak yang jarang: Batalkan surat. Membuka dialog konfirmasi.",
+      "html": "<button class=\"ds-btn-quiet\">Batalkan surat</button>",
+      "css": ".ds-btn-quiet{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:4px;font:600 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;padding:0 8px;background:transparent;color:#C2381A;border:1px solid transparent;} .ds-btn-quiet:hover{text-decoration:underline;text-underline-offset:3px;} .ds-btn-quiet:focus-visible{outline:3px solid #1F3A8A;outline-offset:2px;}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Isian data surat dengan label di atas dan bantuan di bawah.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Nama kegiatan</span><input class=\"ds-field-input\" value=\"FilkomDay 2026\"><span class=\"ds-field-help\">Dipakai sebagai {{nama_kegiatan}}</span></label>",
+      "css": ".ds-field{display:block;font:400 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;color:#1D1D1B;max-width:360px;} .ds-field-label{display:block;font-weight:600;margin-bottom:8px;} .ds-field-input{display:block;width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border:1px solid #D9D7CF;border-radius:4px;background:#FFFFFF;font:inherit;color:inherit;caret-color:#1F3A8A;transition:border-color 150ms ease-out;} .ds-field-input:hover{border-color:#56554F;} .ds-field-input:focus{outline:2px solid #1F3A8A;outline-offset:0;border-color:#1F3A8A;} .ds-field-help{display:block;margin-top:8px;color:#56554F;}"
+    },
+    {
+      "name": "Code Strip",
+      "kind": "chip",
+      "refersTo": "strip-carbon",
+      "description": "Kode jenis surat, versi, tahap, dan status singkat dalam huruf kondensed kapital.",
+      "html": "<span class=\"ds-strip ds-strip-outline\">PMJ</span> <span class=\"ds-strip ds-strip-outline\">V2</span> <span class=\"ds-strip ds-strip-carbon\">T1</span> <span class=\"ds-strip ds-strip-ink\">Berikutnya</span> <span class=\"ds-strip ds-strip-rev\">Revisi</span>",
+      "css": ".ds-strip{display:inline-flex;align-items:center;padding:0 6px;border-radius:2px;font:700 16px/24px \"Barlow Condensed\", \"Barlow\", ui-sans-serif, sans-serif;text-transform:uppercase;letter-spacing:0.02em;} .ds-strip-outline{background:#FFFFFF;color:#1D1D1B;border:1px solid #1D1D1B;line-height:22px;} .ds-strip-carbon{background:#1D1D1B;color:#F6F2E4;} .ds-strip-ink{background:#1F3A8A;color:#FFFFFF;} .ds-strip-rev{background:#C2381A;color:#FFFFFF;}"
+    },
+    {
+      "name": "Route Row",
+      "kind": "custom",
+      "refersTo": "route-row-yours",
+      "description": "Satu pemeriksa di jadwal persetujuan; baris yang menunggu Anda berlatar stabilo.",
+      "html": "<div class=\"ds-route\"><div class=\"ds-route-row\"><span class=\"ds-route-stage\">T1</span><div><b>Contoh Ketua Panitia</b><div class=\"ds-route-sub\">Ketua Panitia</div><div class=\"ds-route-status ds-ok\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"8\" fill=\"#1F6B46\"/><path d=\"M4.6 8.3l2.2 2.2 4.6-4.8\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>Disetujui <span class=\"ds-route-sub\">17.11 09.01</span></div></div></div><div class=\"ds-route-row ds-yours\"><span class=\"ds-route-stage\">T2</span><div><b>Contoh Advisor</b><div class=\"ds-route-sub\">Advisor Organisasi</div><div class=\"ds-route-status ds-ink\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"6.25\" fill=\"none\" stroke=\"#1F3A8A\" stroke-width=\"3.5\"/></svg>Menunggu tautan dari Anda</div></div></div></div>",
+      "css": ".ds-route{max-width:440px;background:#FFFFFF;padding:4px 16px;font:400 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;color:#1D1D1B;} .ds-route-row{display:grid;grid-template-columns:auto 1fr;gap:0 12px;padding:12px 0;border-bottom:1px solid #D9D7CF;} .ds-yours{background:#FBF0D2;margin:0 -16px;padding:12px 16px;} .ds-route-stage{align-self:start;background:#1D1D1B;color:#F6F2E4;border-radius:2px;padding:0 6px;font:700 16px/24px \"Barlow Condensed\", \"Barlow\", ui-sans-serif, sans-serif;} .ds-route-sub{color:#56554F;font-weight:400;} .ds-route-status{display:flex;align-items:center;gap:8px;font-weight:600;} .ds-ok{color:#1F6B46;} .ds-ink{color:#1F3A8A;}"
+    },
+    {
+      "name": "Next Plate",
+      "kind": "card",
+      "refersTo": "next-plate",
+      "description": "Satu pelat karbon per layar yang menyebut langkah berikutnya.",
+      "html": "<section class=\"ds-plate\"><span class=\"ds-plate-strip\">Berikutnya</span><p>Tahap 2 sudah terbuka. Buat tautan sekali pakai, lalu kirim ke Contoh Advisor lewat WhatsApp.</p><button class=\"ds-plate-btn\">Buat tautan untuk Contoh Advisor</button></section>",
+      "css": ".ds-plate{max-width:440px;background:#1D1D1B;color:#F6F2E4;border-radius:4px;padding:20px;font:400 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;} .ds-plate p{margin:12px 0 16px;} .ds-plate-strip{display:inline-block;background:#1F3A8A;color:#FFFFFF;border-radius:2px;padding:0 6px;font:700 16px/24px \"Barlow Condensed\", \"Barlow\", ui-sans-serif, sans-serif;text-transform:uppercase;letter-spacing:0.02em;} .ds-plate-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border-radius:4px;font:600 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out;background:#1F3A8A;color:#FFFFFF;border:1px solid #1F3A8A;} .ds-plate-btn:hover{background:#182E70;} .ds-plate-btn:focus-visible{outline:3px solid #F6F2E4;outline-offset:2px;}"
+    },
+    {
+      "name": "Rail Navigation",
+      "kind": "nav",
+      "refersTo": "rail",
+      "description": "Rail goldenrod desktop; item aktif berbidang karbon.",
+      "html": "<nav class=\"ds-rail\"><div class=\"ds-rail-brand\"><span>PENA</span>Surat organisasi</div><a href=\"#\" class=\"ds-rail-item\">Beranda</a><a href=\"#\" class=\"ds-rail-item\" aria-current=\"page\">Surat</a><a href=\"#\" class=\"ds-rail-item\">Buat surat</a></nav>",
+      "css": ".ds-rail{width:220px;box-sizing:border-box;background:#E7B53B;color:#1D1D1B;padding:20px 16px;font:400 16px/24px \"Barlow\", ui-sans-serif, system-ui, sans-serif;} .ds-rail-brand{display:flex;align-items:center;gap:12px;font-weight:600;margin-bottom:32px;} .ds-rail-brand span{background:#1D1D1B;color:#F6F2E4;border-radius:2px;padding:0 6px;font:700 16px/24px \"Barlow Condensed\", \"Barlow\", ui-sans-serif, sans-serif;} .ds-rail-item{display:flex;align-items:center;min-height:44px;padding:0 12px;border-radius:4px;color:inherit;text-decoration:none;} .ds-rail-item:hover{background:rgb(29 29 27 / 0.1);} .ds-rail-item[aria-current=page]{background:#1D1D1B;color:#F6F2E4;font-weight:600;} .ds-rail-item:focus-visible{outline:3px solid #1F3A8A;outline-offset:2px;}"
+    },
+    {
+      "name": "Letter Paper",
+      "kind": "custom",
+      "refersTo": "letter-paper",
+      "description": "Pratinjau surat Tinos dengan kop bergaris ganda; satu-satunya permukaan berbayang.",
+      "html": "<article class=\"ds-paper\"><header>BADAN EKSEKUTIF MAHASISWA<br>FAKULTAS ILMU KOMPUTER</header><p class=\"ds-paper-meta\">Nomor : 001/BEM-FILKOM/PMJ/XI/2026<br>Perihal : Peminjaman kursi FilkomDay</p><p>Dengan hormat,</p><p class=\"ds-paper-block\">Sehubungan dengan kegiatan FilkomDay 2026 pada 7 Desember 2026 di Aula Fakultas, kami bermaksud meminjam barang berikut.</p></article>",
+      "css": ".ds-paper{max-width:440px;background:#FFFFFF;color:#1D1D1B;border-radius:2px;padding:40px;font:400 16px/24px \"Tinos\",\"Times New Roman\",Times,serif;box-shadow:0 1px 2px rgb(29 29 27 / 0.06),0 8px 24px rgb(29 29 27 / 0.08);} .ds-paper header{text-align:center;font-weight:700;padding-bottom:8px;border-bottom:4px double #1D1D1B;} .ds-paper p{margin:16px 0 0;} .ds-paper-block{text-align:justify;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Jadwal Saku",
+    "overview": "Status surat dibaca seperti jadwal keberangkatan di stasiun atau bandara: setiap surat dan setiap pemeriksa adalah satu baris di kolom tetap, dengan kode pendek di kiri dan status di kanan. Di setiap layar ada tepat satu pelat karbon \"Berikutnya\" yang menjawab \"apa yang harus saya lakukan sekarang\".\n\nAntarmuka berdisiplin seperti jadwal cetak: satu ukuran huruf, kode kondensed kapital, garis tipis, dan warna yang hanya muncul bila membawa arti. Satu-satunya objek yang diangkat dari bidang adalah kertas surat.",
+    "keyCharacteristics": [
+      "Rail goldenrod di kiri (desktop) atau bilah atas dan tab bar goldenrod (HP) sebagai bidang dunia jadwal.",
+      "Strip kode kondensed kapital: PMJ, V2, T1, REVISI, DRAF.",
+      "Baris jadwal per pemeriksa dengan tanda status geometris dan teks status.",
+      "Satu pelat karbon \"Berikutnya\" per layar.",
+      "Kertas surat Tinos dengan kop bergaris ganda, satu-satunya permukaan berbayang.",
+      "Satu ukuran huruf 16/24 di seluruh aplikasi."
+    ],
+    "rules": [
+      {
+        "name": "The Meaning-Only Rule",
+        "body": "Hijau hanya berarti disetujui dan vermilion hanya berarti revisi, galat, atau merusak. Warna status tidak pernah menjadi hiasan, dan selalu disertai teks status.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Ink Rule",
+        "body": "Biru tinta dipakai jarang, untuk satu hal: \"tekan ini\" (aksi, tautan, fokus). Di satu layar paling banyak satu tombol utama biru tinta per area keputusan.",
+        "section": "colors"
+      },
+      {
+        "name": "The Rail Stays Outside Rule",
+        "body": "Goldenrod membingkai aplikasi (rail, bilah, landing), tidak pernah masuk ke panel atau kertas.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Size Rule",
+        "body": "Antarmuka aplikasi memakai satu ukuran, 16/24. Jangan menambah ukuran judul di aplikasi; naikkan tebal, pakai strip, atau pindahkan ke pelat. Ukuran besar hanya di landing, masuk, dan halaman galat.",
+        "section": "typography"
+      },
+      {
+        "name": "The Condensed Is For Codes Rule",
+        "body": "Huruf kondensed kapital hanya untuk kode pendek dan kepala kolom, tidak untuk kalimat.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Plate Rule",
+        "body": "Tepat satu pelat karbon \"Berikutnya\" per layar. Di HP pelat ada tepat di bawah judul.",
+        "section": "layout"
+      },
+      {
+        "name": "The Paper Is The Only Object Rule",
+        "body": "Hanya kertas surat yang diangkat. Panel, tombol, dan pelat datar.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do pakai satu pelat \"Berikutnya\" per layar dan letakkan aksi utama layar itu di dalamnya.",
+      "Do tulis status dengan tanda geometris dan teks bersamaan; warna tidak pernah sendirian.",
+      "Do pakai strip kode untuk jenis surat, versi, dan tahap, dengan teks kapital pendek.",
+      "Do jaga target sentuh 44 px (tab bar 48 px isi, bilah keputusan review 44 px).",
+      "Do tandai data contoh dan kontrol yang belum tersambung dengan kalimat jujur di dekatnya.",
+      "Do jalankan npm run css setelah mengubah view atau token; hasil build ikut disimpan."
+    ],
+    "donts": [
+      "Don't menambah ukuran huruf di antarmuka aplikasi (lihat The One Size Rule).",
+      "Don't memakai hijau atau vermilion untuk hiasan, atau biru tinta untuk hal yang tidak bisa ditekan.",
+      "Don't memberi bayangan pada panel, tombol, atau pelat; hanya kertas surat (dan papan landing) yang berbayang.",
+      "Don't membuat sudut lebih dari 4 px atau bentuk pil.",
+      "Don't memakai goldenrod di dalam panel atau kertas.",
+      "Don't memuat huruf dari Google Fonts atau CDN; huruf ada di public/assets/fonts.",
+      "Don't memakai mode gelap: kertas surat harus sama dengan cetakan.",
+      "Don't menulis em dash di teks antarmuka."
+    ]
+  }
+}

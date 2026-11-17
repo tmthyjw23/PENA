@@ -1,0 +1,10 @@
+/vendor/
+/.tools/
+/.env
+/.env.*
+!/.env.example
+/app/config/local.php
+/storage/*
+!/storage/.htaccess
+/public/uploads/
+/node_modules/

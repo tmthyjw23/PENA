@@ -1,0 +1,39 @@
+{
+  "name": "egg3l/pena",
+  "description": "PENA: penyusunan dan persetujuan surat organisasi mahasiswa (PHP native MVC)",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.2",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-gd": "*",
+    "ext-mbstring": "*",
+    "ext-mysqli": "*",
+    "ext-zip": "*",
+    "phpoffice/phpword": "^1.4",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Pena\\": "app/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {},
+    "platform": {
+      "php": "8.2.12"
+    }
+  },
+  "scripts": {
+    "check": "@php scripts/check.php",
+    "test": "@php tests/run.php",
+    "test:schema": "@php tests/pena_schema.php",
+    "test:flow": "@php tests/pena_workflow.php",
+    "test:ai": "@php tests/pena_ai.php",
+    "setup:local": "@php scripts/setup-local.php",
+    "db:install": "@php scripts/install-db.php",
+    "serve": "@php -S 127.0.0.1:8787 scripts/router.php"
+  }
+}

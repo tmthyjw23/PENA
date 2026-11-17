@@ -1,0 +1,57 @@
+Options -Indexes -Multiviews
+ServerSignature Off
+
+# Error Documents diarahkan secara dinamis atau ditangani router App.php
+
+<LimitExcept GET POST HEAD OPTIONS>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+</LimitExcept>
+
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<FilesMatch "(?i)\.(sql|bak|backup|old|tmp|temp|log|env.*|ini|conf|config|yml|yaml|lock|sh|ps1|bat|cmd|git.*|svn.*)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(?:vendor|scripts|tests|storage|database|docs|resources|node_modules|\.tools|\.impeccable|\.claude)(?:/|$) - [F,L,NC]
+    RewriteRule ^(?:composer\.(?:json|lock)|package(?:-lock)?\.json|.*\.md)$ - [F,L,NC]
+
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]
+    RewriteRule .* - [F,L]
+
+    # Base URL of this folder (e.g. /pena/ under an Apache Alias, / at a domain root),
+    # so the rewrites below work wherever the project is mounted.
+    RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
+    RewriteRule ^(.*)$ - [E=PENA_BASE:%1]
+
+    RewriteRule ^assets/(.*)$ %{ENV:PENA_BASE}public/assets/$1 [L]
+    RewriteRule ^uploads/(.*)$ %{ENV:PENA_BASE}public/uploads/$1 [L]
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^(.*)$ %{ENV:PENA_BASE}index.php?url=$1 [QSA,L]
+</IfModule>

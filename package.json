@@ -1,0 +1,14 @@
+{
+  "name": "pena",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PENA front-end build (Tailwind CSS). Hasil build public/assets/css/app.css ikut disimpan, jadi server tidak butuh Node.",
+  "scripts": {
+    "css": "tailwindcss -i resources/css/app.css -o public/assets/css/app.css --minify",
+    "css:watch": "tailwindcss -i resources/css/app.css -o public/assets/css/app.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "tailwindcss": "^4.3.5"
+  }
+}

@@ -1,0 +1,147 @@
+/* PENA, arah "Jadwal saku". Token dari Figma pfBtKoFGp8ckRKkPoFX6oh (koleksi Color, Spacing).
+   Build: npm run css (hasil di public/assets/css/app.css). */
+@import "tailwindcss";
+@source "../../app/view";
+
+/* Huruf disimpan di proyek (public/assets/fonts, subset latin) agar demo tetap benar tanpa internet.
+   Barlow dan Barlow Condensed: SIL Open Font License 1.1. Tinos: Apache License 2.0. */
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/barlow-400.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/barlow-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/barlow-700.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/barlow-condensed-600.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/barlow-condensed-700.woff2") format("woff2"); }
+@font-face { font-family: "Tinos"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/tinos-400.woff2") format("woff2"); }
+@font-face { font-family: "Tinos"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/tinos-700.woff2") format("woff2"); }
+
+@theme {
+  --color-*: initial;
+  --color-page: #F4F4F1;
+  --color-surface: #FFFFFF;
+  --color-raised: #ECEBE6;
+  --color-rail: #E7B53B;
+  --color-board: #263238;
+  --color-board-row: #34434B;
+  --color-plate: #1D1D1B;
+  --color-ink: #1D1D1B;          /* text/primary, border/strong, rail-active */
+  --color-secondary: #56554F;
+  --color-muted: #6B6A64;
+  --color-on-board-muted: #B9C5CB;
+  --color-on-plate: #F6F2E4;
+  --color-line: #D9D7CF;          /* border/default */
+  --color-action: #1F3A8A;        /* biru tinta: aksi utama, tautan, fokus */
+  --color-action-hover: #182E70;
+  --color-action-soft: #E6EBF7;
+  --color-ok: #1F6B46;
+  --color-ok-soft: #E2F0E8;
+  --color-rev: #C2381A;
+  --color-rev-soft: #FBE6E0;
+  --color-hl: #FBF0D2;
+  --color-ok-on-board: #9ED5B6;   /* status di papan gelap landing: 8,6:1 dan 6,4:1 di board */
+  --color-rev-on-board: #F2A391;
+  --color-white: #FFFFFF;
+  --color-transparent: transparent;
+
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-cond: "Barlow Condensed", "Barlow", ui-sans-serif, sans-serif;
+  --font-paper: "Tinos", "Times New Roman", Times, serif;
+
+  /* Satu ukuran huruf 16/24 untuk antarmuka; ukuran besar hanya di landing dan masuk. */
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+
+  --radius-strip: 2px;
+  --radius-control: 4px;
+  --radius-panel: 4px;
+  --radius-paper: 2px;
+
+  --shadow-paper: 0 1px 2px rgb(29 29 27 / 0.06), 0 8px 24px rgb(29 29 27 / 0.08);  /* kertas: satu-satunya objek yang "diangkat" */
+  --shadow-board: 0 12px 32px rgb(29 29 27 / 0.25);                                   /* papan jadwal di landing */
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-page font-sans text-base text-ink antialiased;
+    font-variant-numeric: tabular-nums;
+  }
+  ::selection { background: var(--color-hl); color: var(--color-ink); }
+  a { text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--color-action); outline-offset: 2px; }
+  h1, h2, h3 { text-wrap: balance; }
+  p, li, dd { text-wrap: pretty; }
+  input, textarea, select { caret-color: var(--color-action); }
+  [hidden] { display: none !important; }
+  * { scrollbar-color: #B8B6AE transparent; }
+}
+
+@layer components {
+  /* Strip kode: PMJ, V2, T1, REVISI. Barlow Condensed kapital. */
+  .strip {
+    @apply inline-flex items-center rounded-strip px-1.5 font-cond font-bold uppercase leading-6 whitespace-nowrap;
+    letter-spacing: 0.02em;
+  }
+  .strip-outline { @apply border border-ink bg-surface text-ink; padding-block: 0; }
+  .strip-carbon { @apply bg-plate text-on-plate; }
+  .strip-ink { @apply bg-action text-white; }
+  .strip-ok { @apply bg-ok text-white; }
+  .strip-rev { @apply bg-rev text-white; }
+
+  .colhead { @apply font-cond font-semibold uppercase text-secondary; letter-spacing: 0.02em; }
+
+  .panel { @apply rounded-panel bg-surface; }
+
+  /* Tombol: 44px, tiga gaya. */
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-control border px-4 font-semibold whitespace-nowrap
+      transition-colors duration-150 ease-out cursor-pointer disabled:cursor-not-allowed;
+  }
+  .btn-primary { @apply border-action bg-action text-white hover:border-action-hover hover:bg-action-hover disabled:border-line disabled:bg-raised disabled:text-muted; }
+  .btn-primary:focus-visible { outline-color: var(--color-ink); }
+  .btn-secondary { @apply border-ink bg-surface text-ink hover:bg-raised disabled:border-line disabled:text-muted; }
+  .btn-quiet { @apply border-transparent bg-transparent px-2 text-rev hover:underline; }
+  .btn-danger { @apply border-rev bg-rev text-white hover:brightness-90; }
+  .btn-block { @apply w-full; }
+
+  .field-label { @apply mb-2 block font-semibold; }
+  .field {
+    @apply block w-full min-h-11 rounded-control border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted
+      transition-colors duration-150 hover:border-secondary focus:border-action focus:outline-none;
+  }
+  .field:focus-visible { outline: 2px solid var(--color-action); outline-offset: 0; }
+  .field[aria-invalid="true"] { @apply border-rev; }
+  .field-help { @apply mt-2 text-secondary; }
+  .field-error { @apply mt-2 text-rev; }
+
+  /* Pelat "Berikutnya": satu per layar. */
+  .plate { @apply rounded-panel bg-plate p-5 text-on-plate; }
+  .plate .btn-secondary { @apply border-surface; }
+  /* Biru tinta dan karbon tidak terlihat di atas pelat karbon: cincin fokus memakai warna teks pelat. */
+  .plate :focus-visible, .plate .btn-primary:focus-visible { outline-color: var(--color-on-plate); }
+
+  /* Baris jadwal (Route row, Compact). */
+  .route-row { @apply grid grid-cols-[auto_1fr] gap-x-3 border-b border-line py-3; }
+  .route-row.is-you { @apply -mx-4 bg-hl px-4; }
+
+  .mark { @apply inline-block size-4 shrink-0; }
+
+  /* Penanda isian di teks dan tombol sisip. */
+  .ph { @apply rounded-strip px-0.5 text-action; background: var(--color-action-soft); }
+  .ph-chip {
+    @apply inline-flex min-h-9 items-center rounded-strip border border-dashed border-ink/50 bg-hl px-2 font-semibold
+      hover:border-ink cursor-pointer;
+  }
+
+  /* Kertas surat: metrik Times New Roman agar sama dengan Word/PDF. */
+  .paper { @apply rounded-paper bg-surface font-paper text-ink; box-shadow: var(--shadow-paper); }
+  .paper p[data-block] { text-align: justify; }
+  .paper table.grid { @apply w-full border-collapse; }
+  .paper table.grid th, .paper table.grid td { @apply border border-ink px-2 text-left align-top; }
+  .paper .is-marked { @apply bg-rev-soft; outline: 1px dashed var(--color-rev); outline-offset: 4px; }
+  .paper .fact { text-decoration: underline; text-decoration-color: var(--color-muted); text-underline-offset: 3px; }
+
+  dialog.sheet { @apply m-auto w-[min(560px,calc(100vw-32px))] rounded-panel bg-surface p-8 text-ink; }
+  dialog.sheet::backdrop { background: rgb(29 29 27 / 0.6); }
+}
+
+/* Gerak: hanya transisi warna 150 ms pada hover (MOTION 1). Tidak ada gerak posisi, jadi tidak perlu
+   mematikan semua transisi untuk prefers-reduced-motion. */

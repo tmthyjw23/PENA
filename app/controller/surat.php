@@ -1,0 +1,502 @@
+<?php
+/**
+ * Controller Surat - halaman sekretaris: daftar, buat, ubah, ajukan, revisi, batalkan.
+ * Aturan bisnis ada di Pena\Service; controller ini hanya membaca form dan menampilkan hasil.
+ * Metode bantu diawali "_" agar router template tidak membukanya sebagai URL.
+ */
+
+use Pena\Service\AiClient;
+use Pena\Service\AiException;
+use Pena\Service\LetterAiService;
+use Pena\Service\LetterQuery;
+use Pena\Service\LetterRenderer;
+use Pena\Service\LetterService;
+use Pena\Service\PenaException;
+use Pena\Support\Db;
+
+class surat extends Controller {
+
+    /** Daftar surat. ?status=semua|tindakan|draft|in_review|approved|cancelled, ?q=perihal atau nomor. */
+    public function index() {
+        [$org] = $this->_context();
+        $query = $this->_query();
+        $all = $query->letters((int)$org['id']);
+        $needsLink = $query->lettersNeedingLink((int)$org['id']);
+        $tabs = ['semua' => ['Semua', static fn($l) => true],
+                 'tindakan' => ['Perlu tindakan', static fn($l) => $l['status'] === 'revision_requested' || isset($needsLink[(int)$l['id']])],
+                 'draft' => ['Draf', static fn($l) => $l['status'] === 'draft'],
+                 'in_review' => ['Sedang direview', static fn($l) => $l['status'] === 'in_review'],
+                 'approved' => ['Disetujui', static fn($l) => $l['status'] === 'approved'],
+                 'cancelled' => ['Dibatalkan', static fn($l) => $l['status'] === 'cancelled']];
+        $tab = isset($tabs[$_GET['status'] ?? '']) ? $_GET['status'] : 'semua';
+        $q = trim((string)($_GET['q'] ?? ''));
+        $counts = array_map(static fn($t) => count(array_filter($all, $t[1])), $tabs);
+        $letters = array_values(array_filter($all, static fn($l) => $tabs[$tab][1]($l)
+            && ($q === '' || mb_stripos($l['title'], $q) !== false || mb_stripos((string)$l['letter_number'], $q) !== false)));
+        $this->display('surat/index', $this->_page('Surat', [
+            'org' => $org,
+            'letters' => $letters,
+            'total' => count($all),
+            'tabs' => array_map(static fn($t) => $t[0], $tabs),
+            'counts' => $counts,
+            'tab' => $tab,
+            'q' => $q,
+        ]));
+    }
+
+    /** Buat surat: ceritakan kebutuhan, PENA menyusun lewat AI (9router). */
+    public function buat() {
+        [$org] = $this->_context();
+        $state = $_SESSION['pena_ai'] ?? [];
+        $this->display('surat/generate', $this->_page('Buat Surat', [
+            'org' => $org,
+            'active_menu' => 'buat',
+            'prompt' => (string)($state['prompt'] ?? ''),
+            'clarify' => $state['clarify'] ?? null,
+            'ai_error' => $state['error'] ?? null,
+            'ai_ready' => AiClient::fromEnv() !== null,
+            'has_result' => !empty($state['blocks']),
+        ]));
+    }
+
+    /** Tanpa JavaScript: tiga langkah AI berurutan dalam satu permintaan, lalu ke halaman hasil. */
+    public function susun() {
+        [$org, $userId] = $this->_context(true);
+        @set_time_limit(0); // three model calls in one request; each is bounded by AI_TIMEOUT
+        foreach (['kerangka', 'data', 'paragraf'] as $step) {
+            $result = $this->_aiStep($step, $org, $userId);
+            if ($result['status'] !== 'ok') $this->_go('/surat/buat/');
+        }
+        $this->_go('/surat/hasil/');
+    }
+
+    /** Langkah AI untuk tampilan "Sedang menyusun" (fetch). Jawaban JSON. */
+    public function ai_kerangka() { [$org, $userId] = $this->_context(true, true); $this->json_response($this->_aiStep('kerangka', $org, $userId)); }
+    public function ai_data() { [$org, $userId] = $this->_context(true, true); $this->json_response($this->_aiStep('data', $org, $userId)); }
+    public function ai_paragraf() { [$org, $userId] = $this->_context(true, true); $this->json_response($this->_aiStep('paragraf', $org, $userId)); }
+
+    /** Periksa hasil susunan AI: semua isian bisa diubah sebelum disimpan sebagai draf. */
+    public function hasil() {
+        [$org] = $this->_context();
+        $state = $_SESSION['pena_ai'] ?? [];
+        if (empty($state['blocks'])) $this->_go('/surat/buat/');
+        $query = $this->_query();
+        $template = $this->_template((int)$org['id'], (int)$state['template_id']);
+        $signers = $query->signers((int)$org['id']);
+        $byId = array_column($signers, null, 'id');
+        $values = array_map(static fn($f) => $f['value'], $state['fields']);
+        $blocks = [];
+        foreach ($template['definition']['blocks'] as $b) {
+            $blocks[] = isset($state['blocks'][$b['id']]) ? ['id' => $b['id'], 'text' => $state['blocks'][$b['id']]['text']] : ['id' => $b['id']];
+        }
+        $letterheads = $query->letterheads((int)$org['id']);
+        $preview = (new LetterRenderer())->render($template['definition'], array_filter($values, static fn($v) => $v !== null),
+            array_values(array_filter($blocks, static fn($b) => !array_key_exists('text', $b) || $b['text'] !== '')),
+            $letterheads[0] ?? [], null, $state['title'],
+            array_values(array_filter(array_map(static fn($r) => $byId[$r['signer_id']] ?? null, $state['route']))), null);
+        $this->display('surat/generate_hasil', $this->_page('Periksa Hasil', [
+            'org' => $org,
+            'active_menu' => 'buat',
+            'state' => $state,
+            'template' => $template,
+            'signers' => $signers,
+            'letterheads' => $letterheads,
+            'preview' => $preview,
+            'errors' => $_SESSION['pena_ai_errors'] ?? [],
+            'error_message' => $_SESSION['pena_ai_message'] ?? null,
+            'model' => AiClient::fromEnv()?->model(),
+        ]));
+        unset($_SESSION['pena_ai_errors'], $_SESSION['pena_ai_message']);
+    }
+
+    /** Simpan hasil AI (setelah diperiksa) sebagai draf biasa; permintaan dan log AI ikut ditautkan. */
+    public function simpan_ai() {
+        [$org, $userId] = $this->_context(true);
+        $state = $_SESSION['pena_ai'] ?? [];
+        if (empty($state['blocks'])) $this->_go('/surat/buat/');
+        $template = $this->_template((int)$org['id'], (int)$state['template_id']);
+        [$fields, $blocks] = $this->_readContent($template['definition']);
+        $stages = [];
+        foreach ((array)($_POST['stages'] ?? []) as $stage) {
+            $signerIds = array_values(array_filter(array_map('intval', (array)($stage['signer_ids'] ?? []))));
+            if (trim((string)($stage['name'] ?? '')) === '' && $signerIds === []) continue;
+            $stages[] = ['name' => (string)($stage['name'] ?? ''), 'signer_ids' => $signerIds];
+        }
+        $title = (string)($_POST['title'] ?? '');
+        try {
+            $id = $this->_letters()->createDraft($userId, (int)$org['id'], (int)$template['id'], $title, $fields, $blocks, $stages,
+                ((int)($_POST['letterhead_id'] ?? 0)) ?: null, (string)$state['prompt']);
+            $versionId = (int)$this->_db()->value('SELECT current_version_id FROM letters WHERE id = ?', [$id]);
+            $ai = AiClient::fromEnv();
+            if ($ai) (new LetterAiService($this->_db(), $ai))->attach($state['generation_ids'] ?? [], (int)$org['id'], $id, $versionId, $userId);
+            unset($_SESSION['pena_ai']);
+            $this->_flash('success', 'Draf surat tersimpan. Periksa pratinjau, lalu ajukan bila sudah benar.');
+            $this->_go("/surat/detail/$id");
+        } catch (PenaException $e) {
+            // Keep what the secretary typed and show the problems next to it.
+            $state['title'] = $title;
+            foreach ($state['fields'] as $key => $f) {
+                if (array_key_exists($key, $fields)) $state['fields'][$key]['value'] = $fields[$key];
+                elseif (isset($_POST['fields'][$key])) $state['fields'][$key]['value'] = null;
+            }
+            foreach ($blocks as $b) if (isset($b['text'], $state['blocks'][$b['id']])) $state['blocks'][$b['id']]['text'] = $b['text'];
+            $state['route'] = array_map(static fn($s) => ['stage' => $s['name'], 'signer_id' => (int)($s['signer_ids'][0] ?? 0), 'quote' => null], $stages);
+            $_SESSION['pena_ai'] = $state;
+            $_SESSION['pena_ai_errors'] = $e->errors;
+            $_SESSION['pena_ai_message'] = $e->getMessage();
+            $this->_go('/surat/hasil/');
+        }
+    }
+
+    /** Tulis ulang satu paragraf hasil AI (fetch). Jawaban JSON. */
+    public function tulis_ulang() {
+        [$org, $userId] = $this->_context(true, true);
+        $state = $_SESSION['pena_ai'] ?? [];
+        $ai = AiClient::fromEnv();
+        if (!$ai || empty($state['template_id'])) $this->json_response(['status' => 'error', 'message' => 'Layanan AI atau hasil susunan tidak tersedia.']);
+        @set_time_limit($ai->timeout() + 15);
+        try {
+            $template = $this->_template((int)$org['id'], (int)$state['template_id']);
+            $values = array_map(static fn($f) => $f['value'], $state['fields']);
+            $r = (new LetterAiService($this->_db(), $ai))->rewrite((int)$org['id'], $userId, $template, $values,
+                (string)($_POST['block'] ?? ''), (string)($_POST['current'] ?? ''), (string)($_POST['instruction'] ?? ''));
+            $state['generation_ids'][] = $r['generation_id'];
+            $_SESSION['pena_ai'] = $state;
+            $this->json_response(['status' => 'ok', 'text' => $r['text'], 'warnings' => $r['warnings']]);
+        } catch (AiException $e) {
+            $this->json_response(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * One AI step on the session state. kerangka resets the state from the posted request;
+     * data and paragraf continue it. Never throws: returns status ok | clarify | error.
+     */
+    private function _aiStep(string $step, array $org, int $userId): array {
+        $ai = AiClient::fromEnv();
+        if (!$ai) return ['status' => 'error', 'message' => 'Layanan AI belum diatur. Isi AI_BASE_URL dan AI_MODEL di .env, lalu jalankan 9router.'];
+        // PHP's own limit (30 s on this server) must outlast the AI timeout, or the request dies unlogged.
+        // The paragraph step may call the model twice (one retry).
+        @set_time_limit($ai->timeout() * ($step === 'paragraf' ? 2 : 1) + 15);
+        $service = new LetterAiService($this->_db(), $ai);
+        $query = $this->_query();
+        $orgId = (int)$org['id'];
+        $state = $_SESSION['pena_ai'] ?? [];
+        try {
+            if ($step === 'kerangka') {
+                $prompt = trim(mb_substr((string)($_POST['prompt'] ?? ''), 0, 1000));
+                $state = ['prompt' => $prompt, 'generation_ids' => []];
+                $_SESSION['pena_ai'] = $state;
+                $r = $service->recommendTemplate($orgId, $userId, $prompt, $query->templates($orgId));
+                $state['generation_ids'][] = $r['generation_id'];
+                if ($r['status'] === 'clarify') {
+                    $state['clarify'] = ['question' => $r['question'], 'options' => $r['options']];
+                    $_SESSION['pena_ai'] = $state;
+                    return ['status' => 'clarify', 'question' => $r['question'], 'options' => $r['options']];
+                }
+                $state += ['template_id' => $r['template_id'], 'code' => $r['code'], 'reason' => $r['reason'], 'title' => $r['title']];
+                $_SESSION['pena_ai'] = $state;
+                $t = $this->_template($orgId, $r['template_id']);
+                return ['status' => 'ok', 'label' => $t['name'] . ' (' . $t['code'] . ')'];
+            }
+            if (empty($state['template_id'])) return ['status' => 'error', 'message' => 'Mulai lagi dari kotak permintaan.'];
+            $template = $this->_template($orgId, (int)$state['template_id']);
+            if ($step === 'data') {
+                $r = $service->extract($orgId, $userId, $state['prompt'], $template, $query->signers($orgId));
+                $state['generation_ids'][] = $r['generation_id'];
+                $state['fields'] = $r['fields']; $state['route'] = $r['route']; $state['missing'] = $r['missing'];
+                $_SESSION['pena_ai'] = $state;
+                $filled = count(array_filter($r['fields'], static fn($f) => $f['value'] !== null));
+                return ['status' => 'ok', 'label' => $filled . ' dari ' . count($r['fields']) . ' isian'];
+            }
+            if (empty($state['fields'])) return ['status' => 'error', 'message' => 'Data surat belum terisi. Susun ulang.'];
+            $values = array_map(static fn($f) => $f['value'], $state['fields']);
+            $r = $service->writeParagraphs($orgId, $userId, $state['prompt'], $template, $values);
+            $state['generation_ids'] = array_merge($state['generation_ids'], $r['generation_ids']);
+            $state['blocks'] = $r['blocks'];
+            $_SESSION['pena_ai'] = $state;
+            return ['status' => 'ok', 'label' => count($r['blocks']) . ' paragraf', 'next' => APP_PATH . '/surat/hasil/'];
+        } catch (AiException $e) {
+            $state['error'] = $e->getMessage();
+            $_SESSION['pena_ai'] = $state;
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+    /** Isi manual tanpa AI: pilih kerangka, isi data, tulis paragraf, tentukan alur. */
+    public function manual() {
+        [$org] = $this->_context();
+        $query = $this->_query();
+        $templates = $query->templates((int)$org['id']);
+        $templateId = (int)($_GET['kerangka'] ?? ($_SESSION['pena_old']['template_id'] ?? ($templates[0]['id'] ?? 0)));
+        $template = null;
+        foreach ($templates as $t) if ((int)$t['id'] === $templateId) $template = $t;
+        $this->display('surat/form', $this->_page('Buat Surat', [
+            'active_menu' => 'buat',
+            'mode' => 'create',
+            'org' => $org,
+            'templates' => $templates,
+            'template' => $template,
+            'signers' => $query->signers((int)$org['id']),
+            'letterheads' => $query->letterheads((int)$org['id']),
+            'old' => $this->_takeOld(),
+        ]));
+    }
+
+    public function simpan() {
+        [$org, $userId] = $this->_context(true);
+        $templateId = (int)($_POST['template_id'] ?? 0);
+        $template = $this->_template((int)$org['id'], $templateId);
+        [$fields, $blocks] = $this->_readContent($template['definition']);
+        $stages = [];
+        foreach ((array)($_POST['stages'] ?? []) as $stage) {
+            $signerIds = array_values(array_filter(array_map('intval', (array)($stage['signer_ids'] ?? []))));
+            if (trim((string)($stage['name'] ?? '')) === '' && $signerIds === []) continue;
+            $stages[] = ['name' => (string)($stage['name'] ?? ''), 'signer_ids' => $signerIds];
+        }
+        try {
+            $id = $this->_letters()->createDraft($userId, (int)$org['id'], $templateId, (string)($_POST['title'] ?? ''),
+                $fields, $blocks, $stages, ((int)($_POST['letterhead_id'] ?? 0)) ?: null);
+            $this->_flash('success', 'Draf surat tersimpan.');
+            $this->_go("/surat/detail/$id");
+        } catch (PenaException $e) {
+            $this->_keepOld($e);
+            $this->_go('/surat/manual/?kerangka=' . $templateId);
+        }
+    }
+
+    public function detail($id = 0) {
+        [$org] = $this->_context();
+        $detail = $this->_query()->detail((int)$id, (int)$org['id']);
+        if (!$detail) $this->abort(404, 'Surat tidak ditemukan.');
+        $links = $_SESSION['pena_links'][(int)$id] ?? [];
+        unset($_SESSION['pena_links'][(int)$id]);
+        $this->display('surat/detail', $this->_page($detail['letter']['title'], $detail + [
+            'org' => $org,
+            'links' => $links,
+            'signers' => $this->_query()->signers((int)$org['id']),
+            'errors' => $this->_takeOld()['errors'] ?? [],
+        ]));
+    }
+
+    public function edit($id = 0) {
+        [$org] = $this->_context();
+        $detail = $this->_query()->detail((int)$id, (int)$org['id']);
+        if (!$detail) $this->abort(404, 'Surat tidak ditemukan.');
+        if ($detail['version']['submitted_at'] !== null) {
+            $this->_flash('warning', 'Versi ini sudah diajukan. Mulai revisi untuk mengubah isi.');
+            $this->_go("/surat/detail/$id");
+        }
+        $template = $this->_template((int)$org['id'], (int)$detail['letter']['template_id']);
+        $old = $this->_takeOld();
+        $this->display('surat/form', $this->_page('Ubah Draf', [
+            'mode' => 'edit',
+            'org' => $org,
+            'letter' => $detail['letter'],
+            'template' => $template,
+            'old' => $old ?: ['fields' => $detail['version']['fields'], 'blocks' => $detail['version']['blocks'],
+                              'title' => $detail['letter']['title']],
+        ]));
+    }
+
+    public function perbarui($id = 0) {
+        [$org, $userId] = $this->_context(true);
+        $detail = $this->_query()->detail((int)$id, (int)$org['id']);
+        if (!$detail) $this->abort(404, 'Surat tidak ditemukan.');
+        $template = $this->_template((int)$org['id'], (int)$detail['letter']['template_id']);
+        [$fields, $blocks] = $this->_readContent($template['definition']);
+        try {
+            $this->_letters()->updateDraft((int)$id, $userId, $fields, $blocks);
+            $this->_flash('success', 'Draf diperbarui.');
+            $this->_go("/surat/detail/$id");
+        } catch (PenaException $e) {
+            $this->_keepOld($e);
+            $this->_go("/surat/edit/$id");
+        }
+    }
+
+    public function ajukan($id = 0) {
+        [$org, $userId] = $this->_context(true);
+        $this->_owned((int)$id, (int)$org['id']);
+        try {
+            $result = $this->_letters()->submit((int)$id, $userId);
+            $this->_rememberLinks((int)$id, $result['links']);
+            $this->_flash('success', 'Surat diajukan dengan nomor ' . $result['letter_number'] . '. Kirim tautan di bawah kepada pemeriksa.');
+        } catch (PenaException $e) {
+            $this->_keepOld($e);
+            $this->_flash('danger', $e->getMessage());
+        }
+        $this->_go("/surat/detail/$id");
+    }
+
+    public function revisi($id = 0) {
+        [$org, $userId] = $this->_context(true);
+        $this->_owned((int)$id, (int)$org['id']);
+        try {
+            $this->_letters()->startRevision((int)$id, $userId, (string)($_POST['summary'] ?? ''));
+            $this->_flash('success', 'Versi baru dibuat. Ubah isinya, lalu ajukan kembali.');
+            $this->_go("/surat/edit/$id");
+        } catch (PenaException $e) {
+            $this->_flash('danger', $e->getMessage());
+            $this->_go("/surat/detail/$id");
+        }
+    }
+
+    public function batal($id = 0) {
+        [$org, $userId] = $this->_context(true);
+        $this->_owned((int)$id, (int)$org['id']);
+        try {
+            $this->_letters()->cancel((int)$id, $userId, (string)($_POST['reason'] ?? ''));
+            $number = $this->_query()->detail((int)$id, (int)$org['id'])['letter']['letter_number'] ?? null;
+            $this->_flash('success', $number ? "Surat dibatalkan. Nomor $number tetap tercatat terpakai." : 'Surat dibatalkan.');
+        } catch (PenaException $e) {
+            $this->_flash('danger', $e->getMessage());
+        }
+        $this->_go("/surat/detail/$id");
+    }
+
+    public function ganti($id = 0) {
+        [$org, $userId] = $this->_context(true);
+        $this->_owned((int)$id, (int)$org['id']);
+        try {
+            $this->_letters()->replaceSigner((int)$id, $userId, (int)($_POST['member_id'] ?? 0), (int)($_POST['signer_id'] ?? 0));
+            $this->_flash('success', 'Pemeriksa diganti. Bila surat sedang direview, mulai revisi lalu ajukan ulang.');
+        } catch (PenaException $e) {
+            $this->_flash('danger', $e->getMessage());
+        }
+        $this->_go("/surat/detail/$id");
+    }
+
+    public function tautan($id = 0) {
+        [$org, $userId] = $this->_context(true);
+        $this->_owned((int)$id, (int)$org['id']);
+        try {
+            $requestId = (int)($_POST['request_id'] ?? 0);
+            $token = $this->_letters()->reissueLink((int)$id, $userId, $requestId);
+            $this->_rememberLinks((int)$id, [$requestId => $token]);
+            $this->_flash('success', 'Tautan dibuat. Kirim ke pemeriksa; tautan sebelumnya (jika ada) tidak berlaku lagi.');
+        } catch (PenaException $e) {
+            $this->_flash('danger', $e->getMessage());
+        }
+        $this->_go("/surat/detail/$id");
+    }
+
+    // ------------------------------------------------------------ helpers
+
+    /** @return array{0: array, 1: int} organization row and user id; $post also checks method + CSRF */
+    private function _context(bool $post = false, bool $json = false): array {
+        $this->start_default_session_app();
+        if (empty($_SESSION['user-id'])) {
+            if ($json) $this->json_response(['status' => 'error', 'message' => 'Sesi berakhir. Masuk lagi, lalu ulangi.'], 401);
+            $this->_go('/login/');
+        }
+        if ($post) {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->abort(405);
+            if (!$this->verify_csrf_token()) {
+                if ($json) $this->json_response(['status' => 'error', 'message' => 'Sesi formulir kedaluwarsa. Muat ulang halaman, lalu ulangi.'], 419);
+                $this->_flash('danger', 'Sesi formulir kedaluwarsa. Silakan ulangi.');
+                $this->_go('/surat/');
+            }
+        }
+        $org = $this->_query()->managedOrganization((int)$_SESSION['user-id']);
+        if (!$org) $this->abort(403, 'Akun Anda belum terdaftar sebagai sekretaris atau admin organisasi mana pun.');
+        return [$org, (int)$_SESSION['user-id']];
+    }
+
+    private function _owned(int $letterId, int $orgId): void {
+        if (!$this->_query()->detail($letterId, $orgId)) $this->abort(404, 'Surat tidak ditemukan.');
+    }
+
+    private function _template(int $orgId, int $templateId): array {
+        foreach ($this->_query()->templates($orgId) as $t) if ((int)$t['id'] === $templateId) return $t;
+        $this->_flash('danger', 'Pilih kerangka surat terlebih dahulu.');
+        $this->_go('/surat/manual/');
+    }
+
+    /**
+     * Reads fields and blocks from the form in template order.
+     * Table fields come as one row per line, columns separated by "|".
+     */
+    private function _readContent(array $definition): array {
+        $postedFields = (array)($_POST['fields'] ?? []);
+        $fields = [];
+        foreach ($definition['fields'] as $spec) {
+            $raw = $postedFields[$spec['key']] ?? '';
+            if ($spec['type'] === 'table') {
+                $columns = array_column($spec['columns'] ?? [], 'key');
+                $rows = [];
+                foreach (preg_split('/\R/', (string)$raw) as $line) {
+                    if (trim($line) === '') continue;
+                    $cells = array_map('trim', explode('|', $line));
+                    $row = [];
+                    foreach ($columns as $i => $column) $row[$column] = $cells[$i] ?? '';
+                    $rows[] = $row;
+                }
+                if ($rows !== []) $fields[$spec['key']] = $rows;
+                continue;
+            }
+            $value = trim((string)$raw);
+            if ($spec['type'] === 'money') $value = str_replace(['.', ' ', 'Rp', 'rp'], '', $value);
+            if ($value !== '') $fields[$spec['key']] = $value;
+        }
+        $postedBlocks = (array)($_POST['blocks'] ?? []);
+        $blocks = [];
+        foreach ($definition['blocks'] as $spec) {
+            if ($spec['type'] === 'paragraph' && $spec['source'] !== 'fixed') {
+                $text = trim((string)($postedBlocks[$spec['id']] ?? ''));
+                if ($text === '' && empty($spec['required'])) continue;
+                $blocks[] = ['id' => $spec['id'], 'text' => $text];
+            } elseif ($spec['type'] === 'table' && !isset($fields[$spec['field']]) && empty($spec['required'])) {
+                continue;
+            } else {
+                $blocks[] = ['id' => $spec['id']];
+            }
+        }
+        return [$fields, $blocks];
+    }
+
+    private function _rememberLinks(int $letterId, array $links): void {
+        $names = [];
+        foreach ($links as $requestId => $token) {
+            $row = $this->_db()->one('SELECT signer_name, signer_position, kind FROM approval_requests WHERE id = ?', [$requestId]);
+            $names[] = $row + ['url' => APP_PATH . '/review/lihat/' . $token];
+        }
+        $_SESSION['pena_links'][$letterId] = $names;
+    }
+
+    private function _keepOld(PenaException $e): void {
+        $_SESSION['pena_old'] = [
+            'title' => $_POST['title'] ?? '', 'template_id' => $_POST['template_id'] ?? null,
+            'letterhead_id' => $_POST['letterhead_id'] ?? null, 'raw_fields' => $_POST['fields'] ?? [],
+            'raw_blocks' => $_POST['blocks'] ?? [], 'stages' => $_POST['stages'] ?? [],
+            'message' => $e->getMessage(), 'errors' => $e->errors,
+        ];
+    }
+
+    private function _takeOld(): array {
+        $old = $_SESSION['pena_old'] ?? [];
+        unset($_SESSION['pena_old']);
+        return $old;
+    }
+
+    private function _page(string $title, array $data): array {
+        $flash = $_SESSION['flash_message'] ?? null;
+        unset($_SESSION['flash_message']);
+        return $data + ['title' => $title . ' - PENA', 'active_menu' => 'surat', 'flash' => $flash,
+                        'csrf_token' => $this->get_csrf_token()];
+    }
+
+    private function _flash(string $type, string $text): void {
+        $_SESSION['flash_message'] = ['type' => $type, 'text' => $text];
+    }
+
+    private function _go(string $path): never {
+        header('Location: ' . APP_PATH . $path);
+        exit();
+    }
+
+    private ?Db $db = null;
+    private function _db(): Db { return $this->db ??= Db::fromTemplate(new Database()); }
+    private function _query(): LetterQuery { return new LetterQuery($this->_db()); }
+    private function _letters(): LetterService { return new LetterService($this->_db()); }
+}
