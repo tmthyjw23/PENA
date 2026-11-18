@@ -1,6 +1,6 @@
 <?php
 /**
- * Controller Masuk/Keluar untuk sekretaris dan admin organisasi. Pemeriksa tidak masuk; mereka memakai tautan.
+ * Controller Masuk/Keluar. Setiap akun adalah sekretaris di ruang kerjanya; pemeriksa tidak masuk, mereka memakai tautan.
  */
 class login extends Controller {
 
@@ -22,19 +22,20 @@ class login extends Controller {
 
         $username = trim((string)($_POST['username'] ?? ''));
         $password = (string)($_POST['password'] ?? '');
-        if ($username === '' || $password === '') $this->_back('Username dan password wajib diisi.');
+        if ($username === '' || $password === '') $this->_back('Email dan password wajib diisi.');
 
         $db = new Database();
         if (!$db->isConnected()) $this->_back('Database belum terhubung. Periksa MySQL dan pengaturan DB di .env.');
 
         $user = (new User_model())->validate_credentials($username, $password);
-        if (!$user) $this->_back('Username atau password salah. Periksa lalu coba lagi.');
+        if (!$user) $this->_back('Email atau password salah. Periksa lalu coba lagi.');
 
         session_regenerate_id(true); // prevents session fixation
         $_SESSION['user-id'] = (int)$user['id'];
         $_SESSION['user-name'] = $user['nama_lengkap'];
         $_SESSION['user-username'] = $user['username'];
         $_SESSION['user-email'] = $user['email'];
+        unset($_SESSION['workspace-id']);
         header('Location: ' . APP_PATH . '/dashboard/');
         exit();
     }

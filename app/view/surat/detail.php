@@ -10,6 +10,10 @@ $open = !in_array($status, ['approved', 'cancelled'], true);
 $base = APP_PATH . '/surat';
 $id = (int)$letter['id'];
 $csrf = '<input type="hidden" name="csrf_token" value="' . e($data['csrf_token']) . '">';
+// Personal letters carry no number; "first submission" is version 1 instead. Without reviewers they are final when submitted.
+$personal = ($letter['workspace_kind'] ?? '') === 'personal';
+$firstSubmit = $personal ? $vno === 1 : $letter['letter_number'] === null;
+$selfOnly = $personal && $data['stages'] === [];
 $eventLabels = [
     'draft_created' => 'Draf dibuat', 'draft_updated' => 'Draf diperbarui', 'number_assigned' => 'Nomor diberikan',
     'submitted' => 'Diajukan', 'review_opened' => 'Dibuka pemeriksa', 'approved' => 'Disetujui',
@@ -56,7 +60,8 @@ $rowState = static function (array $stage, array $m) use ($status, $isWorking): 
 };
 
 $statusLine = match (true) {
-    $status === 'draft' && $letter['letter_number'] === null => ['Draf, belum diajukan', 'text-secondary'],
+    $status === 'draft' && $firstSubmit => ['Draf, belum ' . ($selfOnly ? 'diselesaikan' : 'diajukan'), 'text-secondary'],
+    $status === 'approved' && $selfOnly => ['Selesai', 'text-ok'],
     $status === 'draft' => ['Draf revisi, belum diajukan', 'text-secondary'],
     default => [pena_status($status)[0], pena_status($status)[2]],
 };
@@ -67,7 +72,7 @@ $statusLine = match (true) {
     <h1 class="font-bold"><?= e($letter['title']); ?></h1>
     <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
       <?= pena_strip($letter['template_code'] ?? ''); ?><?= pena_strip('V' . $vno); ?>
-      <span class="text-secondary"><?= e($letter['letter_number'] ?? ($status === 'cancelled' ? 'Tidak bernomor' : 'Nomor dibuat saat diajukan')); ?></span>
+      <span class="text-secondary"><?= e($personal ? 'Surat pribadi, tanpa nomor' : ($letter['letter_number'] ?? ($status === 'cancelled' ? 'Tidak bernomor' : 'Nomor dibuat saat diajukan'))); ?></span>
       <span class="font-semibold <?= $statusLine[1]; ?>"><?= e($statusLine[0]); ?></span>
     </div>
   </div>
@@ -118,14 +123,16 @@ $statusLine = match (true) {
 
       <?php elseif ($status === 'draft'): ?>
         <?= pena_strip('Draf', 'carbon'); ?>
-        <?php if ($letter['letter_number'] === null): ?>
-          <p class="mt-3">Draf ini belum bernomor dan belum dikirim. Saat diajukan, nomor surat dibuat, isi versi <?= $vno; ?> dikunci, dan tahap 1 dibuka.</p>
+        <?php if ($selfOnly): ?>
+          <p class="mt-3">Surat ini tanpa pemeriksa. Saat diselesaikan, isinya dikunci dan surat langsung siap dikirim atau dicetak.</p>
+        <?php elseif ($firstSubmit): ?>
+          <p class="mt-3">Draf ini belum dikirim. Saat diajukan,<?= $personal ? '' : ' nomor surat dibuat,'; ?> isi versi <?= $vno; ?> dikunci, dan tahap 1 dibuka.</p>
         <?php else: ?>
-          <p class="mt-3">Versi <?= $vno; ?> dibuat dari revisi. Nomor <?= e($letter['letter_number']); ?> tetap. Saat diajukan, penyetuju versi sebelumnya diminta konfirmasi ulang dengan daftar perubahan.</p>
+          <p class="mt-3">Versi <?= $vno; ?> dibuat dari revisi.<?= $letter['letter_number'] ? ' Nomor ' . e($letter['letter_number']) . ' tetap.' : ''; ?> Saat diajukan, penyetuju versi sebelumnya diminta konfirmasi ulang dengan daftar perubahan.</p>
           <?php if (!empty($version['change_summary'])): ?><p class="mt-2">Ringkasan untuk pemeriksa: &ldquo;<?= e($version['change_summary']); ?>&rdquo;</p><?php endif; ?>
         <?php endif; ?>
         <div class="mt-4 flex flex-wrap gap-2">
-          <button type="button" class="btn btn-primary" data-open="dlg-ajukan"><?= $letter['letter_number'] === null ? 'Ajukan untuk review' : 'Ajukan versi ' . $vno; ?></button>
+          <button type="button" class="btn btn-primary" data-open="dlg-ajukan"><?= $selfOnly ? 'Selesaikan surat' : ($firstSubmit ? 'Ajukan untuk review' : 'Ajukan versi ' . $vno); ?></button>
           <a href="<?= $base; ?>/edit/<?= $id; ?>" class="btn btn-secondary">Ubah draf</a>
         </div>
 
@@ -140,8 +147,12 @@ $statusLine = match (true) {
         <button type="button" class="btn btn-primary mt-4" data-open="dlg-revisi">Mulai revisi</button>
 
       <?php elseif ($status === 'approved'): ?>
-        <?= pena_strip('Disetujui semua pihak', 'ok'); ?>
+        <?= pena_strip($selfOnly ? 'Selesai' : 'Disetujui semua pihak', 'ok'); ?>
+        <?php if ($selfOnly): ?>
+          <p class="mt-3">Versi <?= $vno; ?> diselesaikan pada <?= e(pena_date($letter['approved_at'])); ?> dan isinya terkunci. Kirim ke penerima, atau cetak untuk tanda tangan basah.</p>
+        <?php else: ?>
         <p class="mt-3">Versi <?= $vno; ?> disetujui<?= $lastApproval ? ' ' . e($lastApproval['name']) . ' pada ' . e(pena_date($lastApproval['decided_at'])) : ''; ?>. Unduh untuk dicetak dan ditandatangani basah bila diperlukan.</p>
+        <?php endif; ?>
         <p class="mt-2 text-on-plate/80">Ekspor Word dan PDF disambungkan di tahap fitur berikutnya.</p>
         <div class="mt-4 flex flex-wrap gap-2">
           <button type="button" class="btn btn-primary" disabled>Unduh PDF</button>
@@ -163,6 +174,9 @@ $statusLine = match (true) {
 
     <section class="panel p-4 lg:p-5 xl:order-1" aria-labelledby="jadwal">
       <h2 id="jadwal" class="flex items-center gap-3 font-bold">Jadwal persetujuan <?= pena_strip('V' . $vno); ?></h2>
+      <?php if ($selfOnly): ?>
+        <p class="mt-2 text-secondary">Tanpa pemeriksa. Surat ditandatangani sendiri oleh pembuatnya.</p>
+      <?php endif; ?>
       <ol class="mt-2">
         <?php foreach ($data['stages'] as $stage): foreach ($stage['members'] as $m):
           [$mk, $label, $cls, $time, $act] = $rowState($stage, $m);
@@ -235,11 +249,17 @@ $statusLine = match (true) {
   <dialog id="dlg-ajukan" class="sheet" aria-labelledby="dlg-ajukan-t">
     <form method="POST" action="<?= $base; ?>/ajukan/<?= $id; ?>" class="space-y-4">
       <?= $csrf; ?>
-      <h2 id="dlg-ajukan-t" class="font-bold"><?= $letter['letter_number'] === null ? 'Ajukan surat untuk review?' : 'Ajukan versi ' . $vno . '?'; ?></h2>
-      <p class="text-secondary"><?= $letter['letter_number'] === null ? 'Nomor surat dibuat sekarang dan tetap tercatat terpakai, termasuk bila surat nanti dibatalkan.' : 'Nomor ' . e($letter['letter_number']) . ' tetap dipakai.'; ?></p>
+      <?php if ($selfOnly): ?>
+        <h2 id="dlg-ajukan-t" class="font-bold">Selesaikan surat?</h2>
+        <p class="text-secondary">Isi surat dikunci dan tidak bisa diubah lagi. Bila ada yang salah setelah ini, buat surat baru.</p>
+        <div class="flex flex-wrap gap-3"><button class="btn btn-primary">Selesaikan</button><button type="button" class="btn btn-secondary" data-close>Kembali</button></div>
+      <?php else: ?>
+      <h2 id="dlg-ajukan-t" class="font-bold"><?= $firstSubmit ? 'Ajukan surat untuk review?' : 'Ajukan versi ' . $vno . '?'; ?></h2>
+      <?php if (!$personal): ?><p class="text-secondary"><?= $letter['letter_number'] === null ? 'Nomor surat dibuat sekarang dan tetap tercatat terpakai, termasuk bila surat nanti dibatalkan.' : 'Nomor ' . e($letter['letter_number']) . ' tetap dipakai.'; ?></p><?php endif; ?>
       <p class="text-secondary">Isi versi <?= $vno; ?> dikunci. Perubahan setelah ini menjadi versi baru.</p>
       <p class="text-secondary">Tautan untuk pemeriksa yang sudah giliran tampil sekali di halaman ini; kirim sendiri lewat WhatsApp.</p>
       <div class="flex flex-wrap gap-3"><button class="btn btn-primary">Ajukan sekarang</button><button type="button" class="btn btn-secondary" data-close>Kembali</button></div>
+      <?php endif; ?>
     </form>
   </dialog>
   <?php endif; ?>

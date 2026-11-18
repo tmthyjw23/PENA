@@ -10,6 +10,10 @@ use Pena\Support\Db;
 /**
  * Letter lifecycle on the secretary's side: draft → submit → (revise → resubmit) → approved / cancelled.
  *
+ * Workspace kinds: an organization letter gets a serial number, needs a letterhead and at least one reviewer.
+ * A personal letter has no number and no letterhead; without reviewers it is final when submitted
+ * (signed by its author), with reviewers it goes through the same staged approval.
+ *
  * Invariants enforced here (the database cannot express them):
  *  - a submitted version is never edited; any change after submission is a new version;
  *  - the facts, blocks, letterhead, template and signers reviewers see are frozen in the version snapshot;
@@ -46,7 +50,7 @@ final class LetterService
             if ($letterheadId !== null && !$db->one('SELECT id FROM letterheads WHERE id = ? AND organization_id = ? AND is_active = 1', [$letterheadId, $organizationId])) {
                 throw new PenaException('Kop surat tidak ditemukan di organisasi ini.');
             }
-            $this->assertStages($organizationId, $stages);
+            $this->assertStages($organizationId, $stages, $this->kind($organizationId) === 'personal');
 
             $letterId = $db->insert('INSERT INTO letters (organization_id, template_id, letterhead_id, created_by, title, source_prompt)
                                      VALUES (?, ?, ?, ?, ?, ?)',
@@ -85,7 +89,7 @@ final class LetterService
 
     /**
      * Freezes the working version, assigns the number on first submission, and opens review.
-     * @return array{letter_number:string, version_id:int, links:array<int,string>} links: requestId => raw token
+     * @return array{letter_number:?string, version_id:int, links:array<int,string>, approved:bool} links: requestId => raw token
      */
     public function submit(int $letterId, int $userId): array
     {
@@ -105,10 +109,11 @@ final class LetterService
             $fields = json_decode($version['fields'], true);
             $blocks = json_decode($version['blocks'], true);
             $this->assertValid($template, $fields, $blocks, true);
-            if ($letter['letterhead_id'] === null) throw new PenaException('Pilih kop surat sebelum mengajukan.');
+            $org = $db->one('SELECT kind, name, short_name FROM organizations WHERE id = ?', [$orgId]);
+            $personal = $org['kind'] === 'personal';
+            if (!$personal && $letter['letterhead_id'] === null) throw new PenaException('Pilih kop surat sebelum mengajukan.');
 
-            $org = $db->one('SELECT name, short_name FROM organizations WHERE id = ?', [$orgId]);
-            if ($letter['letter_number'] === null) {
+            if (!$personal && $letter['letter_number'] === null) {
                 $n = $this->numbers->next($orgId, $org['short_name'], $template['code'], $template['number_series'], $template['number_format'], $now);
                 $db->run('UPDATE letters SET number_series = ?, number_year = ?, number_seq = ?, letter_number = ?, number_assigned_at = ? WHERE id = ?',
                          [$n['series'], $n['year'], $n['seq'], $n['number'], $now->format('Y-m-d H:i:s'), $letterId]);
@@ -117,11 +122,15 @@ final class LetterService
             }
 
             $members = $this->activeMembers($letterId);
-            if ($members === []) throw new PenaException('Alur persetujuan belum memiliki pemeriksa.');
+            if ($members === [] && !$personal) throw new PenaException('Alur persetujuan belum memiliki pemeriksa.');
             $snapshot = [
                 'organization' => $org,
                 'letter_number' => $letter['letter_number'],
-                'letterhead' => $db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]),
+                'letterhead' => $letter['letterhead_id'] === null ? null
+                    : $db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]),
+                // A personal letter is signed by its author, after any "Mengetahui" reviewers.
+                'author' => $personal ? ['name' => (string)($fields['nama_mahasiswa'] ?? $db->value('SELECT nama_lengkap FROM users WHERE id = ?', [$userId])),
+                                         'position' => 'Hormat saya'] : null,
                 'template' => ['id' => (int)$template['id'], 'code' => $template['code'], 'revision' => (int)$template['revision'],
                                'name' => $template['name'], 'definition' => json_decode($template['definition'], true)],
                 'approval' => array_map(static fn($m) => [
@@ -146,10 +155,16 @@ final class LetterService
                 $reconfirm = isset($approvedBefore[(int)$m['member_id']]);
                 $this->insertRequest($letterId, (int)$version['id'], $m, $reconfirm ? 'reconfirm' : 'review', $reconfirm ? 'pending' : 'waiting');
             }
+            $this->event($letterId, (int)$version['id'], $userId, 'submitted', ['version_no' => (int)$version['version_no'], 'hash' => $hash]);
+            if ($members === []) {
+                // Personal letter without reviewers: final as soon as its author submits it.
+                $db->run("UPDATE letters SET status = 'approved', approved_at = ? WHERE id = ?", [$now->format('Y-m-d H:i:s'), $letterId]);
+                $this->event($letterId, (int)$version['id'], $userId, 'approved', ['self_signed' => true]);
+                return ['letter_number' => null, 'version_id' => (int)$version['id'], 'links' => [], 'approved' => true];
+            }
             $db->run("UPDATE letters SET status = 'in_review' WHERE id = ?", [$letterId]);
             $links = $this->flow->activate((int)$version['id'], $now);
-            $this->event($letterId, (int)$version['id'], $userId, 'submitted', ['version_no' => (int)$version['version_no'], 'hash' => $hash]);
-            return ['letter_number' => $letter['letter_number'], 'version_id' => (int)$version['id'], 'links' => $links];
+            return ['letter_number' => $letter['letter_number'], 'version_id' => (int)$version['id'], 'links' => $links, 'approved' => false];
         });
     }
 
@@ -264,9 +279,9 @@ final class LetterService
                                 WHERE s.letter_id = ? ORDER BY s.stage_order, m.id', [$letterId]);
     }
 
-    private function assertStages(int $orgId, array $stages): void
+    private function assertStages(int $orgId, array $stages, bool $optional = false): void
     {
-        if ($stages === []) throw new PenaException('Tentukan minimal satu tahap persetujuan.');
+        if ($stages === [] && !$optional) throw new PenaException('Tentukan minimal satu tahap persetujuan.');
         $seen = [];
         foreach ($stages as $stage) {
             if (trim((string)($stage['name'] ?? '')) === '' || empty($stage['signer_ids']) || !is_array($stage['signer_ids'])) {
@@ -296,8 +311,9 @@ final class LetterService
     private function template(int $templateId, int $orgId): array
     {
         $template = $this->db->one('SELECT * FROM letter_templates WHERE id = ? AND is_active = 1
-                                    AND (organization_id IS NULL OR organization_id = ?)', [$templateId, $orgId]);
-        if (!$template) throw new PenaException('Kerangka surat tidak tersedia untuk organisasi ini.');
+                                    AND (organization_id IS NULL OR organization_id = ?)
+                                    AND audience = (SELECT kind FROM organizations WHERE id = ?)', [$templateId, $orgId, $orgId]);
+        if (!$template) throw new PenaException('Kerangka surat tidak tersedia untuk ruang kerja ini.');
         return $template;
     }
 
@@ -313,12 +329,17 @@ final class LetterService
         return $this->db->one('SELECT * FROM letter_versions WHERE id = ?', [$letter['current_version_id']]);
     }
 
+    /** Every member of a workspace is a secretary; there is no admin role. */
     private function requireManagerOf(int $orgId, int $userId): void
     {
-        $role = $this->db->value('SELECT role FROM organization_members WHERE organization_id = ? AND user_id = ?', [$orgId, $userId]);
-        if (!in_array($role, ['admin', 'secretary'], true)) {
-            throw new PenaException('Anda tidak berwenang mengelola surat organisasi ini.');
+        if ($this->db->value('SELECT role FROM organization_members WHERE organization_id = ? AND user_id = ?', [$orgId, $userId]) === null) {
+            throw new PenaException('Anda tidak berwenang mengelola surat di ruang kerja ini.');
         }
+    }
+
+    private function kind(int $orgId): string
+    {
+        return (string)$this->db->value('SELECT kind FROM organizations WHERE id = ?', [$orgId]);
     }
 
     private function event(int $letterId, ?int $versionId, ?int $userId, string $event, array $detail = []): void

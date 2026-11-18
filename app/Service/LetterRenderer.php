@@ -17,10 +17,11 @@ final class LetterRenderer
 
     /**
      * @param array  $signers [['name' => ..., 'position' => ...], ...] in approval order
+     * @param bool   $numbered false for personal letters, which carry no letter number
      * @return array{letterhead:array, metadata:array<string,string>, recipient:string[], date:string, blocks:array}
      */
     public function render(array $definition, array $fields, array $blocks, array $letterhead,
-                           ?string $number, string $subject, array $signers, ?string $dateIso): array
+                           ?string $number, string $subject, array $signers, ?string $dateIso, bool $numbered = true): array
     {
         $specs = [];
         foreach ($definition['blocks'] ?? [] as $spec) $specs[$spec['id']] = $spec;
@@ -65,7 +66,8 @@ final class LetterRenderer
         ]));
         return [
             'letterhead' => $letterhead,
-            'metadata' => ['Nomor' => $number ?? '(diberikan saat diajukan)', 'Perihal' => $subject],
+            'kop' => $numbered, // personal letters have neither a letterhead nor a number
+            'metadata' => $numbered ? ['Nomor' => $number ?? '(diberikan saat diajukan)', 'Perihal' => $subject] : ['Perihal' => $subject],
             'recipient' => $recipient,
             'date' => $dateIso ? self::longDate($dateIso) : '(tanggal saat diajukan)',
             'blocks' => $out,

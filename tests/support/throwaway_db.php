@@ -25,6 +25,7 @@ function pena_throwaway_db(string $prefix): array
         $db = new mysqli(HOST_DB, USER_DB, PASS_DB, $name, PORT_DB);
         $db->set_charset('utf8mb4');
         Database::applyStrictMode($db);
+        \Pena\Support\Migrator::forProject($db)->run();
         pena_run_sql($db, (string)file_get_contents(dirname(__DIR__, 2) . '/database/pena_schema.sql'));
         return [$db, $drop];
     } catch (Throwable $error) {

@@ -32,6 +32,7 @@
     "test:schema": "@php tests/pena_schema.php",
     "test:flow": "@php tests/pena_workflow.php",
     "test:ai": "@php tests/pena_ai.php",
+    "test:workspace": "@php tests/pena_workspace.php",
     "setup:local": "@php scripts/setup-local.php",
     "db:install": "@php scripts/install-db.php",
     "serve": "@php -S 127.0.0.1:8787 scripts/router.php"

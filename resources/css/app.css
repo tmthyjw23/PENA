@@ -90,10 +90,10 @@
 
   .panel { @apply rounded-panel bg-surface; }
 
-  /* Tombol: 44px, tiga gaya. */
+  /* Tombol: 44px, tiga gaya. Datar, tegas, seperti tombol mesin stasiun/tiket. */
   .btn {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-control border px-4 font-semibold whitespace-nowrap
-      transition-colors duration-150 ease-out cursor-pointer disabled:cursor-not-allowed;
+      transition-colors duration-150 ease-out cursor-pointer disabled:cursor-not-allowed select-none;
   }
   .btn-primary { @apply border-action bg-action text-white hover:border-action-hover hover:bg-action-hover disabled:border-line disabled:bg-raised disabled:text-muted; }
   .btn-primary:focus-visible { outline-color: var(--color-ink); }
@@ -102,19 +102,19 @@
   .btn-danger { @apply border-rev bg-rev text-white hover:brightness-90; }
   .btn-block { @apply w-full; }
 
-  .field-label { @apply mb-2 block font-semibold; }
+  .field-label { @apply mb-2 block font-semibold text-ink; }
   .field {
     @apply block w-full min-h-11 rounded-control border border-line bg-surface px-3 py-2.5 text-ink placeholder:text-muted
       transition-colors duration-150 hover:border-secondary focus:border-action focus:outline-none;
   }
-  .field:focus-visible { outline: 2px solid var(--color-action); outline-offset: 0; }
+  .field:focus-visible { outline: 3px solid var(--color-action); outline-offset: 1px; }
   .field[aria-invalid="true"] { @apply border-rev; }
   .field-help { @apply mt-2 text-secondary; }
-  .field-error { @apply mt-2 text-rev; }
+  .field-error { @apply mt-2 text-rev font-semibold; }
 
-  /* Pelat "Berikutnya": satu per layar. */
+  /* Pelat "Berikutnya": satu per layar. Datar, karbon pekat, fokus teks krem tiket. */
   .plate { @apply rounded-panel bg-plate p-5 text-on-plate; }
-  .plate .btn-secondary { @apply border-surface; }
+  .plate .btn-secondary { @apply border-surface bg-transparent text-on-plate hover:bg-white/10; }
   /* Biru tinta dan karbon tidak terlihat di atas pelat karbon: cincin fokus memakai warna teks pelat. */
   .plate :focus-visible, .plate .btn-primary:focus-visible { outline-color: var(--color-on-plate); }
 
@@ -125,17 +125,18 @@
   .mark { @apply inline-block size-4 shrink-0; }
 
   /* Penanda isian di teks dan tombol sisip. */
-  .ph { @apply rounded-strip px-0.5 text-action; background: var(--color-action-soft); }
+  .ph { @apply rounded-strip px-0.5 text-action font-semibold; background: var(--color-action-soft); }
   .ph-chip {
-    @apply inline-flex min-h-9 items-center rounded-strip border border-dashed border-ink/50 bg-hl px-2 font-semibold
-      hover:border-ink cursor-pointer;
+    @apply inline-flex min-h-9 items-center gap-1.5 rounded-strip border border-dashed border-ink/50 bg-hl px-2 font-semibold
+      transition-colors duration-150 hover:border-ink cursor-pointer select-none;
   }
 
-  /* Kertas surat: metrik Times New Roman agar sama dengan Word/PDF. */
+  /* Kertas surat: metrik Times New Roman agar sama dengan Word/PDF. Satu-satunya objek terangkat. */
   .paper { @apply rounded-paper bg-surface font-paper text-ink; box-shadow: var(--shadow-paper); }
   .paper p[data-block] { text-align: justify; }
-  .paper table.grid { @apply w-full border-collapse; }
+  .paper table.grid { @apply w-full border-collapse my-3; }
   .paper table.grid th, .paper table.grid td { @apply border border-ink px-2 text-left align-top; }
+  .paper table.grid th { @apply bg-page/60 font-bold; }
   .paper .is-marked { @apply bg-rev-soft; outline: 1px dashed var(--color-rev); outline-offset: 4px; }
   .paper .fact { text-decoration: underline; text-decoration-color: var(--color-muted); text-underline-offset: 3px; }
 

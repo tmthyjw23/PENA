@@ -24,8 +24,9 @@ $blockValue = static function (string $id) use ($old): string {
 };
 $err = static fn(string $key, string $id) => isset($errors[$key]) ? '<p class="field-error" id="' . e($id) . '-err">' . e($errors[$key]) . '</p>' : '';
 $aria = static fn(string $key, string $id, string $help = '') => ' aria-describedby="' . trim($help . (isset($errors[$key]) ? ' ' . $id . '-err' : '')) . '"' . (isset($errors[$key]) ? ' aria-invalid="true"' : '');
+$personal = ($data['org']['kind'] ?? '') === 'personal';
 $help = [
-    'penerima_jabatan' => 'Contoh: Kepala Bagian Umum', 'penerima_instansi' => 'Ditulis di bawah jabatan',
+    'penerima_jabatan' => $personal ? 'Contoh: Dosen Pengampu Basis Data' : 'Contoh: Kepala Bagian Umum', 'penerima_instansi' => 'Ditulis di bawah jabatan',
     'tanggal_mulai' => 'Ditulis lengkap di surat', 'tanggal_selesai' => 'Kosongkan bila satu hari',
     'nominal' => 'Angka saja, contoh 3500000',
 ];
@@ -38,7 +39,7 @@ $letterheads = $data['letterheads'] ?? [];
     <p class="text-secondary"><?= e($template['name']); ?>. Jenis surat dan alur persetujuan tidak berubah di sini.</p>
   <?php else: ?>
     <h1 class="font-bold">Buat surat, isi manual</h1>
-    <p class="text-secondary">Draf bisa diubah kapan saja sampai Anda mengajukannya. Nomor surat dibuat saat diajukan.
+    <p class="text-secondary">Draf bisa diubah kapan saja sampai Anda mengajukannya.<?= $personal ? ' Nama, NIM, dan program studi terisi dari profil Anda.' : ' Nomor surat dibuat saat diajukan.'; ?>
       <a href="<?= $base; ?>/buat/" class="font-semibold text-action underline">Ceritakan saja ke PENA</a></p>
   <?php endif; ?>
 </header>
@@ -55,7 +56,7 @@ $letterheads = $data['letterheads'] ?? [];
 <?php if (!$template): ?>
   <section class="panel max-w-[640px] p-6">
     <h2 class="font-bold">Belum ada kerangka surat</h2>
-    <p class="mt-2 text-secondary">Organisasi ini belum punya kerangka. Admin perlu menambahkannya terlebih dahulu.</p>
+    <p class="mt-2 text-secondary">Belum ada kerangka untuk ruang kerja ini.</p>
   </section>
 <?php else: $def = $template['definition']; ?>
 <form method="POST" action="<?= $base; ?>/<?= $isEdit ? 'perbarui/' . (int)$data['letter']['id'] : 'simpan/'; ?>" novalidate>
@@ -82,6 +83,29 @@ $letterheads = $data['letterheads'] ?? [];
             </a>
           <?php endforeach; ?>
         </div>
+        <?php if (!$personal && !$letterheads): $kop = $old['kop'] ?? []; ?>
+          <fieldset class="mt-5 border-t border-line pt-4">
+            <legend class="font-bold">Kop surat organisasi</legend>
+            <p class="mt-1 text-secondary">Diisi sekali bersama surat pertama, lalu dipakai otomatis untuk surat berikutnya.</p>
+            <div class="mt-3 grid gap-x-4 gap-y-5 sm:grid-cols-2">
+              <div class="sm:col-span-2">
+                <label class="field-label" for="kop_name">Nama di kop</label>
+                <input id="kop_name" name="kop[name]" class="field" maxlength="150" value="<?= e($kop['name'] ?? mb_strtoupper($data['org']['name'])); ?>"<?= $aria('kop.name', 'kop_name'); ?>>
+                <?= $err('kop.name', 'kop_name'); ?>
+              </div>
+              <div>
+                <label class="field-label" for="kop_address">Alamat</label>
+                <input id="kop_address" name="kop[address]" class="field" maxlength="255" value="<?= e($kop['address'] ?? ''); ?>"<?= $aria('kop.address', 'kop_address'); ?>>
+                <?= $err('kop.address', 'kop_address'); ?>
+              </div>
+              <div>
+                <label class="field-label" for="kop_contact">Kontak <span class="font-normal text-secondary">(opsional)</span></label>
+                <input id="kop_contact" name="kop[contact]" class="field" maxlength="255" value="<?= e($kop['contact'] ?? ''); ?>" placeholder="Email atau nomor telepon"<?= $aria('kop.contact', 'kop_contact'); ?>>
+                <?= $err('kop.contact', 'kop_contact'); ?>
+              </div>
+            </div>
+          </fieldset>
+        <?php endif; ?>
         <?php if (count($letterheads) > 1): ?>
           <label for="letterhead_id" class="field-label mt-4">Kop surat</label>
           <select id="letterhead_id" name="letterhead_id" class="field">
@@ -159,21 +183,32 @@ $letterheads = $data['letterheads'] ?? [];
     <?php if (!$isEdit): ?>
     <div class="space-y-6 xl:sticky xl:top-6">
       <section class="panel p-4 lg:p-5" aria-labelledby="alur">
-        <h2 id="alur" class="font-bold">Alur persetujuan</h2>
-        <p class="mt-2 text-secondary">Tahap berjalan berurutan. Semua pemeriksa dalam satu tahap harus setuju sebelum tahap berikutnya dibuka.</p>
+        <h2 id="alur" class="font-bold"><?= $personal ? 'Pemeriksa (opsional)' : 'Alur persetujuan'; ?></h2>
+        <p class="mt-2 text-secondary"><?= $personal
+            ? 'Tanpa pemeriksa, surat langsung jadi saat Anda menyelesaikannya. Tambahkan tahap bila surat perlu diketahui dosen wali atau kaprodi lebih dulu.'
+            : 'Tahap berjalan berurutan. Semua pemeriksa dalam satu tahap harus setuju sebelum tahap berikutnya dibuka.'; ?></p>
         <?php
-        $defaults = [['Ketua Panitia', 'Ketua Panitia'], ['Advisor', 'Advisor'], ['Dekan', 'Dekan'], ['', null]];
+        $hasSigners = $data['signers'] !== [];
+        // Stage names to suggest, how many to show at first, and the directory entry to pre-select.
+        [$defaults, $visible] = match (true) {
+            $personal => [[['', 'Dosen Wali'], ['', null], ['', null]], 0],
+            $hasSigners => [[['Ketua Panitia', 'Ketua Panitia'], ['Advisor', 'Advisor'], ['Dekan', 'Dekan'], ['', null]], 3],
+            default => [[['', null], ['', null], ['', null], ['', null]], 1],
+        };
         foreach ($defaults as $i => [$defaultName, $hint]):
             $row = $old['stages'][$i] ?? null;
             $name = $row['name'] ?? $defaultName;
             $selected = array_map('intval', (array)($row['signer_ids'] ?? []));
-            if ($row === null && $hint !== null) foreach ($data['signers'] as $s) if (stripos($s['position'], $hint) !== false) { $selected = [(int)$s['id']]; break; }
-            $extra = $i === 3 && $row === null; ?>
+            // Hidden stages still submit, so only visible ones get a suggested reviewer.
+            if ($row === null && $hint !== null && $i < $visible) foreach ($data['signers'] as $s) if (stripos($s['position'], $hint) !== false) { $selected = [(int)$s['id']]; break; }
+            $newName = (string)($row['new_name'] ?? '');
+            $newPosition = (string)($row['new_position'] ?? '');
+            $extra = $i >= $visible && $row === null; ?>
           <fieldset class="mt-4 border-t border-line pt-4"<?= $extra ? ' data-extra-stage hidden' : ''; ?>>
             <legend class="sr-only">Tahap <?= $i + 1; ?></legend>
             <div class="flex items-center gap-3">
               <?= pena_strip('T' . ($i + 1), 'carbon'); ?>
-              <input name="stages[<?= $i; ?>][name]" class="field min-h-9 py-1" value="<?= e($name); ?>" placeholder="Nama tahap" aria-label="Nama tahap <?= $i + 1; ?>">
+              <input name="stages[<?= $i; ?>][name]" class="field min-h-9 py-1" value="<?= e($name); ?>" placeholder="<?= $personal ? 'Nama tahap, contoh Mengetahui' : 'Nama tahap, contoh Ketua Panitia'; ?>" aria-label="Nama tahap <?= $i + 1; ?>">
             </div>
             <div class="mt-2">
               <?php foreach ($data['signers'] as $s): ?>
@@ -183,9 +218,17 @@ $letterheads = $data['letterheads'] ?? [];
                 </label>
               <?php endforeach; ?>
             </div>
+            <details class="mt-2"<?= (!$hasSigners || $newName !== '' || $newPosition !== '') ? ' open' : ''; ?>>
+              <summary class="flex min-h-9 cursor-pointer items-center font-semibold text-action"><?= $hasSigners ? '+ Pemeriksa baru' : 'Pemeriksa'; ?></summary>
+              <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                <input name="stages[<?= $i; ?>][new_name]" class="field" maxlength="150" value="<?= e($newName); ?>" placeholder="Nama lengkap" aria-label="Nama pemeriksa baru, tahap <?= $i + 1; ?>">
+                <input name="stages[<?= $i; ?>][new_position]" class="field" maxlength="150" value="<?= e($newPosition); ?>" placeholder="Jabatan, contoh Dosen Wali" aria-label="Jabatan pemeriksa baru, tahap <?= $i + 1; ?>">
+              </div>
+              <p class="mt-1 text-[13.5px] text-secondary">Disimpan ke daftar pemeriksa ruang ini, jadi surat berikutnya tinggal dipilih.</p>
+            </details>
           </fieldset>
         <?php endforeach; ?>
-        <button type="button" class="btn btn-secondary mt-4" data-add-stage>Tambah tahap</button>
+        <button type="button" class="btn btn-secondary mt-4" data-add-stage><?= $personal ? 'Minta diketahui pemeriksa' : 'Tambah tahap'; ?></button>
       </section>
 
       <div class="plate">

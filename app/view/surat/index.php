@@ -51,7 +51,7 @@ $link = static fn(string $tab) => $base . '?' . http_build_query(array_filter(['
           <span class="row-span-2 self-start lg:row-span-1 lg:self-center"><?= pena_strip($l['template_code'] ?? ''); ?></span>
           <div class="min-w-0">
             <a href="<?= $base; ?>detail/<?= (int)$l['id']; ?>" class="font-semibold no-underline after:absolute after:inset-0 hover:underline"><?= e($l['title']); ?></a>
-            <p class="text-secondary"><?= $l['letter_number'] ? e($l['letter_number']) : 'Belum bernomor'; ?></p>
+            <p class="text-secondary"><?= $l['letter_number'] ? e($l['letter_number']) : ($l['kind'] === 'personal' ? 'Surat pribadi, tanpa nomor' : 'Belum bernomor'); ?></p>
           </div>
           <div class="col-start-2 flex items-center justify-between gap-3 lg:contents">
             <span><?= pena_chip($l['status']); ?></span>

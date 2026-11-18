@@ -10,14 +10,6 @@ final class LetterQuery
 {
     public function __construct(private readonly Db $db, private readonly LetterRenderer $renderer = new LetterRenderer()) {}
 
-    /** The organization the user manages letters for (first admin/secretary membership). */
-    public function managedOrganization(int $userId): ?array
-    {
-        return $this->db->one("SELECT o.id, o.name, o.short_name, m.role FROM organization_members m
-                               JOIN organizations o ON o.id = m.organization_id
-                               WHERE m.user_id = ? AND m.role IN ('admin', 'secretary') ORDER BY o.id LIMIT 1", [$userId]);
-    }
-
     public function letters(int $orgId): array
     {
         return $this->db->all('SELECT l.id, l.title, l.status, l.letter_number, l.updated_at, t.name AS template_name,
@@ -47,13 +39,15 @@ final class LetterQuery
         return $out;
     }
 
+    /** Built-in and workspace templates meant for this kind of workspace (personal or organization). */
     public function templates(int $orgId): array
     {
         return array_map(static function (array $t): array {
             $t['definition'] = json_decode($t['definition'], true);
             return $t;
         }, $this->db->all('SELECT id, code, name, description, definition FROM letter_templates
-                           WHERE is_active = 1 AND (organization_id IS NULL OR organization_id = ?) ORDER BY name', [$orgId]));
+                           WHERE is_active = 1 AND (organization_id IS NULL OR organization_id = ?)
+                             AND audience = (SELECT kind FROM organizations WHERE id = ?) ORDER BY name', [$orgId, $orgId]));
     }
 
     public function signers(int $orgId): array
@@ -69,8 +63,11 @@ final class LetterQuery
     /** Full detail of a letter in $orgId, or null when it belongs elsewhere. */
     public function detail(int $letterId, int $orgId): ?array
     {
-        $letter = $this->db->one('SELECT l.*, t.name AS template_name, t.code AS template_code, t.definition AS template_definition
+        $letter = $this->db->one('SELECT l.*, t.name AS template_name, t.code AS template_code, t.definition AS template_definition,
+                                         o.kind AS workspace_kind, u.nama_lengkap AS author_name
                                     FROM letters l JOIN letter_templates t ON t.id = l.template_id
+                                    JOIN organizations o ON o.id = l.organization_id
+                                    JOIN users u ON u.id = l.created_by
                                    WHERE l.id = ? AND l.organization_id = ?', [$letterId, $orgId]);
         if (!$letter) return null;
         $version = $this->db->one('SELECT * FROM letter_versions WHERE id = ?', [$letter['current_version_id']]);
@@ -115,16 +112,21 @@ final class LetterQuery
     {
         $snapshot = $version['snapshot'];
         if ($snapshot !== null) {
+            $personal = ($snapshot['organization']['kind'] ?? 'organization') === 'personal';
             return $this->renderer->render($snapshot['template']['definition'], $version['fields'], $version['blocks'],
                 $snapshot['letterhead'] ?? [], $snapshot['letter_number'], $letter['title'],
-                $snapshot['approval'] ?? [], $version['submitted_at']);
+                array_merge($snapshot['approval'] ?? [], !empty($snapshot['author']) ? [$snapshot['author']] : []),
+                $version['submitted_at'], !$personal);
         }
+        $personal = ($letter['workspace_kind'] ?? 'organization') === 'personal';
         $signers = $this->db->all('SELECT g.name, g.position FROM approval_stages s
                                      JOIN approval_stage_members m ON m.stage_id = s.id AND m.removed_at IS NULL
                                      JOIN signers g ON g.id = m.signer_id WHERE s.letter_id = ? ORDER BY s.stage_order, m.id', [$letter['id']]);
         $letterhead = $letter['letterhead_id']
             ? $this->db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]) : [];
+        // A personal letter is signed by its author below any "Mengetahui" reviewers.
+        if ($personal) $signers[] = ['name' => (string)($version['fields']['nama_mahasiswa'] ?? $letter['author_name'] ?? ''), 'position' => 'Hormat saya'];
         return $this->renderer->render(json_decode($letter['template_definition'], true), $version['fields'], $version['blocks'],
-            $letterhead ?? [], $letter['letter_number'], $letter['title'], $signers, null);
+            $letterhead ?? [], $letter['letter_number'], $letter['title'], $signers, null, !$personal);
     }
 }

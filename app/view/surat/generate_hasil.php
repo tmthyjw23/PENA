@@ -21,6 +21,8 @@ $display = static function (array $spec, $value): string {
     return (string)$value;
 };
 $letterheads = $data['letterheads'];
+$personal = ($data['org']['kind'] ?? '') === 'personal';
+$missing = array_values($s['missing'] ?? []);
 ?>
 <header class="mb-4">
   <h1 class="font-bold">Periksa hasil susunan</h1>
@@ -58,6 +60,28 @@ $letterheads = $data['letterheads'];
           <p class="text-secondary">Kerangka salah? Ubah permintaan Anda lalu susun lagi, atau isi manual.</p>
         </div>
       </div>
+      <?php if (!$personal && !$letterheads): $kop = $s['kop'] ?? []; ?>
+        <fieldset class="mt-5 border-t border-line pt-4">
+          <legend class="font-bold">Kop surat organisasi</legend>
+          <p class="mt-1 text-secondary">Surat pertama ruang ini. Kop diisi sekali, lalu dipakai otomatis.</p>
+          <div class="mt-3 grid gap-x-4 gap-y-5 sm:grid-cols-2">
+            <div class="sm:col-span-2">
+              <label class="field-label" for="kop_name">Nama di kop</label>
+              <input id="kop_name" name="kop[name]" class="field" maxlength="150" value="<?= e($kop['name'] ?? mb_strtoupper($data['org']['name'])); ?>"<?= isset($errors['kop.name']) ? ' aria-invalid="true"' : ''; ?>>
+              <?php if (isset($errors['kop.name'])): ?><p class="field-error"><?= e($errors['kop.name']); ?></p><?php endif; ?>
+            </div>
+            <div>
+              <label class="field-label" for="kop_address">Alamat</label>
+              <input id="kop_address" name="kop[address]" class="field" maxlength="255" value="<?= e($kop['address'] ?? ''); ?>"<?= isset($errors['kop.address']) ? ' aria-invalid="true"' : ''; ?>>
+              <?php if (isset($errors['kop.address'])): ?><p class="field-error"><?= e($errors['kop.address']); ?></p><?php endif; ?>
+            </div>
+            <div>
+              <label class="field-label" for="kop_contact">Kontak <span class="font-normal text-secondary">(opsional)</span></label>
+              <input id="kop_contact" name="kop[contact]" class="field" maxlength="255" value="<?= e($kop['contact'] ?? ''); ?>" placeholder="Email atau nomor telepon">
+            </div>
+          </div>
+        </fieldset>
+      <?php endif; ?>
       <?php if (count($letterheads) > 1): ?>
         <label for="letterhead_id" class="field-label mt-4">Kop surat</label>
         <select id="letterhead_id" name="letterhead_id" class="field"><?php foreach ($letterheads as $lh): ?><option value="<?= (int)$lh['id']; ?>"><?= e($lh['name']); ?></option><?php endforeach; ?></select>
@@ -127,12 +151,18 @@ $letterheads = $data['letterheads'];
     </section>
 
     <section class="panel p-4 lg:p-5" aria-labelledby="alur">
-      <h2 id="alur" class="font-bold">Alur persetujuan</h2>
-      <p class="mt-2 text-secondary">Dibaca dari kalimat Anda. Tahap berjalan berurutan; ubah nama tahap atau pemeriksanya bila perlu.</p>
+      <h2 id="alur" class="font-bold"><?= $personal ? 'Pemeriksa (opsional)' : 'Alur persetujuan'; ?></h2>
+      <p class="mt-2 text-secondary"><?= $personal
+          ? 'Kosongkan bila surat tidak perlu diketahui siapa pun; surat langsung jadi saat Anda menyelesaikannya.'
+          : 'Dibaca dari kalimat Anda. Tahap berjalan berurutan; ubah nama tahap atau pemeriksanya bila perlu.'; ?></p>
       <?php if (!empty($s['missing'])): ?>
-        <p class="mt-2 flex items-start gap-2 rounded-control bg-hl p-3"><?= pena_mark('waiting', 'mt-1'); ?>Tidak ada di direktori penanda tangan: <?= e(implode(', ', $s['missing'])); ?>. Pilih pemeriksa lain, atau minta admin menambahkannya.</p>
+        <p class="mt-2 flex items-start gap-2 rounded-control bg-hl p-3"><?= pena_mark('waiting', 'mt-1'); ?>Belum ada di daftar pemeriksa: <?= e(implode(', ', $s['missing'])); ?>. Tambahkan sebagai pemeriksa baru pada tahapnya di bawah.</p>
       <?php endif; ?>
-      <?php $route = $s['route']; for ($i = 0; $i < max(count($route), 1) + 1; $i++): $r = $route[$i] ?? null; ?>
+      <?php $route = $s['route']; $miss = 0;
+        for ($i = 0; $i < max(count($route), 1) + 1; $i++): $r = $route[$i] ?? null;
+          // A reviewer the AI read from the sentence but who is not in the list yet: suggest them as new.
+          $suggest = ($r !== null && empty($r['signer_id']) && empty($r['new_position'])) ? ($missing[$miss++] ?? '') : '';
+          $newName = (string)($r['new_name'] ?? ''); $newPosition = (string)($r['new_position'] ?? $suggest); ?>
         <div class="mt-3 grid items-center gap-3 border-t border-line pt-3 sm:grid-cols-[auto_minmax(0,1fr)_minmax(0,1.4fr)]">
           <?= pena_strip('T' . ($i + 1), 'carbon'); ?>
           <input name="stages[<?= $i; ?>][name]" class="field" value="<?= e($r['stage'] ?? ''); ?>" placeholder="<?= $r ? '' : 'Tahap tambahan (opsional)'; ?>" aria-label="Nama tahap <?= $i + 1; ?>">
@@ -141,6 +171,13 @@ $letterheads = $data['letterheads'];
             <?php foreach ($data['signers'] as $sg): ?><option value="<?= (int)$sg['id']; ?>" <?= (int)($r['signer_id'] ?? 0) === (int)$sg['id'] ? 'selected' : ''; ?>><?= e($sg['name']); ?>, <?= e($sg['position']); ?></option><?php endforeach; ?>
           </select>
           <?php if (!empty($r['quote'])): ?><p class="text-secondary sm:col-start-2 sm:col-span-2">Dari: &ldquo;<?= e($r['quote']); ?>&rdquo;</p><?php endif; ?>
+          <details class="sm:col-start-2 sm:col-span-2"<?= ($newName !== '' || $newPosition !== '' || !$data['signers']) ? ' open' : ''; ?>>
+            <summary class="flex min-h-9 cursor-pointer items-center font-semibold text-action">+ Pemeriksa baru</summary>
+            <div class="mt-2 grid gap-2 sm:grid-cols-2">
+              <input name="stages[<?= $i; ?>][new_name]" class="field" maxlength="150" value="<?= e($newName); ?>" placeholder="Nama lengkap" aria-label="Nama pemeriksa baru, tahap <?= $i + 1; ?>">
+              <input name="stages[<?= $i; ?>][new_position]" class="field" maxlength="150" value="<?= e($newPosition); ?>" placeholder="Jabatan, contoh Dosen Wali" aria-label="Jabatan pemeriksa baru, tahap <?= $i + 1; ?>">
+            </div>
+          </details>
         </div>
       <?php endfor; ?>
     </section>

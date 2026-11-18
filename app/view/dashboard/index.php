@@ -25,9 +25,12 @@ foreach ($letters as $l) {
 usort($todo, static fn($a, $b) => $a[0] <=> $b[0]);
 $count = static fn(string $s) => count(array_filter($letters, static fn($l) => $l['status'] === $s));
 ?>
-<header class="mb-6">
-  <h1 class="font-bold">Perlu tindakan Anda</h1>
-  <p class="text-secondary"><?= $data['org'] ? e($data['org']['name']) . ', ' : ''; ?><?= e($today); ?></p>
+<header class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <h1 class="font-bold">Perlu tindakan Anda</h1>
+    <p class="text-secondary"><?= $data['org'] ? e($data['org']['name']) . ', ' : ''; ?><?= e($today); ?></p>
+  </div>
+  <a href="<?= APP_PATH; ?>/surat/buat/" class="btn btn-primary self-start sm:self-auto">Buat surat</a>
 </header>
 
 <?php if (!$data['org']): ?>

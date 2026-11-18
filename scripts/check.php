@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__);
 $count = 0;
-foreach (['app', 'scripts', 'tests'] as $directory) {
+foreach (['app', 'database', 'scripts', 'tests'] as $directory) {
     $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root . '/' . $directory));
     foreach ($files as $file) {
         if ($file->getExtension() !== 'php') continue;

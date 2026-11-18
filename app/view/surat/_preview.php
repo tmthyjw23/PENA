@@ -6,11 +6,13 @@ $lh = $preview['letterhead'] ?? [];
 $hl = $highlight ?? null;
 ?>
 <article class="paper px-5 py-6 text-[14px] leading-[21px] sm:px-10 sm:py-10 sm:text-base sm:leading-6 lg:px-14" aria-label="Pratinjau surat">
+  <?php if ($preview['kop'] ?? true): ?>
   <header class="border-b-4 border-double border-ink pb-2 text-center">
-    <p class="font-bold uppercase"><?= e($lh['name'] ?? '(Kop surat belum dipilih)'); ?></p>
+    <p class="font-bold uppercase"><?= e($lh['name'] ?? '(Kop surat diisi saat menyimpan draf)'); ?></p>
     <?php if (!empty($lh['address'])): ?><p><?= e($lh['address']); ?></p><?php endif; ?>
     <?php if (!empty($lh['contact'])): ?><p><?= e($lh['contact']); ?></p><?php endif; ?>
   </header>
+  <?php endif; ?>
   <div class="mt-5 flex flex-wrap justify-between gap-x-6 gap-y-1">
     <table>
       <?php foreach ($preview['metadata'] as $label => $value): ?>

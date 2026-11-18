@@ -12,6 +12,7 @@ use Pena\Service\LetterQuery;
 use Pena\Service\LetterRenderer;
 use Pena\Service\LetterService;
 use Pena\Service\PenaException;
+use Pena\Service\WorkspaceService;
 use Pena\Support\Db;
 
 class surat extends Controller {
@@ -116,16 +117,10 @@ class surat extends Controller {
         if (empty($state['blocks'])) $this->_go('/surat/buat/');
         $template = $this->_template((int)$org['id'], (int)$state['template_id']);
         [$fields, $blocks] = $this->_readContent($template['definition']);
-        $stages = [];
-        foreach ((array)($_POST['stages'] ?? []) as $stage) {
-            $signerIds = array_values(array_filter(array_map('intval', (array)($stage['signer_ids'] ?? []))));
-            if (trim((string)($stage['name'] ?? '')) === '' && $signerIds === []) continue;
-            $stages[] = ['name' => (string)($stage['name'] ?? ''), 'signer_ids' => $signerIds];
-        }
         $title = (string)($_POST['title'] ?? '');
+        $stages = [];
         try {
-            $id = $this->_letters()->createDraft($userId, (int)$org['id'], (int)$template['id'], $title, $fields, $blocks, $stages,
-                ((int)($_POST['letterhead_id'] ?? 0)) ?: null, (string)$state['prompt']);
+            $id = $this->_createDraft($org, $userId, (int)$template['id'], $title, $fields, $blocks, $stages, (string)$state['prompt']);
             $versionId = (int)$this->_db()->value('SELECT current_version_id FROM letters WHERE id = ?', [$id]);
             $ai = AiClient::fromEnv();
             if ($ai) (new LetterAiService($this->_db(), $ai))->attach($state['generation_ids'] ?? [], (int)$org['id'], $id, $versionId, $userId);
@@ -140,7 +135,9 @@ class surat extends Controller {
                 elseif (isset($_POST['fields'][$key])) $state['fields'][$key]['value'] = null;
             }
             foreach ($blocks as $b) if (isset($b['text'], $state['blocks'][$b['id']])) $state['blocks'][$b['id']]['text'] = $b['text'];
-            $state['route'] = array_map(static fn($s) => ['stage' => $s['name'], 'signer_id' => (int)($s['signer_ids'][0] ?? 0), 'quote' => null], $stages);
+            $state['route'] = array_map(static fn($s) => ['stage' => $s['name'], 'signer_id' => (int)($s['signer_ids'][0] ?? 0), 'quote' => null,
+                                                          'new_name' => $s['new_name'] ?? '', 'new_position' => $s['new_position'] ?? ''], $stages);
+            $state['kop'] = $_POST['kop'] ?? null;
             $_SESSION['pena_ai'] = $state;
             $_SESSION['pena_ai_errors'] = $e->errors;
             $_SESSION['pena_ai_message'] = $e->getMessage();
@@ -204,6 +201,13 @@ class surat extends Controller {
             if ($step === 'data') {
                 $r = $service->extract($orgId, $userId, $state['prompt'], $template, $query->signers($orgId));
                 $state['generation_ids'][] = $r['generation_id'];
+                // Identity the student did not repeat comes from the personal profile, marked as such.
+                $values = WorkspaceService::prefill($org, $template['definition'], array_map(static fn($f) => $f['value'], $r['fields']));
+                foreach ($r['fields'] as $key => $f) {
+                    if ($f['value'] === null && ($values[$key] ?? null) !== null) {
+                        $r['fields'][$key] = ['value' => $values[$key], 'quote' => null, 'flag' => 'ok', 'note' => 'Dari profil Anda'];
+                    }
+                }
                 $state['fields'] = $r['fields']; $state['route'] = $r['route']; $state['missing'] = $r['missing'];
                 $_SESSION['pena_ai'] = $state;
                 $filled = count(array_filter($r['fields'], static fn($f) => $f['value'] !== null));
@@ -231,6 +235,10 @@ class surat extends Controller {
         $templateId = (int)($_GET['kerangka'] ?? ($_SESSION['pena_old']['template_id'] ?? ($templates[0]['id'] ?? 0)));
         $template = null;
         foreach ($templates as $t) if ((int)$t['id'] === $templateId) $template = $t;
+        $old = $this->_takeOld();
+        if ($template && !isset($old['raw_fields'])) {
+            $old['fields'] = WorkspaceService::prefill($org, $template['definition'], $old['fields'] ?? []);
+        }
         $this->display('surat/form', $this->_page('Buat Surat', [
             'active_menu' => 'buat',
             'mode' => 'create',
@@ -239,7 +247,7 @@ class surat extends Controller {
             'template' => $template,
             'signers' => $query->signers((int)$org['id']),
             'letterheads' => $query->letterheads((int)$org['id']),
-            'old' => $this->_takeOld(),
+            'old' => $old,
         ]));
     }
 
@@ -249,14 +257,8 @@ class surat extends Controller {
         $template = $this->_template((int)$org['id'], $templateId);
         [$fields, $blocks] = $this->_readContent($template['definition']);
         $stages = [];
-        foreach ((array)($_POST['stages'] ?? []) as $stage) {
-            $signerIds = array_values(array_filter(array_map('intval', (array)($stage['signer_ids'] ?? []))));
-            if (trim((string)($stage['name'] ?? '')) === '' && $signerIds === []) continue;
-            $stages[] = ['name' => (string)($stage['name'] ?? ''), 'signer_ids' => $signerIds];
-        }
         try {
-            $id = $this->_letters()->createDraft($userId, (int)$org['id'], $templateId, (string)($_POST['title'] ?? ''),
-                $fields, $blocks, $stages, ((int)($_POST['letterhead_id'] ?? 0)) ?: null);
+            $id = $this->_createDraft($org, $userId, $templateId, (string)($_POST['title'] ?? ''), $fields, $blocks, $stages, null);
             $this->_flash('success', 'Draf surat tersimpan.');
             $this->_go("/surat/detail/$id");
         } catch (PenaException $e) {
@@ -321,7 +323,11 @@ class surat extends Controller {
         try {
             $result = $this->_letters()->submit((int)$id, $userId);
             $this->_rememberLinks((int)$id, $result['links']);
-            $this->_flash('success', 'Surat diajukan dengan nomor ' . $result['letter_number'] . '. Kirim tautan di bawah kepada pemeriksa.');
+            $this->_flash('success', match (true) {
+                $result['approved'] => 'Surat selesai dan siap dikirim. Isinya terkunci; perubahan berikutnya dibuat sebagai surat baru.',
+                $result['letter_number'] === null => 'Surat diajukan. Kirim tautan di bawah kepada pemeriksa.',
+                default => 'Surat diajukan dengan nomor ' . $result['letter_number'] . '. Kirim tautan di bawah kepada pemeriksa.',
+            });
         } catch (PenaException $e) {
             $this->_keepOld($e);
             $this->_flash('danger', $e->getMessage());
@@ -398,9 +404,48 @@ class surat extends Controller {
                 $this->_go('/surat/');
             }
         }
-        $org = $this->_query()->managedOrganization((int)$_SESSION['user-id']);
-        if (!$org) $this->abort(403, 'Akun Anda belum terdaftar sebagai sekretaris atau admin organisasi mana pun.');
+        $org = $this->_workspaces()->current((int)$_SESSION['user-id'], isset($_SESSION['workspace-id']) ? (int)$_SESSION['workspace-id'] : null);
+        if (!$org) $this->abort(403, 'Akun ini belum punya ruang kerja.');
+        $_SESSION['workspace-id'] = $org['id'];
         return [$org, (int)$_SESSION['user-id']];
+    }
+
+    /**
+     * Saves a new draft together with what the secretary set up along the way, in one transaction:
+     * reviewers typed as "Pemeriksa baru", the organization's letterhead on its first letter,
+     * and (personal workspace) the identity fields remembered for the next letter.
+     * $stages is filled with what was read, so the form can be restored after an error.
+     */
+    private function _createDraft(array $org, int $userId, int $templateId, string $title, array $fields, array $blocks,
+                                  array &$stages, ?string $prompt): int {
+        $workspaces = $this->_workspaces();
+        $stages = [];
+        foreach ((array)($_POST['stages'] ?? []) as $stage) {
+            $signerIds = array_values(array_filter(array_map('intval', (array)($stage['signer_ids'] ?? []))));
+            $newName = trim((string)($stage['new_name'] ?? ''));
+            $newPosition = trim((string)($stage['new_position'] ?? ''));
+            if (trim((string)($stage['name'] ?? '')) === '' && $signerIds === [] && $newName === '' && $newPosition === '') continue;
+            $stages[] = ['name' => trim((string)($stage['name'] ?? '')) ?: $newPosition, 'signer_ids' => $signerIds,
+                         'new_name' => $newName, 'new_position' => $newPosition];
+        }
+        return $this->_db()->transaction(function () use ($org, $userId, $templateId, $title, $fields, $blocks, $stages, $prompt, $workspaces) {
+            $orgId = (int)$org['id'];
+            $ready = [];
+            foreach ($stages as $stage) {
+                if ($stage['new_name'] !== '' || $stage['new_position'] !== '') {
+                    $stage['signer_ids'][] = $workspaces->addSigner($orgId, $userId, $stage['new_name'], $stage['new_position']);
+                }
+                $ready[] = ['name' => $stage['name'], 'signer_ids' => array_values(array_unique($stage['signer_ids']))];
+            }
+            $letterheadId = ((int)($_POST['letterhead_id'] ?? 0)) ?: null;
+            if ($org['kind'] === 'organization' && $letterheadId === null && is_array($_POST['kop'] ?? null)) {
+                $kop = $_POST['kop'];
+                $letterheadId = $workspaces->addLetterhead($orgId, $userId, (string)($kop['name'] ?? ''), (string)($kop['address'] ?? ''), (string)($kop['contact'] ?? ''));
+            }
+            $id = $this->_letters()->createDraft($userId, $orgId, $templateId, $title, $fields, $blocks, $ready, $letterheadId, $prompt);
+            $workspaces->rememberProfile($orgId, $userId, $fields);
+            return $id;
+        });
     }
 
     private function _owned(int $letterId, int $orgId): void {
@@ -467,7 +512,7 @@ class surat extends Controller {
     private function _keepOld(PenaException $e): void {
         $_SESSION['pena_old'] = [
             'title' => $_POST['title'] ?? '', 'template_id' => $_POST['template_id'] ?? null,
-            'letterhead_id' => $_POST['letterhead_id'] ?? null, 'raw_fields' => $_POST['fields'] ?? [],
+            'letterhead_id' => $_POST['letterhead_id'] ?? null, 'kop' => $_POST['kop'] ?? null, 'raw_fields' => $_POST['fields'] ?? [],
             'raw_blocks' => $_POST['blocks'] ?? [], 'stages' => $_POST['stages'] ?? [],
             'message' => $e->getMessage(), 'errors' => $e->errors,
         ];
@@ -483,6 +528,7 @@ class surat extends Controller {
         $flash = $_SESSION['flash_message'] ?? null;
         unset($_SESSION['flash_message']);
         return $data + ['title' => $title . ' - PENA', 'active_menu' => 'surat', 'flash' => $flash,
+                        'workspaces' => $this->_workspaces()->forUser((int)$_SESSION['user-id']),
                         'csrf_token' => $this->get_csrf_token()];
     }
 
@@ -499,4 +545,5 @@ class surat extends Controller {
     private function _db(): Db { return $this->db ??= Db::fromTemplate(new Database()); }
     private function _query(): LetterQuery { return new LetterQuery($this->_db()); }
     private function _letters(): LetterService { return new LetterService($this->_db()); }
+    private function _workspaces(): WorkspaceService { return new WorkspaceService($this->_db()); }
 }

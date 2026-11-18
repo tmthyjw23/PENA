@@ -1,7 +1,11 @@
 <?php
 require dirname(__DIR__) . '/layout/app_top.php';
 $step = 1;
-$examples = [
+$personal = ($data['org']['kind'] ?? '') === 'personal';
+$examples = $personal ? [
+    'Izin tidak masuk kuliah Basis Data tanggal 20 November karena sakit demam, ke dosen pengampu Basis Data.',
+    'Dispensasi kuliah 25 sampai 27 November karena ikut lomba Gemastik di Universitas Indonesia, ke Kaprodi Teknik Informatika, diketahui dosen wali.',
+] : [
     'Permohonan dana Malam Keakraban Rp 3.500.000 ke Wakil Dekan III, acara 12 Desember di Gedung F, ditandatangani ketua panitia dan diketahui advisor.',
     'Izin memakai lapangan untuk bakti sosial 20 Desember, ke Kepala Bagian Umum, ditandatangani ketua panitia dan diketahui dekan.',
 ];
@@ -20,7 +24,7 @@ $steps = [['kerangka', 'Memilih kerangka'], ['data', 'Mengisi data surat'], ['pa
       <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>">
       <label for="prompt" class="field-label">Surat apa yang Anda butuhkan?</label>
       <textarea id="prompt" name="prompt" rows="5" maxlength="1000" required class="field" aria-describedby="prompt-h"><?= e($data['prompt']); ?></textarea>
-      <p id="prompt-h" class="field-help">Sebut siapa penerimanya, kegiatan, tanggal, tempat, barang atau dana yang diminta, dan siapa yang menandatangani. <span data-count><?= mb_strlen($data['prompt']); ?></span> dari 1.000 karakter.</p>
+      <p id="prompt-h" class="field-help"><?= $personal ? 'Sebut penerimanya, tanggal, alasan atau kegiatan, dan siapa yang perlu mengetahui (bila ada). Nama, NIM, dan program studi diambil dari profil Anda.' : 'Sebut siapa penerimanya, kegiatan, tanggal, tempat, barang atau dana yang diminta, dan siapa yang menandatangani.'; ?> <span data-count><?= mb_strlen($data['prompt']); ?></span> dari 1.000 karakter.</p>
 
       <?php if (!$data['ai_ready']): ?>
         <p class="mt-4 flex items-start gap-3 rounded-control bg-hl p-3" role="status"><?= pena_mark('waiting', 'mt-1'); ?>
@@ -71,11 +75,11 @@ $steps = [['kerangka', 'Memilih kerangka'], ['data', 'Mengisi data surat'], ['pa
   <aside class="panel p-4 lg:p-5" aria-labelledby="pena-kerja">
     <h2 id="pena-kerja" class="font-bold">Yang dilakukan PENA</h2>
     <dl class="mt-3 space-y-3">
-      <div class="grid grid-cols-[64px_1fr] gap-3"><dt><?= pena_strip('PMJ'); ?></dt><dd>Memilih kerangka yang cocok dari kerangka organisasi Anda</dd></div>
+      <div class="grid grid-cols-[64px_1fr] gap-3"><dt><?= pena_strip($personal ? 'IZN' : 'PMJ'); ?></dt><dd>Memilih kerangka yang cocok dari kerangka <?= $personal ? 'surat pribadi' : 'organisasi Anda'; ?></dd></div>
       <div class="grid grid-cols-[64px_1fr] gap-3"><dt><?= pena_strip('Data'); ?></dt><dd>Mengisi isian hanya dari kalimat Anda; yang disimpulkan ditandai perlu dicek, yang tidak disebut dibiarkan kosong</dd></div>
       <div class="grid grid-cols-[64px_1fr] gap-3"><dt><?= pena_strip('Tulis'); ?></dt><dd>Menulis paragraf dengan penanda, bukan dengan fakta yang diketik ulang</dd></div>
     </dl>
-    <p class="mt-4 text-secondary">Nomor surat tidak dibuat di sini. Nomor muncul saat Anda mengajukan surat.</p>
+    <p class="mt-4 text-secondary"><?= $personal ? 'Surat pribadi tidak bernomor. Tanpa pemeriksa, surat langsung jadi saat Anda menyelesaikannya.' : 'Nomor surat tidak dibuat di sini. Nomor muncul saat Anda mengajukan surat.'; ?></p>
     <h3 class="colhead mt-5 border-t border-line pt-4">Contoh permintaan</h3>
     <ul class="mt-2 space-y-2">
       <?php foreach ($examples as $ex): ?>

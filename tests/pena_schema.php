@@ -32,7 +32,7 @@ try {
     $pena = (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql');
     runSql($db, $pena);
     runSql($db, $pena); // re-running setup must not fail or duplicate seeds
-    check((int)$db->query('SELECT COUNT(*) c FROM letter_templates')->fetch_assoc()['c'] === 2, 'Seeds duplicated on re-run');
+    check((int)$db->query('SELECT COUNT(*) c FROM letter_templates')->fetch_assoc()['c'] === 4, 'Seeds duplicated on re-run');
     check((int)$db->query('SELECT COUNT(*) c FROM users')->fetch_assoc()['c'] === 3, 'User seeds duplicated or missing');
     check((int)$db->query("SELECT COUNT(*) c FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA = DATABASE() AND CONSTRAINT_NAME = 'fk_letter_current_version'")->fetch_assoc()['c'] === 1, 'current_version FK missing');
     $defs = $db->query('SELECT definition FROM letter_templates')->fetch_all(MYSQLI_ASSOC);

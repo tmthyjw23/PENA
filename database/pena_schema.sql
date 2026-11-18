@@ -8,8 +8,8 @@
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
--- Akun orang yang masuk ke PENA (sekretaris, admin). Pemeriksa tidak perlu akun.
--- Peran ditentukan per organisasi di organization_members, bukan di sini.
+-- Akun orang yang masuk ke PENA. Setiap akun adalah sekretaris (pembuat surat) di ruang kerjanya.
+-- Pemeriksa tidak perlu akun. Tidak ada peran admin.
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -24,29 +24,40 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Akun contoh untuk pengujian lokal (ganti atau nonaktifkan sebelum dipakai sungguhan):
---   admin / admin123, sekretaris / sekretaris123. Baris yang sudah ada tidak diubah.
+--   sekretaris / sekretaris123 (BEM + pribadi), admin / admin123 (anggota BEM; nama akun lama),
+--   anggota / sekretaris123 (hanya ruang pribadi). Baris yang sudah ada tidak diubah.
 INSERT INTO `users` (`id`, `username`, `password`, `nama_lengkap`, `email`, `status`) VALUES
 (1, 'admin', '$2y$12$0DHbmnAE/FyrZTuvXlqVtewf3en6seLuZ6WMxalycCejAUCWjCAam', 'Contoh Admin Organisasi', 'admin@pena.local', 'active'),
 (2, 'sekretaris', '$2y$12$DgNVpYjQyWvIrb2jrAE1FeLJ8zgmlg4YZjoZMIFcuP65MHwRUSsx.', 'Contoh Sekretaris', 'sekretaris@pena.local', 'active'),
-(3, 'anggota', '$2y$12$DgNVpYjQyWvIrb2jrAE1FeLJ8zgmlg4YZjoZMIFcuP65MHwRUSsx.', 'Contoh Anggota Tanpa Akses', 'anggota@pena.local', 'active')
+(3, 'anggota', '$2y$12$DgNVpYjQyWvIrb2jrAE1FeLJ8zgmlg4YZjoZMIFcuP65MHwRUSsx.', 'Contoh Mahasiswa', 'anggota@pena.local', 'active')
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
 -- ---------------------------------------------------------------------
--- Organisasi: pemilik kop, nomor, direktori penanda tangan, kerangka, arsip.
--- Akun (users) mewakili orang; keanggotaan menentukan perannya di organisasi.
+-- Ruang kerja (nama tabel tetap organizations): pemilik kop, nomor, direktori pemeriksa, arsip.
+--   kind=personal     : dibuat otomatis saat daftar; tanpa kop dan nomor; profil mengisi identitas surat.
+--   kind=organization : dibuat oleh siapa pun; kop, nomor berseri, alur bertahap.
+-- owner_user_id hanya penanda pemilik (pengaturan AI nanti), bukan peran; bisa dialihkan.
+-- Perubahan skema sejak 18 Nov 2026 lewat database/migrations (Pena\Support\Migrator).
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `organizations` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `kind` ENUM('personal', 'organization') NOT NULL DEFAULT 'organization',
   `name` VARCHAR(150) NOT NULL,
   `short_name` VARCHAR(30) NOT NULL UNIQUE,
+  `owner_user_id` INT NULL,
+  `profile` JSON NULL,
+  `verified_at` DATETIME NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_org_owner` (`owner_user_id`, `kind`),
+  CONSTRAINT `fk_org_owner` FOREIGN KEY (`owner_user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `organization_members` (
   `organization_id` INT NOT NULL,
   `user_id` INT NOT NULL,
-  `role` ENUM('admin', 'secretary', 'member') NOT NULL DEFAULT 'member',
+  -- Semua anggota setara (sekretaris); tidak ada peran admin.
+  `role` ENUM('secretary') NOT NULL DEFAULT 'secretary',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`organization_id`, `user_id`),
   INDEX (`user_id`),
@@ -85,13 +96,15 @@ CREATE TABLE IF NOT EXISTS `signers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------
--- Kerangka surat (blok terkontrol). organization_id NULL = kerangka bawaan.
+-- Kerangka surat (blok terkontrol). organization_id NULL = kerangka bawaan dari operator.
+-- audience: untuk ruang organisasi atau ruang pribadi.
 -- definition: {"fields":[...], "blocks":[...]} — isian terstruktur + blok yang diizinkan.
 -- Kerangka tidak diubah di tempat; perubahan = baris baru dengan revision+1.
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `letter_templates` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `organization_id` INT NULL,
+  `audience` ENUM('organization', 'personal') NOT NULL DEFAULT 'organization',
   `code` VARCHAR(40) NOT NULL,
   `revision` INT NOT NULL DEFAULT 1,
   `name` VARCHAR(150) NOT NULL,
@@ -348,14 +361,27 @@ CREATE TABLE IF NOT EXISTS `ai_generations` (
 -- =====================================================================
 -- DATA DEMO PENA (nama penanda tangan adalah contoh, bukan orang sungguhan)
 -- =====================================================================
-INSERT INTO `organizations` (`id`, `name`, `short_name`) VALUES
-(1, 'Badan Eksekutif Mahasiswa Fakultas Ilmu Komputer', 'BEM-FILKOM')
+INSERT INTO `organizations` (`id`, `kind`, `name`, `short_name`, `owner_user_id`) VALUES
+(1, 'organization', 'Badan Eksekutif Mahasiswa Fakultas Ilmu Komputer', 'BEM-FILKOM', 2)
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
 INSERT INTO `organization_members` (`organization_id`, `user_id`, `role`) VALUES
-(1, 1, 'admin'),
+(1, 1, 'secretary'),
 (1, 2, 'secretary')
 ON DUPLICATE KEY UPDATE `role` = VALUES(`role`);
+
+-- Setiap akun punya tepat satu ruang pribadi (juga akun yang dibuat sebelum ruang kerja ada).
+INSERT INTO `organizations` (`kind`, `name`, `short_name`, `owner_user_id`)
+SELECT 'personal', u.`nama_lengkap`, CONCAT('pribadi-', u.`id`), u.`id` FROM `users` u
+ WHERE NOT EXISTS (SELECT 1 FROM `organizations` o WHERE o.`kind` = 'personal' AND o.`owner_user_id` = u.`id`)
+ON DUPLICATE KEY UPDATE `kind` = `kind`;
+INSERT IGNORE INTO `organization_members` (`organization_id`, `user_id`, `role`)
+SELECT o.`id`, o.`owner_user_id`, 'secretary' FROM `organizations` o
+ WHERE o.`kind` = 'personal' AND o.`owner_user_id` IS NOT NULL;
+-- Nama pemilik menjadi isian profil pertama (dipakai mengisi identitas surat pribadi).
+UPDATE `organizations` o JOIN `users` u ON u.`id` = o.`owner_user_id`
+   SET o.`profile` = JSON_OBJECT('nama_mahasiswa', u.`nama_lengkap`)
+ WHERE o.`kind` = 'personal' AND o.`profile` IS NULL;
 
 INSERT INTO `letterheads` (`id`, `organization_id`, `name`, `address`, `contact`) VALUES
 (1, 1, 'BADAN EKSEKUTIF MAHASISWA FAKULTAS ILMU KOMPUTER', 'Alamat kampus (ubah di pengaturan kop)', 'Email organisasi (ubah di pengaturan kop)')
@@ -407,6 +433,55 @@ INSERT INTO `letter_templates` (`id`, `organization_id`, `code`, `revision`, `na
    {"id":"latar","type":"paragraph","source":"ai","required":true,"instruction":"Latar kegiatan {{nama_kegiatan}} pada {{tanggal_mulai}} di {{tempat_kegiatan}}. Gunakan penanda isian."},
    {"id":"permohonan","type":"paragraph","source":"ai","required":true,"instruction":"Nyatakan permohonan {{hal_dimohon}} secara jelas; sebut {{nominal}} hanya bila terisi."},
    {"id":"penutup","type":"paragraph","source":"fixed","required":true,"text":"Demikian permohonan ini kami sampaikan. Atas perhatian dan kebijaksanaannya, kami ucapkan terima kasih."},
+   {"id":"tanda_tangan","type":"signatures","source":"approval","required":true}
+  ]}')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+-- Kerangka pribadi. Riset 18 Nov 2026: surat mahasiswa yang paling sering dicontohkan adalah izin tidak
+-- hadir kuliah dan permohonan dispensasi. Tanpa nomor; isian "profile" diisi dari profil ruang pribadi.
+-- Permohonan ke dosen dan surat pernyataan menyusul.
+INSERT INTO `letter_templates` (`id`, `organization_id`, `audience`, `code`, `revision`, `name`, `description`, `number_series`, `number_format`, `definition`) VALUES
+(3, NULL, 'personal', 'IZN', 1, 'Surat Izin Tidak Hadir', 'Izin tidak mengikuti kuliah karena sakit, urusan keluarga, atau keperluan mendesak', 'PRIBADI',
+ '{seq}',
+ '{"fields":[
+   {"key":"penerima_jabatan","label":"Ditujukan kepada","type":"text","required":true},
+   {"key":"penerima_instansi","label":"Instansi penerima","type":"text","required":false},
+   {"key":"nama_mahasiswa","label":"Nama lengkap","type":"text","required":true,"profile":true},
+   {"key":"nim","label":"NIM","type":"text","required":true,"profile":true},
+   {"key":"program_studi","label":"Program studi","type":"text","required":true,"profile":true},
+   {"key":"mata_kuliah","label":"Mata kuliah","type":"text","required":true},
+   {"key":"tanggal_mulai","label":"Tanggal tidak hadir","type":"date","required":true},
+   {"key":"tanggal_selesai","label":"Sampai tanggal","type":"date","required":false},
+   {"key":"alasan","label":"Alasan","type":"text","required":true}
+  ],
+  "blocks":[
+   {"id":"pembuka","type":"paragraph","source":"fixed","required":true,"text":"Dengan hormat,"},
+   {"id":"identitas","type":"paragraph","source":"fixed","required":true,"text":"Saya yang bertanda tangan di bawah ini, {{nama_mahasiswa}} (NIM {{nim}}), mahasiswa Program Studi {{program_studi}},"},
+   {"id":"izin","type":"paragraph","source":"ai","required":true,"instruction":"Sampaikan permohonan izin tidak dapat mengikuti perkuliahan {{mata_kuliah}} pada {{tanggal_mulai}} karena {{alasan}}. Gunakan penanda isian, sopan dan singkat, sudut pandang orang pertama (saya)."},
+   {"id":"penutup","type":"paragraph","source":"fixed","required":true,"text":"Demikian surat izin ini saya sampaikan. Atas perhatian dan pengertian Bapak/Ibu, saya ucapkan terima kasih."},
+   {"id":"tanda_tangan","type":"signatures","source":"approval","required":true}
+  ]}'),
+(4, NULL, 'personal', 'DSP', 1, 'Surat Permohonan Dispensasi', 'Dispensasi kehadiran karena lomba, kepanitiaan, magang, atau pelatihan', 'PRIBADI',
+ '{seq}',
+ '{"fields":[
+   {"key":"penerima_jabatan","label":"Ditujukan kepada","type":"text","required":true},
+   {"key":"penerima_instansi","label":"Instansi penerima","type":"text","required":false},
+   {"key":"nama_mahasiswa","label":"Nama lengkap","type":"text","required":true,"profile":true},
+   {"key":"nim","label":"NIM","type":"text","required":true,"profile":true},
+   {"key":"program_studi","label":"Program studi","type":"text","required":true,"profile":true},
+   {"key":"nama_kegiatan","label":"Nama kegiatan","type":"text","required":true},
+   {"key":"penyelenggara","label":"Penyelenggara","type":"text","required":false},
+   {"key":"tanggal_mulai","label":"Tanggal mulai","type":"date","required":true},
+   {"key":"tanggal_selesai","label":"Tanggal selesai","type":"date","required":false},
+   {"key":"tempat_kegiatan","label":"Tempat kegiatan","type":"text","required":true},
+   {"key":"mata_kuliah","label":"Mata kuliah terdampak","type":"text","required":false}
+  ],
+  "blocks":[
+   {"id":"pembuka","type":"paragraph","source":"fixed","required":true,"text":"Dengan hormat,"},
+   {"id":"identitas","type":"paragraph","source":"fixed","required":true,"text":"Saya yang bertanda tangan di bawah ini, {{nama_mahasiswa}} (NIM {{nim}}), mahasiswa Program Studi {{program_studi}},"},
+   {"id":"permohonan","type":"paragraph","source":"ai","required":true,"instruction":"Mohon dispensasi kehadiran kuliah karena mengikuti {{nama_kegiatan}} pada {{tanggal_mulai}} di {{tempat_kegiatan}}; sebut {{penyelenggara}} dan {{mata_kuliah}} hanya bila terisi. Gunakan penanda isian, sudut pandang orang pertama (saya)."},
+   {"id":"kesanggupan","type":"paragraph","source":"ai","required":false,"instruction":"Kesanggupan mengejar materi atau tugas yang tertinggal."},
+   {"id":"penutup","type":"paragraph","source":"fixed","required":true,"text":"Demikian permohonan ini saya sampaikan. Atas perhatian dan kebijaksanaan Bapak/Ibu, saya ucapkan terima kasih."},
    {"id":"tanda_tangan","type":"signatures","source":"approval","required":true}
   ]}')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);

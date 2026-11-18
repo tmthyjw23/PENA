@@ -1,6 +1,6 @@
 # PENA
 
-Penyusunan dan persetujuan surat organisasi mahasiswa. Aplikasi PHP native dengan arsitektur MVC
+Penyusunan dan persetujuan surat mahasiswa: surat organisasi dan surat pribadi. Aplikasi PHP native dengan arsitektur MVC
 (router `app/core/App.php`, `Controller`, `Database`, folder `app/controller`, `app/model`, `app/view`).
 Kelas layanan PENA ada di `app/Service` (PSR-4 `Pena\`).
 
@@ -13,18 +13,27 @@ Kelas layanan PENA ada di `app/Service` (PSR-4 `Pena\`).
 ```powershell
 D:\xampp\php\php.exe .\.tools\composer.phar install
 D:\xampp\php\php.exe .\.tools\composer.phar setup:local   # membuat .env dari .env.example bila belum ada
-D:\xampp\php\php.exe .\.tools\composer.phar db:install    # membuat database DB_NAME dan menerapkan skema
+D:\xampp\php\php.exe .\.tools\composer.phar db:install    # membuat database DB_NAME, menjalankan migrasi, menerapkan skema
 ```
 
 Isi `.env`: `APP_URL=http://localhost/pena`, koneksi DB, dan pengaturan AI (lihat `.env.example`).
-Akun contoh lokal: `sekretaris / sekretaris123` dan `admin / admin123`. Nonaktifkan sebelum dipakai sungguhan.
+Akun contoh lokal: `sekretaris / sekretaris123` (BEM + ruang pribadi) dan `anggota / sekretaris123` (hanya ruang
+pribadi). Akun `admin / admin123` tersisa dari versi lama sebagai anggota BEM biasa. Nonaktifkan sebelum dipakai sungguhan.
+Akun baru dibuat sendiri lewat `/daftar/`.
 Server dev alternatif tanpa Apache: `composer serve` (http://127.0.0.1:8787).
 
 ## Database
 
-`database/pena_schema.sql` adalah skema lengkap: akun, organisasi, kop, direktori penanda tangan,
+Peran: hanya **sekretaris** (setiap akun, di ruang kerjanya), **pemeriksa** (tanpa akun, lewat tautan), dan
+**operator platform**. Tidak ada peran admin. Setiap akun punya ruang pribadi (tanpa kop dan nomor; tanpa pemeriksa,
+surat langsung jadi) dan boleh membuat ruang organisasi (kop diisi bersama surat pertama, nomor berseri, alur bertahap).
+Pemeriksa ditambahkan langsung di form surat ("Pemeriksa baru"). Lihat [docs/ANALISIS-PRODUK.md](docs/ANALISIS-PRODUK.md).
+
+`database/pena_schema.sql` adalah skema lengkap: akun, ruang kerja (`organizations.kind`), kop, direktori pemeriksa,
 kerangka surat (JSON), penghitung nomor, surat dan versinya, tahap dan permintaan persetujuan
 (token tautan disimpan sebagai hash), komentar, ekspor, jejak audit, dan log AI. Aman dijalankan ulang.
+Perubahan untuk database yang sudah ada ada di `database/migrations/` (dicatat di tabel `schema_migrations`);
+`db:install` menjalankannya sebelum skema. Cadangkan database dulu sebelum memasang di server.
 Setiap koneksi memakai `sql_mode` strict (`Database::STRICT_SQL_MODE`).
 
 ## Layanan dan halaman
@@ -58,4 +67,5 @@ D:\xampp\php\php.exe .\.tools\composer.phar test          # SQL binding, login, 
 D:\xampp\php\php.exe .\.tools\composer.phar test:schema   # database sementara pena_test_*
 D:\xampp\php\php.exe .\.tools\composer.phar test:flow
 D:\xampp\php\php.exe .\.tools\composer.phar test:ai       # transport palsu, tanpa jaringan
+D:\xampp\php\php.exe .\.tools\composer.phar test:workspace # migrasi dari skema 17 Nov, daftar, ruang kerja
 ```

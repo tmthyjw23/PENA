@@ -1,7 +1,8 @@
 <?php
 /**
  * Secretary app shell: goldenrod rail on desktop, goldenrod top bar + bottom tab bar on phones.
- * Expects $data['title'], optional $data['active_menu'] (dashboard|surat|buat), $data['org'], $data['mobile_title'].
+ * Expects $data['title'], optional $data['active_menu'] (dashboard|surat|buat), $data['org'] (current workspace),
+ * $data['workspaces'] (all of the user's workspaces, for the switcher), $data['mobile_title'].
  */
 require_once dirname(__DIR__) . '/surat/_helpers.php';
 $active = $data['active_menu'] ?? 'dashboard';
@@ -15,6 +16,29 @@ $nav = [
     'buat' => ['Buat surat', APP_PATH . '/surat/buat/'],
 ];
 $cur = static fn(string $k) => $active === $k ? ' aria-current="page"' : '';
+$workspaces = $data['workspaces'] ?? [];
+$wsLabel = static fn(array $w) => $w['kind'] === 'personal' ? 'Ruang pribadi' : $w['name'];
+// Workspace switcher: each entry is a small POST form (switching changes session state).
+$switcher = static function (string $tone) use ($workspaces, $org, $wsLabel, $data): void {
+    if (!$workspaces) return; ?>
+    <ul class="space-y-1" aria-label="Ruang kerja">
+      <?php foreach ($workspaces as $w): $on = $org && (int)$org['id'] === (int)$w['id']; ?>
+        <li>
+          <?php if ($on): ?>
+            <p class="flex min-h-9 items-center gap-2 rounded-control px-2 font-semibold" aria-current="true">
+              <?= pena_strip($w['kind'] === 'personal' ? 'Pribadi' : $w['short_name'], 'carbon'); ?><span class="truncate"><?= e($wsLabel($w)); ?></span></p>
+          <?php else: ?>
+            <form method="POST" action="<?= APP_PATH; ?>/ruang/pilih/<?= (int)$w['id']; ?>">
+              <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token'] ?? ''); ?>">
+              <button class="flex min-h-9 w-full items-center gap-2 rounded-control px-2 text-left <?= $tone; ?>">
+                <?= pena_strip($w['kind'] === 'personal' ? 'Pribadi' : $w['short_name'], 'outline'); ?><span class="truncate"><?= e($wsLabel($w)); ?></span></button>
+            </form>
+          <?php endif; ?>
+        </li>
+      <?php endforeach; ?>
+      <li><a href="<?= APP_PATH; ?>/ruang/baru/" class="flex min-h-9 items-center px-2 text-[13.5px] font-semibold text-action underline">+ Ruang organisasi</a></li>
+    </ul>
+<?php };
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -38,9 +62,10 @@ $cur = static fn(string $k) => $active === $k ? ' aria-current="page"' : '';
     </ul>
   </nav>
   <div class="mt-auto">
-    <?php if ($org): ?><p><?= e($org['name']); ?></p><?php endif; ?>
-    <p class="font-semibold"><?= e($userName); ?><?= $org ? ', ' . e(pena_role($org['role'] ?? '')) : ''; ?></p>
-    <a href="<?= APP_PATH; ?>/login/logout/" class="mt-3 inline-flex min-h-11 items-center underline decoration-ink/40 hover:decoration-ink">Keluar</a>
+    <p class="colhead">Ruang kerja</p>
+    <?php $switcher('hover:bg-ink/10'); ?>
+    <p class="mt-4 font-semibold"><?= e($userName); ?><?= $org ? ', ' . e(pena_role($org, (int)($_SESSION['user-id'] ?? 0))) : ''; ?></p>
+    <a href="<?= APP_PATH; ?>/login/logout/" class="mt-2 inline-flex min-h-11 items-center underline decoration-ink/40 hover:decoration-ink">Keluar</a>
   </div>
 </aside>
 
@@ -50,9 +75,12 @@ $cur = static fn(string $k) => $active === $k ? ' aria-current="page"' : '';
   <details class="relative ml-auto">
     <summary class="flex size-11 cursor-pointer list-none items-center justify-center font-cond font-bold [&::-webkit-details-marker]:hidden" aria-label="Menu akun <?= e($userName); ?>"><?= e($initials); ?></summary>
     <div class="absolute right-0 top-12 w-64 rounded-panel bg-surface p-4 shadow-paper">
-      <?php if ($org): ?><p class="text-secondary"><?= e($org['name']); ?></p><?php endif; ?>
       <p class="font-semibold"><?= e($userName); ?></p>
-      <a href="<?= APP_PATH; ?>/login/logout/" class="mt-2 inline-flex min-h-11 items-center text-rev underline">Keluar</a>
+      <?php if ($workspaces): ?>
+        <p class="colhead mt-3">Ruang kerja</p>
+        <div class="mt-1"><?php $switcher('hover:bg-raised'); ?></div>
+      <?php endif; ?>
+      <a href="<?= APP_PATH; ?>/login/logout/" class="mt-3 inline-flex min-h-11 items-center text-rev underline">Keluar</a>
     </div>
   </details>
 </header>

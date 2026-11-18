@@ -1,10 +1,11 @@
 <?php
 /**
  * Controller Dashboard - beranda setelah login.
- * Untuk pengurus organisasi: surat yang perlu ditindaklanjuti dan ringkasan status.
+ * Surat di ruang kerja aktif (pribadi atau organisasi) yang perlu ditindaklanjuti dan ringkasan status.
  */
 
 use Pena\Service\LetterQuery;
+use Pena\Service\WorkspaceService;
 use Pena\Support\Db;
 
 class dashboard extends Controller {
@@ -21,11 +22,15 @@ class dashboard extends Controller {
         $letters = [];
         $needsLink = [];
         $revisions = [];
+        $workspaces = [];
         try {
             $db = Db::fromTemplate(new Database());
             $query = new LetterQuery($db);
-            $org = $query->managedOrganization((int)$_SESSION['user-id']);
+            $spaces = new WorkspaceService($db);
+            $org = $spaces->current((int)$_SESSION['user-id'], isset($_SESSION['workspace-id']) ? (int)$_SESSION['workspace-id'] : null);
+            $workspaces = $spaces->forUser((int)$_SESSION['user-id']);
             if ($org !== null) {
+                $_SESSION['workspace-id'] = $org['id'];
                 $letters = $query->letters((int)$org['id']);
                 $needsLink = $query->lettersNeedingLink((int)$org['id']);
                 // Latest revision request per letter that is waiting for the secretary.
@@ -47,6 +52,7 @@ class dashboard extends Controller {
             'letters' => $letters,
             'needs_link' => $needsLink,
             'revisions' => $revisions,
+            'workspaces' => $workspaces,
         ]);
     }
 }

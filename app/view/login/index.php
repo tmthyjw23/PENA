@@ -8,10 +8,13 @@
 <body class="min-h-dvh">
 <div class="grid min-h-dvh lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
   <section class="flex flex-col bg-rail px-4 py-5 lg:px-11 lg:py-10">
-    <a href="<?= APP_PATH; ?>/" class="flex min-h-11 items-center gap-3 font-semibold no-underline"><span class="strip strip-carbon">PENA</span>Surat organisasi</a>
+    <a href="<?= APP_PATH; ?>/" class="flex min-h-11 items-center gap-3 font-semibold no-underline" aria-label="PENA, ke beranda">
+      <span class="strip strip-carbon">PENA</span>
+      <span>Surat organisasi</span>
+    </a>
     <div class="mt-8 lg:mt-auto">
       <h1 class="font-cond text-[40px] font-bold leading-[1] tracking-[-0.01em] lg:text-[64px]">Satu jadwal untuk setiap surat</h1>
-      <p class="mt-3 max-w-[44ch]">Lihat di tahap mana surat berada dan siapa yang sedang ditunggu, tanpa bertanya di grup WhatsApp.</p>
+      <p class="mt-3 max-w-[44ch] text-secondary">Lihat di tahap mana surat berada dan siapa yang sedang ditunggu, tanpa bertanya di grup WhatsApp.</p>
     </div>
   </section>
 
@@ -22,7 +25,8 @@
 
       <?php if (!empty($data['error'])): ?>
         <div class="mt-4 flex items-start gap-3 rounded-panel bg-rev-soft px-4 py-3" role="alert">
-          <?= pena_mark('revision', 'mt-1'); ?><p><?= e($data['error']); ?></p>
+          <?= pena_mark('revision', 'mt-1'); ?>
+          <p><?= e($data['error']); ?></p>
         </div>
       <?php endif; ?>
 
@@ -51,9 +55,17 @@
   </section>
 </div>
 <script>
-  // Demo accounts from database/pena_schema.sql (local testing only). Remove before real use.
+  // Demo accounts from database/pena_schema.sql (local testing only).
   const demo = { sekretaris: 'sekretaris123', admin: 'admin123' };
-  const fill = u => { document.getElementById('username').value = u; document.getElementById('password').value = demo[u]; document.getElementById('password').focus(); };
+  const fill = u => {
+    const uEl = document.getElementById('username');
+    const pEl = document.getElementById('password');
+    if (uEl && pEl) {
+      uEl.value = u;
+      pEl.value = demo[u] || '';
+      pEl.focus();
+    }
+  };
   document.querySelectorAll('[data-demo]').forEach(b => b.addEventListener('click', () => fill(b.dataset.demo)));
   const q = new URLSearchParams(location.search).get('user');
   if (demo[q]) fill(q);

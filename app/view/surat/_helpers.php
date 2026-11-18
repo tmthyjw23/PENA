@@ -81,7 +81,9 @@ if (!function_exists('pena_short')) {
 }
 
 if (!function_exists('pena_role')) {
-    function pena_role(?string $role): string {
-        return match ($role) { 'secretary' => 'sekretaris', 'admin' => 'admin', default => (string)$role };
+    /** Label of the user in a workspace. There is no admin role; the creator is marked as owner. */
+    function pena_role(array $workspace, int $userId): string {
+        if (($workspace['kind'] ?? '') === 'personal') return 'pribadi';
+        return ($workspace['owner_user_id'] ?? null) === $userId ? 'pemilik' : 'sekretaris';
     }
 }
