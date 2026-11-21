@@ -51,6 +51,7 @@
     "test:ai-settings": "@php tests/pena_ai_settings.php",
     "test:ai-endpoint": "@php tests/pena_ai_endpoint.php",
     "test:ai-transport": "@php tests/pena_ai_transport.php",
-    "test:ux": "@php tests/pena_ux.php"
+    "test:ux": "@php tests/pena_ux.php",
+    "test:security": "@php tests/pena_security.php"
   }
 }

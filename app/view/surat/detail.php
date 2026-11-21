@@ -106,7 +106,7 @@ $statusLine = match (true) {
         <?php foreach ($data['links'] as $link): $lid = 'link' . substr(md5($link['url']), 0, 8); ?>
           <label for="<?= $lid; ?>" class="mt-4 block font-semibold"><?= e($link['signer_name']); ?><?= $link['kind'] === 'reconfirm' ? ' (konfirmasi ulang)' : ''; ?></label>
           <div class="mt-2 flex gap-2">
-            <input id="<?= $lid; ?>" class="field min-w-0 flex-1 text-ink" readonly value="<?= e($link['url']); ?>" onclick="this.select()">
+            <input id="<?= $lid; ?>" class="field min-w-0 flex-1 text-ink" readonly value="<?= e($link['url']); ?>" data-select-on-focus>
             <button type="button" class="btn btn-primary" data-copy="<?= $lid; ?>">Salin tautan</button>
           </div>
         <?php endforeach; ?>
@@ -316,7 +316,7 @@ $statusLine = match (true) {
       <div class="flex flex-wrap gap-3"><button class="btn btn-primary">Ganti pemeriksa</button><button type="button" class="btn btn-secondary" data-close>Kembali</button></div>
     </form>
   </dialog>
-  <script>
+  <script<?= pena_nonce(); ?>>
     document.querySelectorAll('[data-ganti]').forEach(b => b.addEventListener('click', () => {
       const d = document.getElementById('dlg-ganti');
       d.querySelector('[name=member_id]').value = b.dataset.ganti;

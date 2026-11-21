@@ -1,5 +1,5 @@
 <?php // Editable grid for table fields: writes back to the "a | b | c" textarea the server reads. ?>
-<script>
+<script<?= pena_nonce(); ?>>
   (function () {
     document.querySelectorAll('textarea[data-rows-editor]').forEach(area => {
       const cols = JSON.parse(area.dataset.rowsEditor);

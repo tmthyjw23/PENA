@@ -266,7 +266,7 @@ $letterheads = $data['letterheads'] ?? [];
     <?php endif; ?>
   </div>
 </form>
-<script>
+<script<?= pena_nonce(); ?>>
   (function () {
     // Placeholder chips insert {{key}} at the cursor of the last focused paragraph.
     let last = null;

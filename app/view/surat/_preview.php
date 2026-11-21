@@ -42,7 +42,7 @@ $hl = $highlight ?? null;
         <div class="grid grid-cols-2 gap-x-8 gap-y-6 pt-4 text-center" data-block="<?= e($block['id']); ?>">
           <?php foreach ($block['signers'] as $i => $s): ?>
             <div class="<?= ($n % 2 === 1 && $i === $n - 1) ? 'col-span-2' : ''; ?>">
-              <p><?= e($s['role']); ?></p><div class="flex h-20 items-center justify-center"><?php if(!empty($s['signature_png'])): ?><img src="<?= e($s['signature_png']); ?>" alt="Gambar tanda tangan <?= e($s['name']); ?>" style="width:180px;max-width:100%;max-height:72px;object-fit:contain"><?php endif; ?></div><p class="font-bold"><?= e($s['name']); ?></p>
+              <p><?= e($s['role']); ?></p><div class="flex h-20 items-center justify-center"><?php if(!empty($s['signature_png'])): ?><img src="<?= e($s['signature_png']); ?>" alt="Gambar tanda tangan <?= e($s['name']); ?>" class="w-[180px] max-w-full max-h-[72px] object-contain"><?php endif; ?></div><p class="font-bold"><?= e($s['name']); ?></p>
             </div>
           <?php endforeach; ?>
         </div>

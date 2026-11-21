@@ -47,8 +47,13 @@ class login extends Controller {
         exit();
     }
 
+    /** POST + CSRF only: a link or image on another site must not be able to end someone's session. */
     public function logout() {
         $this->start_default_session_app();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$this->verify_csrf_token()) {
+            header('Location: ' . APP_PATH . (empty($_SESSION['user-id']) ? '/login/' : '/dashboard/'));
+            exit();
+        }
         $this->destroy_session_cleanly();
         header('Location: ' . APP_PATH . '/login/');
         exit();

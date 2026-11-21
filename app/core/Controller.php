@@ -15,9 +15,21 @@ class Controller {
 		$this->check_security_payloads();
 	}
 
+	private static ?string $cspNonce = null;
+
+	/** One nonce per request; every inline <script> in a view carries it (see pena_nonce()). */
+	public static function csp_nonce(): string {
+		return self::$cspNonce ??= base64_encode(random_bytes(16));
+	}
+
 	public function send_security_headers(){
 		if (!headers_sent()) {
 			@header_remove('X-Powered-By');
+			// Scripts: own files plus inline blocks with this request's nonce. No inline handlers or styles.
+			// img data:/blob: = signature images and the PNG preview before upload.
+			header("Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-" . self::csp_nonce() . "'; "
+				. "style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; "
+				. "form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'");
 			header('X-Frame-Options: SAMEORIGIN');
 			header('X-Content-Type-Options: nosniff');
 			header('Referrer-Policy: strict-origin-when-cross-origin');

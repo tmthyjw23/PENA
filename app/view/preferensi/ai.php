@@ -35,7 +35,7 @@ $setupRequired=$s['mode']==='unconfigured';
 <?php if($s['mode']==='personal'): ?><section class="panel p-5"><h2 class="font-bold">Uji koneksi</h2><p class="mt-2 text-secondary">Mengirim satu pesan contoh tanpa isi surat. Uji ini memakai kuota provider; jeda antar-uji satu menit.</p><form method="post" action="<?= APP_PATH; ?>/preferensi/uji/" class="mt-4"><input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>"><button class="btn btn-secondary">Uji koneksi pribadi</button></form></section><?php endif; ?>
 <?php if($s['has_key']): ?><section class="panel p-5"><h2 class="font-bold">Hapus koneksi pribadi</h2><p class="mt-2 text-secondary"><?= $s['platform_allowed']?'Akun operator kembali memakai AI bawaan.':'Anda perlu menyimpan koneksi baru sebelum membuka ruang kerja lagi.'; ?> Surat yang sudah tersimpan tetap ada.</p><form method="post" action="<?= APP_PATH; ?>/preferensi/hapus/" class="mt-4 space-y-4"><input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>"><label class="field-label" for="delete-password">Kata sandi akun PENA</label><input class="field" id="delete-password" type="password" name="password" required autocomplete="current-password"><button class="btn btn-danger">Hapus koneksi pribadi</button></form></section><?php endif; ?>
 </div></div>
-<script>
+<script<?= pena_nonce(); ?>>
 (()=>{
  const mode=document.getElementById('ai-mode'),fields=document.getElementById('personal-ai-fields'),provider=document.getElementById('ai-provider'),url=document.getElementById('custom-ai-url');
  const model=document.getElementById('ai-model'),options=document.getElementById('ai-model-options'),help=document.getElementById('google-ai-help');

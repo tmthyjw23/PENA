@@ -60,7 +60,7 @@
   </main>
 </div>
 <?php if (APP_ENV === 'local'): ?>
-<script>
+<script<?= pena_nonce(); ?>>
   // Demo accounts from database/demo_seed.sql (local testing only).
   const demo = { sekretaris: 'sekretaris123', admin: 'admin123' };
   const fill = u => {

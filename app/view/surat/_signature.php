@@ -7,7 +7,7 @@
     <label class="flex min-h-11 items-center gap-2"><input type="radio" name="signature_method" value="upload"> Unggah PNG</label>
   </div>
   <div data-draw>
-    <canvas width="800" height="280" class="mt-2 w-full touch-none rounded-control border border-line bg-white" style="height:180px" aria-label="Area menggambar tanda tangan. Untuk alternatif dengan keyboard, pilih Unggah PNG."></canvas>
+    <canvas width="800" height="280" class="mt-2 h-[180px] w-full touch-none rounded-control border border-line bg-white" aria-label="Area menggambar tanda tangan. Untuk alternatif dengan keyboard, pilih Unggah PNG."></canvas>
     <button type="button" class="btn btn-secondary mt-2" data-clear>Hapus gambar</button>
   </div>
   <div data-upload hidden>

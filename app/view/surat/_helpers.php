@@ -80,6 +80,13 @@ if (!function_exists('pena_short')) {
     }
 }
 
+if (!function_exists('pena_nonce')) {
+    /** nonce="..." attribute for an inline script tag; the Content-Security-Policy only runs inline code that carries it. */
+    function pena_nonce(): string {
+        return ' nonce="' . htmlspecialchars(Controller::csp_nonce(), ENT_QUOTES, 'UTF-8') . '"';
+    }
+}
+
 if (!function_exists('pena_role')) {
     /** Label of the user in a workspace. There is no admin role; the creator is marked as owner. */
     function pena_role(array $workspace, int $userId): string {

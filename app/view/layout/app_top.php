@@ -116,7 +116,10 @@ $renderSwitcher = static function (string $id, string $placement = 'desktop') us
     <?php if(!empty($_SESSION['is-operator'])): ?><a href="<?= APP_PATH; ?>/<?= $operatorArea?'dashboard/':'operator/'; ?>" class="mt-2 flex min-h-9 items-center text-[13.5px] underline"><?= $operatorArea?'Ke ruang surat':'Operator platform'; ?></a><?php endif; ?>
     <a data-tour="help" href="<?= APP_PATH; ?>/bantuan/" class="mt-2 flex min-h-9 items-center text-[13.5px] underline">Bantuan</a>
     <a href="<?= APP_PATH; ?>/preferensi/" class="mt-2 flex min-h-9 items-center text-[13.5px] underline">Pengaturan AI</a>
-    <a href="<?= APP_PATH; ?>/login/logout/" class="mt-2 inline-flex min-h-9 items-center text-[13.5px] underline decoration-ink/40 hover:decoration-ink">Keluar</a>
+    <form method="POST" action="<?= APP_PATH; ?>/login/logout/" class="mt-2">
+      <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token'] ?? ''); ?>">
+      <button class="inline-flex min-h-9 items-center text-[13.5px] underline decoration-ink/40 hover:decoration-ink">Keluar</button>
+    </form>
   </div>
 </aside>
 
@@ -141,7 +144,10 @@ $renderSwitcher = static function (string $id, string $placement = 'desktop') us
         <?php if(!empty($_SESSION['is-operator'])): ?><a href="<?= APP_PATH; ?>/<?= $operatorArea?'dashboard/':'operator/'; ?>" class="flex min-h-11 items-center underline"><?= $operatorArea?'Ke ruang surat':'Operator platform'; ?></a><?php endif; ?>
         <a href="<?= APP_PATH; ?>/bantuan/" class="flex min-h-11 items-center underline">Bantuan</a>
         <a href="<?= APP_PATH; ?>/preferensi/" class="flex min-h-11 items-center underline">Pengaturan AI</a>
-        <a href="<?= APP_PATH; ?>/login/logout/" class="flex min-h-9 items-center text-rev underline">Keluar</a>
+        <form method="POST" action="<?= APP_PATH; ?>/login/logout/">
+          <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token'] ?? ''); ?>">
+          <button class="flex min-h-9 items-center text-rev underline">Keluar</button>
+        </form>
       </div>
     </div>
   </details>

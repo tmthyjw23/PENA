@@ -127,4 +127,14 @@
     pending = true; form.dataset.actionPending = 'true'; form.setAttribute('aria-busy', 'true');
     navigation(form.method.toLowerCase() === 'get' ? 'Memuat hasil' : messages(form.action));
   });
+  // Replacements for inline onclick handlers, which the Content-Security-Policy blocks.
+  document.addEventListener('click', event => {
+    if (event.target.closest('[data-history-back]')) history.back();
+  });
+  document.addEventListener('focusin', event => {
+    if (event.target.matches?.('[data-select-on-focus]')) event.target.select();
+  });
+  document.addEventListener('click', event => {
+    if (event.target.matches?.('[data-select-on-focus]')) event.target.select();
+  });
 })();

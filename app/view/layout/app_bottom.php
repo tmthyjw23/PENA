@@ -1,6 +1,6 @@
   </div>
 </main>
-<script>
+<script<?= pena_nonce(); ?>>
   // Dialog openers: <button data-open="dialogId">; dialogs close with their own "Kembali" (value=cancel) or Esc.
   document.querySelectorAll('[data-open]').forEach(btn => btn.addEventListener('click', () => {
     const d = document.getElementById(btn.dataset.open);

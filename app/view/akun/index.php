@@ -35,7 +35,10 @@ if($waiting)$titles['verify']='Menunggu verifikasi email';
       <button class="btn <?= $waiting?'btn-secondary':'btn-primary'; ?>" type="submit"><?= $waiting?'Kirim ulang email':'Kirim email verifikasi'; ?></button>
       <?php if($waiting): ?><p class="field-help mt-3">Jika mengirim ulang, gunakan tautan dari email terbaru. Maksimal tiga permintaan pengiriman per jam, termasuk pengiriman pertama.</p><?php endif; ?>
     </form>
-    <a class="mt-6 inline-flex min-h-11 items-center text-action underline" href="<?= APP_PATH; ?>/login/logout/">Keluar dan gunakan akun lain</a>
+    <form method="POST" action="<?= APP_PATH; ?>/login/logout/" class="mt-6">
+      <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>">
+      <button class="inline-flex min-h-11 items-center text-action underline">Keluar dan gunakan akun lain</button>
+    </form>
   <?php elseif($mode==='forgot'): ?>
     <p class="mt-4 text-secondary">Masukkan email akun Anda. Tautan pemulihan berlaku 30 menit.</p>
     <form action="<?= APP_PATH; ?>/akun/pemulihan/" method="post" class="mt-6 space-y-5">
@@ -55,7 +58,7 @@ if($waiting)$titles['verify']='Menunggu verifikasi email';
       <button class="btn btn-primary" type="submit"><?= $mode==='confirm' ? 'Konfirmasi email' : 'Simpan kata sandi'; ?></button>
     </form>
     <noscript><p class="mt-4" role="alert">Aktifkan JavaScript untuk menggunakan tautan email ini.</p></noscript>
-    <script>
+    <script<?= pena_nonce(); ?>>
       const token = location.hash.slice(1);
       if (/^[a-f0-9]{64}$/.test(token)) document.getElementById('account-token').value = token;
       if (location.hash) history.replaceState(null, '', location.pathname);

@@ -28,7 +28,7 @@ $title = match (true) {
     <?php if (!empty($data['reference_id'])): ?><p class="mt-2 text-secondary">Kode referensi: <?= e($data['reference_id']); ?></p><?php endif; ?>
     <div class="mt-6 flex flex-wrap gap-3">
       <a href="<?= APP_PATH; ?>/<?= !empty($_SESSION['user-id']) ? 'surat/' : ''; ?>" class="btn btn-primary"><?= !empty($_SESSION['user-id']) ? 'Ke daftar surat' : 'Ke halaman depan'; ?></a>
-      <button type="button" class="btn btn-secondary" onclick="history.back()">Kembali</button>
+      <button type="button" class="btn btn-secondary" data-history-back>Kembali</button>
     </div>
   </section>
 </main>

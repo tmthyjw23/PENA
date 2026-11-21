@@ -109,7 +109,7 @@ $steps = [['kerangka', $personal ? 'Merancang susunan' : 'Memilih kerangka'], ['
     </ul>
   </aside>
 </div>
-<script>
+<script<?= pena_nonce(); ?>>
   (function () {
     const form = document.getElementById('susun-form'), t = document.getElementById('prompt'), c = document.querySelector('[data-count]');
     const progress = document.querySelector('[data-progress]'), errBox = document.querySelector('[data-error]');

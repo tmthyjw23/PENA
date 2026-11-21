@@ -203,7 +203,7 @@ $missing = array_values($s['missing'] ?? []);
   </div>
 </form>
 <?php require __DIR__ . '/_rows_editor.php'; ?>
-<script>
+<script<?= pena_nonce(); ?>>
   (function () {
     const csrf = <?= json_encode($data['csrf_token']); ?>;
     const waitMark = <?= json_encode(pena_mark('waiting', 'mt-1')); ?>;
