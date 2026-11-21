@@ -33,14 +33,37 @@ final class WordDocumentService
             'paperSize' => 'A4', 'marginTop' => 1700, 'marginBottom' => 1440,
             'marginLeft' => 1440, 'marginRight' => 1440, 'headerHeight' => 500,
         ]);
-        if (!empty($letterhead['name'])) {
+        $kopImage = self::dataUriBytes($letterhead['image_src'] ?? null);
+        $logo = self::dataUriBytes($letterhead['logo_src'] ?? null);
+        $header = null;
+        if (($letterhead['kind'] ?? 'text') === 'image' && $kopImage !== null) {
+            // Full kop image across the text width (A4 minus 2.54 cm margins ≈ 451 pt).
+            [$w, $h] = getimagesizefromstring($kopImage) ?: [1, 1];
             $header = $section->addHeader();
-            $header->addText($this->text($letterhead['name'] ?? ''), ['bold' => true, 'size' => 14], 'PenaCenter');
-            foreach (['address', 'contact'] as $field) {
-                if (!empty($letterhead[$field])) {
-                    $header->addText($this->text($letterhead[$field]), ['size' => 10], 'PenaCenter');
-                }
+            $header->addImage($kopImage, ['width' => 451, 'height' => (int)round(451 * $h / max(1, $w)), 'alignment' => 'center']);
+        } elseif (!empty($letterhead['name'])) {
+            $header = $section->addHeader();
+            $lines = [[$letterhead['name'], ['bold' => true, 'size' => 14]]];
+            foreach (array_filter(explode("\n", (string)($letterhead['subtitle'] ?? ''))) as $line) $lines[] = [$line, ['bold' => true, 'size' => 12]];
+            foreach (['address', 'contact'] as $field) if (!empty($letterhead[$field])) $lines[] = [$letterhead[$field], ['size' => 10]];
+            if ($logo !== null) {
+                // Logo left, text centred in the remaining width; an empty right cell keeps the text visually centred.
+                $table = $header->addTable(['alignment' => 'center']);
+                $table->addRow();
+                [$w, $h] = getimagesizefromstring($logo) ?: [1, 1];
+                $size = 60; $scale = $size / max($w, $h, 1);
+                $table->addCell(1400, ['valign' => 'center'])->addImage($logo, ['width' => (int)round($w * $scale), 'height' => (int)round($h * $scale), 'alignment' => 'center']);
+                $cell = $table->addCell(6200, ['valign' => 'center']);
+                foreach ($lines as [$text, $font]) $cell->addText($this->text($text), $font, 'PenaCenter');
+                $table->addCell(1400);
+            } else {
+                foreach ($lines as [$text, $font]) $header->addText($this->text($text), $font, 'PenaCenter');
             }
+        }
+        // Double rule under the kop (as on the preview) and room before the letter starts.
+        if ($header !== null) {
+            $header->addText('', ['size' => 2], ['numStyle' => '', 'spaceBefore' => 0, 'spaceAfter' => 240,
+                'borderBottomSize' => 18, 'borderBottomStyle' => 'double', 'borderBottomColor' => '000000']);
         }
         if ($metadata !== []) {
             // No border options: borderSize 0 still renders a hairline grid in Word.
@@ -103,6 +126,14 @@ final class WordDocumentService
             }
         }
         IOFactory::createWriter($document, 'Word2007')->save($path);
+    }
+
+    /** PNG bytes from a data:image/png;base64 URI made by LetterheadService, or null. */
+    private static function dataUriBytes(mixed $uri): ?string
+    {
+        if (!is_string($uri) || !str_starts_with($uri, 'data:image/png;base64,')) return null;
+        $bytes = base64_decode(substr($uri, 22), true);
+        return is_string($bytes) && str_starts_with($bytes, "\x89PNG") ? $bytes : null;
     }
 
     private function text(mixed $value): string

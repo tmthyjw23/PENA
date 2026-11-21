@@ -137,8 +137,10 @@ final class WorkspaceService
         if ($address === '' || mb_strlen($address) > 255) $errors['kop.address'] = 'Alamat wajib diisi (maksimal 255 karakter).';
         if (mb_strlen($contact) > 255) $errors['kop.contact'] = 'Kontak maksimal 255 karakter.';
         if ($errors !== []) throw new PenaException('Lengkapi kop surat organisasi.', $errors);
-        return $this->db->insert('INSERT INTO letterheads (organization_id, name, address, contact) VALUES (?, ?, ?, ?)',
-                                 [$workspaceId, $name, $address, $contact === '' ? null : $contact]);
+        // The first kop of an organization becomes its default kop.
+        $default = !$this->db->value('SELECT COUNT(*) FROM letterheads WHERE organization_id = ? AND is_active = 1 AND is_default = 1', [$workspaceId]);
+        return $this->db->insert('INSERT INTO letterheads (organization_id, name, address, contact, is_default, created_by) VALUES (?, ?, ?, ?, ?, ?)',
+                                 [$workspaceId, $name, $address, $contact === '' ? null : $contact, $default ? 1 : 0, $userId]);
     }
 
     /** Remembers identity fields (name, NIM, study program) typed into a personal letter for the next one. */

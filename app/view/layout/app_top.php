@@ -115,6 +115,7 @@ $renderSwitcher = static function (string $id, string $placement = 'desktop') us
     <p class="truncate text-xs text-ink/75"><?= $operatorArea?'Operator platform':($org ? e(pena_role($org, (int)($_SESSION['user-id'] ?? 0))) : 'Pengguna'); ?></p>
     <?php if(!empty($_SESSION['is-operator'])): ?><a href="<?= APP_PATH; ?>/<?= $operatorArea?'dashboard/':'operator/'; ?>" class="mt-2 flex min-h-9 items-center text-[13.5px] underline"><?= $operatorArea?'Ke ruang surat':'Operator platform'; ?></a><?php endif; ?>
     <a data-tour="help" href="<?= APP_PATH; ?>/bantuan/" class="mt-2 flex min-h-9 items-center text-[13.5px] underline">Bantuan</a>
+    <?php if (!$operatorArea && ($org['kind'] ?? '') === 'organization'): ?><a href="<?= APP_PATH; ?>/kop/"<?= $active === 'kop' ? ' aria-current="page"' : ''; ?> class="mt-2 flex min-h-9 items-center text-[13.5px] underline">Kop surat</a><?php endif; ?>
     <a href="<?= APP_PATH; ?>/preferensi/" class="mt-2 flex min-h-9 items-center text-[13.5px] underline">Pengaturan AI</a>
     <form method="POST" action="<?= APP_PATH; ?>/login/logout/" class="mt-2">
       <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token'] ?? ''); ?>">
@@ -143,6 +144,7 @@ $renderSwitcher = static function (string $id, string $placement = 'desktop') us
       <div class="mt-3 border-t border-line pt-2">
         <?php if(!empty($_SESSION['is-operator'])): ?><a href="<?= APP_PATH; ?>/<?= $operatorArea?'dashboard/':'operator/'; ?>" class="flex min-h-11 items-center underline"><?= $operatorArea?'Ke ruang surat':'Operator platform'; ?></a><?php endif; ?>
         <a href="<?= APP_PATH; ?>/bantuan/" class="flex min-h-11 items-center underline">Bantuan</a>
+        <?php if (!$operatorArea && ($org['kind'] ?? '') === 'organization'): ?><a href="<?= APP_PATH; ?>/kop/" class="flex min-h-11 items-center underline">Kop surat</a><?php endif; ?>
         <a href="<?= APP_PATH; ?>/preferensi/" class="flex min-h-11 items-center underline">Pengaturan AI</a>
         <form method="POST" action="<?= APP_PATH; ?>/login/logout/">
           <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token'] ?? ''); ?>">

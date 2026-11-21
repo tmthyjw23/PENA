@@ -122,6 +122,14 @@ final class LetterService
                 if(($signature['version_id']??0)!==(int)$version['id']||!hash_equals(SignatureService::previewHash($read['preview']),(string)($signature['preview_hash']??'')))throw new PenaException('Draf berubah sejak dibuka. Muat ulang dan periksa kembali sebelum menandatangani.');
             }
             if (!$personal && $letter['letterhead_id'] === null) throw new PenaException('Pilih kop surat sebelum mengajukan.');
+            // A kop edited after this draft was made: submit with its current revision.
+            if ($letter['letterhead_id'] !== null) {
+                $latest = (new LetterheadService($db))->latest((int)$letter['letterhead_id']);
+                if ($latest !== (int)$letter['letterhead_id']) {
+                    $db->run('UPDATE letters SET letterhead_id = ? WHERE id = ?', [$latest, $letterId]);
+                    $letter['letterhead_id'] = $latest;
+                }
+            }
 
             if (!$personal && $letter['letter_number'] === null) {
                 $n = $this->numbers->next($orgId, $org['short_name'], $template['code'], $template['number_series'], $template['number_format'], $now);
@@ -137,8 +145,9 @@ final class LetterService
                 'title'=>$letter['title'],
                 'organization' => $org,
                 'letter_number' => $letter['letter_number'],
+                // Text and image hashes only; the bytes stay in the (never edited) letterhead row.
                 'letterhead' => $letter['letterhead_id'] === null ? null
-                    : $db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]),
+                    : (new LetterheadService($db))->snapshot((int)$letter['letterhead_id']),
                 // A personal letter is signed by its author, after any "Mengetahui" reviewers.
                 'author' => $personal ? ['signature_key'=>'author','name' => (string)($fields['nama_pengirim'] ?? $fields['nama_mahasiswa'] ?? $db->value('SELECT nama_lengkap FROM users WHERE id = ?', [$userId])),
                                          'position' => (json_decode($template['definition'],true)['presentation']['signature_label']??'Hormat saya')] : null,

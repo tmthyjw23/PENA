@@ -14,8 +14,8 @@ INSERT INTO `organization_members` (`organization_id`, `user_id`, `role`) VALUES
 (1, 2, 'secretary')
 ON DUPLICATE KEY UPDATE `role` = VALUES(`role`);
 
-INSERT INTO `letterheads` (`id`, `organization_id`, `name`, `address`, `contact`) VALUES
-(1, 1, 'BADAN EKSEKUTIF MAHASISWA FAKULTAS ILMU KOMPUTER', 'Alamat kampus (ubah di pengaturan kop)', 'Email organisasi (ubah di pengaturan kop)')
+INSERT INTO `letterheads` (`id`, `organization_id`, `name`, `address`, `contact`, `is_default`) VALUES
+(1, 1, 'BADAN EKSEKUTIF MAHASISWA FAKULTAS ILMU KOMPUTER', 'Alamat kampus (ubah di menu Kop surat)', 'Email organisasi (ubah di menu Kop surat)', 1)
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
 INSERT INTO `signers` (`id`, `organization_id`, `name`, `position`) VALUES

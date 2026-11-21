@@ -35,7 +35,7 @@ try {
     pena_run_sql($c, (string)file_get_contents(__DIR__ . '/fixtures/pena_schema_2026-11-17.sql'));
     $c->query("INSERT INTO organization_members (organization_id, user_id, role) VALUES (1, 3, 'member')");
     $applied = Migrator::forProject($c)->run();
-    check($applied === ['001_ruang_kerja', '002_request_limits', '003_account_email', '004_personal_ai_templates', '005_letter_signatures', '006_platform_operators', '007_user_ai_settings', '008_user_guide', '009_version_titles'], 'Migration 001 not applied: ' . json_encode($applied));
+    check($applied === ['001_ruang_kerja', '002_request_limits', '003_account_email', '004_personal_ai_templates', '005_letter_signatures', '006_platform_operators', '007_user_ai_settings', '008_user_guide', '009_version_titles', '010_letterhead_templates'], 'Migration 001 not applied: ' . json_encode($applied));
     pena_run_sql($c, (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql'));
     check(Migrator::forProject($c)->run() === [], 'Migration applied twice');
     pena_run_sql($c, (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql')); // re-run stays safe

@@ -60,7 +60,7 @@ $missing = array_values($s['missing'] ?? []);
         <div class="min-w-0">
           <p class="font-semibold"><?= e($data['template']['name']); ?></p>
           <?php if ($s['reason'] !== '' && empty($def['ai_designed'])): ?><p class="text-secondary"><?= e($s['reason']); ?></p><?php endif; ?>
-          <?php if (count($letterheads) === 1): ?><p class="text-secondary">Kop surat: <?= e(ucwords(strtolower($letterheads[0]['name']))); ?>, satu-satunya kop aktif.</p><?php endif; ?>
+          <?php if (count($letterheads) === 1): ?><p class="text-secondary">Kop surat: <?= e(ucwords(strtolower($letterheads[0]['name']))); ?>, satu-satunya kop aktif. <a href="<?= APP_PATH; ?>/kop/" class="font-semibold text-action underline">Kelola kop surat</a></p><?php endif; ?>
           <p class="text-secondary"><?= !empty($def['ai_designed']) ? 'Jika susunannya belum sesuai, ubah permintaan lalu buat draf kembali.' : 'Kerangka salah? Ubah permintaan Anda lalu susun lagi, atau isi manual.'; ?></p>
         </div>
       </div>
@@ -88,7 +88,8 @@ $missing = array_values($s['missing'] ?? []);
       <?php endif; ?>
       <?php if (count($letterheads) > 1): ?>
         <label for="letterhead_id" class="field-label mt-4">Kop surat</label>
-        <select id="letterhead_id" name="letterhead_id" class="field"><?php foreach ($letterheads as $lh): ?><option value="<?= (int)$lh['id']; ?>"><?= e($lh['name']); ?></option><?php endforeach; ?></select>
+        <select id="letterhead_id" name="letterhead_id" class="field"><?php foreach ($letterheads as $lh): ?><option value="<?= (int)$lh['id']; ?>"><?= e($lh['name']); ?><?= (int)($lh['is_default'] ?? 0) === 1 ? ' (utama)' : ''; ?></option><?php endforeach; ?></select>
+        <p class="field-help"><a href="<?= APP_PATH; ?>/kop/" class="font-semibold text-action underline">Kelola kop surat</a></p>
       <?php endif; ?>
     </section>
 

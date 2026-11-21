@@ -72,7 +72,7 @@ $letterheads = $data['letterheads'] ?? [];
         <h2 id="jenis" class="font-bold">Jenis surat</h2>
         <p class="mt-2 text-secondary">Kerangka menentukan data yang diminta dan bagian surat yang boleh Anda tulis.</p>
         <?php if (count($letterheads) === 1): ?>
-          <p class="mt-2 text-secondary">Kop surat: <?= e(ucwords(strtolower($letterheads[0]['name']))); ?>. Ini satu-satunya kop aktif, jadi dipakai otomatis.</p>
+          <p class="mt-2 text-secondary">Kop surat: <?= e(ucwords(strtolower($letterheads[0]['name']))); ?>. Ini satu-satunya kop aktif, jadi dipakai otomatis. <a href="<?= APP_PATH; ?>/kop/" class="font-semibold text-action underline">Kelola kop surat</a></p>
           <input type="hidden" name="letterhead_id" value="<?= (int)$letterheads[0]['id']; ?>">
         <?php endif; ?>
         <div class="mt-4 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Jenis surat">
@@ -110,8 +110,9 @@ $letterheads = $data['letterheads'] ?? [];
         <?php if (count($letterheads) > 1): ?>
           <label for="letterhead_id" class="field-label mt-4">Kop surat</label>
           <select id="letterhead_id" name="letterhead_id" class="field">
-            <?php foreach ($letterheads as $lh): ?><option value="<?= (int)$lh['id']; ?>" <?= (int)($old['letterhead_id'] ?? 0) === (int)$lh['id'] ? 'selected' : ''; ?>><?= e($lh['name']); ?></option><?php endforeach; ?>
+            <?php foreach ($letterheads as $lh): ?><option value="<?= (int)$lh['id']; ?>" <?= (int)($old['letterhead_id'] ?? 0) === (int)$lh['id'] ? 'selected' : ''; ?>><?= e($lh['name']); ?><?= (int)($lh['is_default'] ?? 0) === 1 ? ' (utama)' : ''; ?></option><?php endforeach; ?>
           </select>
+          <p class="field-help"><a href="<?= APP_PATH; ?>/kop/" class="font-semibold text-action underline">Kelola kop surat</a></p>
         <?php endif; ?>
       </section>
       <?php endif; ?>

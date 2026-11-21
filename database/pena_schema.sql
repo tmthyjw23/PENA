@@ -71,6 +71,17 @@ CREATE TABLE IF NOT EXISTS `letterheads` (
   `address` VARCHAR(255) NULL,
   `contact` VARCHAR(255) NULL,
   `logo_path` VARCHAR(255) NULL,
+  -- Template kop (migrasi 010): teks + logo, atau gambar kop utuh. Isi tidak diubah di tempat:
+  -- menyimpan perubahan membuat baris baru (replaced_by), jadi snapshot surat lama tetap sama.
+  `kind` ENUM('text', 'image') NOT NULL DEFAULT 'text',
+  `subtitle` VARCHAR(255) NULL,
+  `logo_png` MEDIUMBLOB NULL,
+  `logo_sha256` CHAR(64) NULL,
+  `image_png` MEDIUMBLOB NULL,
+  `image_sha256` CHAR(64) NULL,
+  `is_default` TINYINT(1) NOT NULL DEFAULT 0,
+  `replaced_by` INT NULL,
+  `created_by` INT NULL,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

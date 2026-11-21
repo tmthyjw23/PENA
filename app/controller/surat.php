@@ -107,7 +107,7 @@ class surat extends Controller {
             'position'=>$template['definition']['presentation']['signature_label']??'Hormat saya'];
         $preview = (new LetterRenderer())->render($template['definition'], array_filter($values, static fn($v) => $v !== null),
             array_values(array_filter($blocks, static fn($b) => !array_key_exists('text', $b) || $b['text'] !== '')),
-            $letterheads[0] ?? [], null, $state['title'],
+            isset($letterheads[0]) ? $this->_kop()->decorate($this->_kop()->snapshot((int)$letterheads[0]['id']) ?? []) : [], null, $state['title'],
             $previewSigners, null, $org['kind']!=='personal');
         $this->display('surat/generate_hasil', $this->_page('Periksa Hasil', [
             'org' => $org,
@@ -748,4 +748,5 @@ class surat extends Controller {
     private function _query(): LetterQuery { return new LetterQuery($this->_db()); }
     private function _letters(): LetterService { return new LetterService($this->_db()); }
     private function _workspaces(): WorkspaceService { return new WorkspaceService($this->_db()); }
+    private function _kop(): \Pena\Service\LetterheadService { return new \Pena\Service\LetterheadService($this->_db()); }
 }

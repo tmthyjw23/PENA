@@ -64,7 +64,9 @@ final class LetterQuery
 
     public function letterheads(int $orgId): array
     {
-        return $this->db->all('SELECT id, name, address, contact FROM letterheads WHERE organization_id = ? AND is_active = 1 ORDER BY id', [$orgId]);
+        // Default kop first: forms pre-select it, and the AI result page previews it.
+        return $this->db->all('SELECT id, kind, name, subtitle, address, contact, is_default FROM letterheads
+                                WHERE organization_id = ? AND is_active = 1 ORDER BY is_default DESC, id', [$orgId]);
     }
 
     /** Full detail of a letter in $orgId, or null when it belongs elsewhere. */
@@ -121,7 +123,7 @@ final class LetterQuery
         if ($snapshot !== null) {
             $personal = ($snapshot['organization']['kind'] ?? 'organization') === 'personal';
             return $this->renderer->render($snapshot['template']['definition'], $version['fields'], $version['blocks'],
-                $snapshot['letterhead'] ?? [], $snapshot['letter_number'], $snapshot['title']??$version['title']??$letter['title'],
+                (new LetterheadService($this->db))->decorate($snapshot['letterhead'] ?? []), $snapshot['letter_number'], $snapshot['title']??$version['title']??$letter['title'],
                 array_merge($snapshot['approval'] ?? [], !empty($snapshot['author']) ? [$snapshot['author']] : []),
                 $version['submitted_at'], !$personal);
         }
@@ -129,8 +131,8 @@ final class LetterQuery
         $signers = $this->db->all('SELECT g.name, g.position FROM approval_stages s
                                      JOIN approval_stage_members m ON m.stage_id = s.id AND m.removed_at IS NULL
                                      JOIN signers g ON g.id = m.signer_id WHERE s.letter_id = ? ORDER BY s.stage_order, m.id', [$letter['id']]);
-        $letterhead = $letter['letterhead_id']
-            ? $this->db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]) : [];
+        $kop = new LetterheadService($this->db);
+        $letterhead = $letter['letterhead_id'] ? $kop->decorate($kop->snapshot($kop->latest((int)$letter['letterhead_id'])) ?? []) : [];
         // A personal letter is signed by its author below any "Mengetahui" reviewers.
         if ($personal) $signers[] = ['name' => (string)($version['fields']['nama_pengirim'] ?? $version['fields']['nama_mahasiswa'] ?? $letter['author_name'] ?? ''), 'position' => (json_decode($letter['template_definition'],true)['presentation']['signature_label']??'Hormat saya')];
         return $this->renderer->render(json_decode($letter['template_definition'], true), $version['fields'], $version['blocks'],

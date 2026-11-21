@@ -27,7 +27,7 @@ class review extends Controller {
         }
         $snapshot = $page['version']['snapshot'];
         $preview = (new LetterRenderer())->render($snapshot['template']['definition'], $page['version']['fields'],
-            $page['version']['blocks'], $snapshot['letterhead'] ?? [], $snapshot['letter_number'],
+            $page['version']['blocks'], (new \Pena\Service\LetterheadService(Db::fromTemplate(new Database())))->decorate($snapshot['letterhead'] ?? []), $snapshot['letter_number'],
             $page['letter']['title'], array_merge($snapshot['approval'] ?? [], !empty($snapshot['author']) ? [$snapshot['author']] : []),
             $page['version']['submitted_at'], ($snapshot['organization']['kind'] ?? 'organization') !== 'personal');
         $preview=(new \Pena\Service\SignatureService(Db::fromTemplate(new Database())))->decorate((int)$page['version']['id'],$preview,$snapshot['author']??null);
