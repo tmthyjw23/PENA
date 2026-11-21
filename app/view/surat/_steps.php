@@ -1,6 +1,6 @@
 <?php
 // Stepper for "Buat surat dengan AI": $step = 1..3.
-$labels = [1 => 'Ceritakan', 2 => 'Periksa hasil', 3 => 'Simpan draf'];
+$labels = [1 => 'Ceritakan', 2 => 'Periksa', 3 => 'Simpan draf'];
 ?>
 <ol class="mb-6 grid grid-cols-3 border-t border-line" aria-label="Langkah">
   <?php foreach ($labels as $n => $label): $on = $n === $step; $done = $n < $step; ?>

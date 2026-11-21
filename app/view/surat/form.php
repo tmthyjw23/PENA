@@ -36,17 +36,18 @@ $letterheads = $data['letterheads'] ?? [];
   <?php if ($isEdit): ?>
     <nav aria-label="Lokasi" class="hidden text-secondary lg:block"><a href="<?= $base; ?>/detail/<?= (int)$data['letter']['id']; ?>" class="no-underline hover:underline"><?= e($data['letter']['title']); ?></a> / Ubah draf</nav>
     <h1 class="font-bold">Ubah draf</h1>
-    <p class="text-secondary"><?= e($template['name']); ?>. Jenis surat dan alur persetujuan tidak berubah di sini.</p>
+    <p class="text-secondary"><?= e($template['name']); ?>. Jenis surat dan pemeriksa tetap mengikuti draf ini.</p>
   <?php else: ?>
-    <h1 class="font-bold">Buat surat, isi manual</h1>
-    <p class="text-secondary">Draf bisa diubah kapan saja sampai Anda mengajukannya.<?= $personal ? ' Nama, NIM, dan program studi terisi dari profil Anda.' : ' Nomor surat dibuat saat diajukan.'; ?>
-      <a href="<?= $base; ?>/buat/" class="font-semibold text-action underline">Ceritakan saja ke PENA</a></p>
+    <h1 class="font-bold">Isi formulir surat</h1>
+    <p class="text-secondary">Draf bisa diubah kapan saja sampai Anda mengajukannya.<?= $personal ? ' Data profil digunakan jika diperlukan oleh jenis surat.' : ' Nomor surat dibuat saat diajukan.'; ?>
+      <a href="<?= $base; ?>/buat/" class="font-semibold text-action underline">Buat draf dengan AI</a></p>
   <?php endif; ?>
 </header>
+<?php $helpTopic='form';require dirname(__DIR__).'/bantuan/_context.php'; ?>
 
 <?php pena_flash($data['flash']); ?>
 <?php if (!empty($old['message'])): ?>
-  <div class="mb-6 rounded-panel bg-rev-soft px-4 py-3" role="alert">
+  <div class="mb-6 rounded-panel bg-rev-soft px-4 py-3" role="alert" tabindex="-1" data-error-summary>
     <p class="font-semibold"><?= e($old['message']); ?></p>
     <?php foreach ($errors as $key => $msg): if (!str_starts_with($key, 'field.') && !str_starts_with($key, 'block.')): ?><p><?= e($msg); ?></p><?php endif; endforeach; ?>
     <?php if (array_filter(array_keys($errors), static fn($k) => str_starts_with($k, 'field.') || str_starts_with($k, 'block.'))): ?><p>Bagian yang perlu diperbaiki ditandai di bawah.</p><?php endif; ?>
@@ -59,7 +60,7 @@ $letterheads = $data['letterheads'] ?? [];
     <p class="mt-2 text-secondary">Belum ada kerangka untuk ruang kerja ini.</p>
   </section>
 <?php else: $def = $template['definition']; ?>
-<form method="POST" action="<?= $base; ?>/<?= $isEdit ? 'perbarui/' . (int)$data['letter']['id'] : 'simpan/'; ?>" novalidate>
+<form data-draft-guard<?= $isEdit ? ' data-rewrite-endpoint="' . e($base . '/tulis_ulang_draf/' . (int)$data['letter']['id']) . '"' : ''; ?> method="POST" action="<?= $base; ?>/<?= $isEdit ? 'perbarui/' . (int)$data['letter']['id'] : 'simpan/'; ?>" novalidate>
   <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>">
   <input type="hidden" name="template_id" value="<?= (int)$template['id']; ?>">
 
@@ -117,15 +118,13 @@ $letterheads = $data['letterheads'] ?? [];
 
       <section class="panel p-4 lg:p-5" aria-labelledby="data">
         <h2 id="data" class="font-bold">Data surat</h2>
-        <p class="mt-2 text-secondary">Fakta resmi diisi sekali di sini. Paragraf merujuk lewat penanda, jadi mengubah tanggal di sini ikut mengubah kalimat surat.</p>
+        <p class="mt-2 text-secondary">Lengkapi data surat. Teks yang memakai {{isian}} akan mengikuti data ini.</p>
         <div class="mt-4 grid gap-x-4 gap-y-5 sm:grid-cols-2">
-          <?php if (!$isEdit): ?>
-            <div class="sm:col-span-2">
+          <div class="sm:col-span-2">
               <label class="field-label" for="title">Perihal</label>
-              <input id="title" name="title" class="field" maxlength="200" value="<?= e($old['title'] ?? ''); ?>" required aria-describedby="title-h">
-              <p class="field-help" id="title-h">Muncul di kolom Perihal surat</p>
+              <input id="title" name="title" class="field" maxlength="200" value="<?= e($old['title'] ?? ''); ?>" required<?= $aria('title','title','title-h'); ?>>
+              <p class="field-help" id="title-h">Muncul di kolom Perihal surat</p><?= $err('title','title'); ?>
             </div>
-          <?php endif; ?>
           <?php foreach ($def['fields'] as $spec): $key = 'field.' . $spec['key']; $id = 'f_' . $spec['key'];
             $h = $help[$spec['key']] ?? ($spec['type'] !== 'table' ? 'Dipakai sebagai {{' . $spec['key'] . '}}' : '');
             if (empty($spec['required']) && $spec['type'] !== 'table') $h = trim($h . ($h ? '. ' : '') . 'Opsional'); ?>
@@ -147,6 +146,11 @@ $letterheads = $data['letterheads'] ?? [];
       </section>
 
       <section class="panel p-4 lg:p-5" aria-labelledby="isi">
+        <?php if ($isEdit): ?>
+          <input type="hidden" name="rewrite_version_id" value="<?= (int)$data['rewrite_context']['version_id']; ?>">
+          <input type="hidden" name="rewrite_fingerprint" value="<?= e($data['rewrite_context']['fingerprint']); ?>">
+          <input type="hidden" name="ai_connection_revision" value="<?= e($data['ai_connection_revision']); ?>">
+        <?php endif; ?>
         <h2 id="isi" class="font-bold">Isi surat</h2>
         <p class="mt-2 text-secondary">Jangan mengetik tanggal, nama, atau nominal langsung. Pilih penanda untuk menyisipkannya di posisi kursor.</p>
         <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="Penanda isian">
@@ -158,24 +162,39 @@ $letterheads = $data['letterheads'] ?? [];
           <?php foreach ($def['blocks'] as $spec): $key = 'block.' . $spec['id']; $id = 'b_' . $spec['id']; ?>
             <?php if ($spec['type'] === 'paragraph' && $spec['source'] === 'fixed'): ?>
               <div class="rounded-control bg-raised p-3">
-                <p class="colhead">Teks baku kerangka, terkunci</p>
+                <p class="colhead">Teks tetap</p>
                 <p><?= e($spec['text']); ?></p>
               </div>
-            <?php elseif ($spec['type'] === 'paragraph'): ?>
-              <div>
-                <label class="field-label" for="<?= e($id); ?>"><?= e(ucfirst(str_replace('_', ' ', $spec['id']))); ?><?= empty($spec['required']) ? ' <span class="font-normal text-secondary">(opsional)</span>' : ''; ?></label>
+            <?php elseif ($spec['type'] === 'paragraph'): $canRewrite = $isEdit && $spec['source'] === 'ai'; ?>
+              <div data-block-wrap="<?= e($spec['id']); ?>">
+                <div class="flex items-center justify-between gap-3">
+                  <label class="field-label" for="<?= e($id); ?>"><?= e(ucfirst(str_replace('_', ' ', $spec['id']))); ?><?= empty($spec['required']) ? ' <span class="font-normal text-secondary">(opsional)</span>' : ''; ?></label>
+                  <?php if ($canRewrite): ?>
+                    <button type="button" class="min-h-11 font-semibold text-action underline" data-rewrite="<?= e($spec['id']); ?>" aria-expanded="false" aria-controls="<?= e($id); ?>-rw">Tulis ulang</button>
+                  <?php endif; ?>
+                </div>
                 <textarea id="<?= e($id); ?>" name="blocks[<?= e($spec['id']); ?>]" rows="4" class="field"<?= $aria($key, $id, !empty($spec['instruction']) ? $id . '-h' : ''); ?>><?= e($blockValue($spec['id'])); ?></textarea>
                 <?php if (!empty($spec['instruction'])): ?><p class="field-help" id="<?= e($id); ?>-h">Panduan: <?= e($spec['instruction']); ?></p><?php endif; ?>
                 <?= $err($key, $id); ?>
+                <?php if ($canRewrite): ?>
+                  <div id="<?= e($id); ?>-rw" class="mt-2 hidden gap-2" data-rewrite-panel>
+                    <label class="sr-only" for="<?= e($id); ?>-ins">Instruksi tulis ulang</label>
+                    <input id="<?= e($id); ?>-ins" class="field" maxlength="300" placeholder="Misal: lebih singkat, atau sesuaikan dengan catatan pemeriksa">
+                    <button type="button" class="btn btn-secondary" data-rewrite-go="<?= e($spec['id']); ?>">Tulis ulang</button>
+                  </div>
+                  <ul class="mt-2 space-y-1" data-warnings aria-live="polite"></ul>
+                <?php endif; ?>
               </div>
             <?php elseif ($spec['type'] === 'table'): ?>
               <p class="rounded-control border border-dashed border-line p-3 text-secondary">Tabel di surat diambil dari isian <?= e(strtolower($spec['field'] === 'barang' ? 'barang atau ruangan yang dipinjam' : $spec['field'])); ?> di atas.<?= $err($key, $id); ?></p>
             <?php else: ?>
-              <p class="rounded-control border border-dashed border-line p-3 text-secondary">Kolom tanda tangan disusun dari alur persetujuan.</p>
+              <p class="rounded-control border border-dashed border-line p-3 text-secondary">Nama penanda tangan mengikuti daftar pemeriksa.</p>
             <?php endif; ?>
           <?php endforeach; ?>
           <p class="flex items-start gap-3 rounded-control border border-dashed border-line p-3 text-secondary"><?= pena_strip('AI'); ?>
-            <span>Bantuan AI untuk satu paragraf ("Tulis ulang") disambungkan bersama layanan AI. Sampai saat itu, tulis paragraf sendiri dengan penanda.</span></p>
+            <span><?= $isEdit
+                ? 'Tulis ulang mengusulkan satu paragraf dari isian di halaman ini. Hasilnya belum tersimpan sampai Anda menekan Simpan perubahan.'
+                : 'Simpan draf dulu, lalu buka Ubah draf bila ingin memakai Tulis ulang dari AI.'; ?></span></p>
         </div>
       </section>
     </div>
@@ -185,7 +204,7 @@ $letterheads = $data['letterheads'] ?? [];
       <section class="panel p-4 lg:p-5" aria-labelledby="alur">
         <h2 id="alur" class="font-bold"><?= $personal ? 'Pemeriksa (opsional)' : 'Alur persetujuan'; ?></h2>
         <p class="mt-2 text-secondary"><?= $personal
-            ? 'Tanpa pemeriksa, surat langsung jadi saat Anda menyelesaikannya. Tambahkan tahap bila surat perlu diketahui dosen wali atau kaprodi lebih dulu.'
+            ? 'Tambahkan pemeriksa jika surat memerlukan persetujuan. Tanpa pemeriksa, Anda dapat menyelesaikan surat sendiri.'
             : 'Tahap berjalan berurutan. Semua pemeriksa dalam satu tahap harus setuju sebelum tahap berikutnya dibuka.'; ?></p>
         <?php
         $hasSigners = $data['signers'] !== [];
@@ -257,7 +276,7 @@ $letterheads = $data['letterheads'] ?? [];
       if (!t) return;
       const s = t.selectionStart ?? t.value.length, end = t.selectionEnd ?? s, text = b.dataset.insert;
       t.value = t.value.slice(0, s) + text + t.value.slice(end);
-      t.focus(); t.selectionStart = t.selectionEnd = s + text.length;
+      t.dispatchEvent(new Event('input',{bubbles:true}));t.focus(); t.selectionStart = t.selectionEnd = s + text.length;
     }));
     document.querySelector('[data-add-stage]')?.addEventListener('click', e => {
       const hidden = document.querySelector('[data-extra-stage][hidden]');
@@ -268,5 +287,6 @@ $letterheads = $data['letterheads'] ?? [];
   })();
 </script>
 <?php require __DIR__ . '/_rows_editor.php'; ?>
+<?php if ($isEdit): ?><script src="<?= APP_PATH; ?>/assets/js/paragraph-rewrite.js?v=<?= @filemtime(dirname(__DIR__, 3) . '/public/assets/js/paragraph-rewrite.js') ?: 1; ?>" defer></script><?php endif; ?>
 <?php endif; ?>
 <?php require dirname(__DIR__) . '/layout/app_bottom.php'; ?>

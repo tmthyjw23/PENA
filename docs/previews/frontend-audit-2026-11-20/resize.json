@@ -1,0 +1,36 @@
+{
+  "initial": {
+    "width": 320,
+    "headerDisplay": "none",
+    "rows": [
+      {
+        "inline": "1fr",
+        "computed": "223px"
+      }
+    ]
+  },
+  "after": {
+    "width": 1440,
+    "headerDisplay": "grid",
+    "rows": [
+      {
+        "inline": "1fr",
+        "computed": "737px"
+      }
+    ]
+  },
+  "afterAdd": {
+    "width": 1440,
+    "headerDisplay": "grid",
+    "rows": [
+      {
+        "inline": "1fr",
+        "computed": "737px"
+      },
+      {
+        "inline": "24px repeat(3, minmax(0px, 1fr)) 64px",
+        "computed": "24px 205.656px 205.672px 205.672px 64px"
+      }
+    ]
+  }
+}

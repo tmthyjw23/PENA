@@ -7,6 +7,7 @@ class Controller {
 
 	/** Idle minutes before a signed-in session ends (SESSION_IDLE_MINUTES in .env). */
 	private const DEFAULT_IDLE_MINUTES = 60;
+	private bool $accountSessionChecked = false;
 
 	public function __construct(){
 		$this->send_security_headers();
@@ -104,6 +105,40 @@ class Controller {
 		}
 		$_SESSION['LAST_ACTIVITY'] = time();
 		if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+		$this->check_account_session();
+	}
+
+	/** Fresh DB state makes a password reset revoke every previously signed-in session. */
+	private function check_account_session(): void {
+		if ($this->accountSessionChecked || empty($_SESSION['user-id'])) return;
+		$this->accountSessionChecked = true;
+		$database = new Database();
+		if (!$database->isConnected()) $this->abort(503, 'Layanan akun belum tersedia. Coba lagi nanti.');
+		$user = \Pena\Support\Db::fromTemplate($database)->one(
+			"SELECT u.status,u.auth_version,u.email_verified_at,EXISTS(SELECT 1 FROM platform_operators p WHERE p.user_id=u.id) AS is_operator FROM users u WHERE u.id=?", [(int)$_SESSION['user-id']]);
+		if (!\Pena\Service\AccountService::sessionIsCurrent($user, $_SESSION['user-auth-version'] ?? null)) {
+			$this->destroy_session_cleanly();
+			session_id('');
+			@session_start();
+			$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+			// Email links and login continue anonymously; workspaces redirect through their normal guards.
+			return;
+		}
+		$_SESSION['is-operator']=!empty($user['is_operator'])&&$user['email_verified_at']!==null;
+		if ($user['email_verified_at'] === null && !in_array(static::class, ['akun','login','review','landing','daftar'], true)) {
+			header('Location: '.APP_PATH.'/akun/verifikasi/');
+			exit();
+		}
+        // Keep account recovery, guest review and help reachable during required AI setup.
+        if ($user['email_verified_at'] !== null && !in_array(static::class, ['akun','login','review','landing','daftar','preferensi','bantuan','operator'], true)
+            && (new \Pena\Service\AiSettings(\Pena\Support\Db::fromTemplate($database)))->requiresSetup((int)$_SESSION['user-id'])) {
+            $setupUrl=APP_PATH.'/preferensi/';
+            $wantsJson=str_contains($_SERVER['HTTP_ACCEPT']??'', 'application/json')
+                || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']??'')==='xmlhttprequest'
+                || preg_match('~/(?:ai_kerangka|ai_data|ai_paragraf|tulis_ulang)(?:/|$)~i',$_SERVER['REQUEST_URI']??'');
+            if($wantsJson)$this->json_response(['status'=>'error','message'=>'Pilih provider dan simpan API key Anda di Pengaturan AI sebelum melanjutkan.','setup_url'=>$setupUrl],403);
+            header('Location: '.$setupUrl);exit();
+        }
 	}
 
 	public function destroy_session_cleanly(){
@@ -134,14 +169,13 @@ class Controller {
 
 	/** Strips control characters and normalizes UTF-8 in all input; passwords keep their whitespace. */
 	public function sanitize_global_inputs(){
-		$password = $_POST['password'] ?? null;
+		$passwords = array_intersect_key($_POST, array_flip(['password', 'password_confirmation', 'api_key']));
 		$_GET = $this->clean_input_array($_GET);
 		$_POST = $this->clean_input_array($_POST);
 		$_COOKIE = $this->clean_input_array($_COOKIE);
 		$_REQUEST = $this->clean_input_array($_REQUEST);
-		if (is_string($password)) {
-			$_POST['password'] = $password;
-			$_REQUEST['password'] = $password;
+		foreach ($passwords as $key => $password) {
+			if (is_string($password)) { $_POST[$key] = $password; $_REQUEST[$key] = $password; }
 		}
 	}
 

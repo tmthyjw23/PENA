@@ -19,6 +19,7 @@ class review extends Controller {
         $this->start_default_session_app();
         header('Referrer-Policy: no-referrer'); // the token must not leak to other sites
         header('X-Robots-Tag: noindex');
+        header('Cache-Control: no-store, private');
         try {
             $page = $this->_service()->open((string)$token);
         } catch (PenaException $e) {
@@ -28,12 +29,12 @@ class review extends Controller {
         $preview = (new LetterRenderer())->render($snapshot['template']['definition'], $page['version']['fields'],
             $page['version']['blocks'], $snapshot['letterhead'] ?? [], $snapshot['letter_number'],
             $page['letter']['title'], array_merge($snapshot['approval'] ?? [], !empty($snapshot['author']) ? [$snapshot['author']] : []),
-            null, ($snapshot['organization']['kind'] ?? 'organization') !== 'personal');
-        $preview['date'] = '(tanggal surat)';
+            $page['version']['submitted_at'], ($snapshot['organization']['kind'] ?? 'organization') !== 'personal');
+        $preview=(new \Pena\Service\SignatureService(Db::fromTemplate(new Database())))->decorate((int)$page['version']['id'],$preview,$snapshot['author']??null);
         $flash = $_SESSION['flash_message'] ?? null;
         unset($_SESSION['flash_message']);
         $this->display('review/index', [
-            'title' => 'Review: ' . $page['letter']['title'],
+            'title' => 'Pemeriksaan: ' . $page['letter']['title'],
             'page' => $page,
             'preview' => $preview,
             'changes' => $this->_changes($page, $snapshot['template']['definition']),
@@ -47,7 +48,7 @@ class review extends Controller {
         $this->_guardPost();
         try {
             $result = $this->_service()->approve((string)$token, (string)($_POST['content_hash'] ?? ''),
-                trim((string)($_POST['note'] ?? '')) ?: null, $this->_ip(), $_SERVER['HTTP_USER_AGENT'] ?? '');
+                trim((string)($_POST['note'] ?? '')) ?: null, $this->_ip(), $_SERVER['HTTP_USER_AGENT'] ?? '', \Pena\Service\SignatureService::fromRequest($_POST,$_FILES));
             $this->_done('Persetujuan Anda tercatat', $result['letter_status'] === 'approved'
                 ? 'Surat ini sudah disetujui semua pihak. Halaman ini boleh ditutup.'
                 : 'Sekretaris akan mengirim surat ini ke pemeriksa berikutnya. Halaman ini boleh ditutup.', 'approved');
@@ -85,6 +86,9 @@ class review extends Controller {
     private function _changes(array $page, array $definition): array {
         if ($page['previous'] === null) return [];
         $changes = [];
+        if(isset($page['previous']['title'],$page['version']['title'])&&$page['previous']['title']!==$page['version']['title']){
+            $changes[]=['label'=>'Perihal','before'=>$page['previous']['title'],'after'=>$page['version']['title']];
+        }
         $labels = array_column($definition['fields'], 'label', 'key');
         $types = array_column($definition['fields'], 'type', 'key');
         $before = $page['previous']['fields'];
@@ -92,7 +96,7 @@ class review extends Controller {
         foreach (array_unique(array_merge(array_keys($before), array_keys($after))) as $key) {
             if (($before[$key] ?? null) == ($after[$key] ?? null)) continue;
             $show = static fn($v) => match (true) {
-                is_array($v) => count($v) . ' baris',
+                is_array($v) => implode("\n", array_map(static fn($row) => implode(' | ', array_map(static fn($cell) => (string)$cell, (array)$row)), $v)),
                 $v === null => '(kosong)',
                 ($types[$key] ?? '') === 'date' => \Pena\Service\TemplateValidator::formatDate((string)$v),
                 default => (string)$v,

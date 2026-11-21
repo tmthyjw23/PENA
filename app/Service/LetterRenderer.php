@@ -54,12 +54,13 @@ final class LetterRenderer
                 case 'signatures':
                     if ($signers !== []) {
                         $out[] = ['type' => 'signatures', 'id' => $spec['id'], 'signers' => array_map(
-                            static fn($s) => ['role' => $s['position'], 'name' => $s['name']], $signers)];
+                            static fn($s) => ['role' => $s['position'], 'name' => $s['name'], 'signature_key'=>$s['signature_key']??''], $signers)];
                     }
                     break;
             }
         }
 
+        $presentation=$numbered?[]:($definition['presentation']??[]);
         $recipient = array_values(array_filter([
             isset($fields['penerima_jabatan']) ? 'Yth. ' . $fields['penerima_jabatan'] : null,
             $fields['penerima_instansi'] ?? null,
@@ -67,9 +68,9 @@ final class LetterRenderer
         return [
             'letterhead' => $letterhead,
             'kop' => $numbered, // personal letters have neither a letterhead nor a number
-            'metadata' => $numbered ? ['Nomor' => $number ?? '(diberikan saat diajukan)', 'Perihal' => $subject] : ['Perihal' => $subject],
-            'recipient' => $recipient,
-            'date' => $dateIso ? self::longDate($dateIso) : '(tanggal saat diajukan)',
+            'metadata' => $numbered ? ['Nomor' => $number ?? '(diberikan saat diajukan)', 'Perihal' => $subject] : (($presentation['show_subject']??true)?['Perihal'=>$subject]:[]),
+            'recipient' => ($presentation['formal_recipient']??true)?$recipient:[],
+            'date' => ($presentation['show_date']??true)?($dateIso ? self::longDate($dateIso) : '(tanggal saat diajukan)'):'',
             'blocks' => $out,
         ];
     }

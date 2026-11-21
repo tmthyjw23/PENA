@@ -9,7 +9,7 @@
 
 -- ---------------------------------------------------------------------
 -- Akun orang yang masuk ke PENA. Setiap akun adalah sekretaris (pembuat surat) di ruang kerjanya.
--- Pemeriksa tidak perlu akun. Tidak ada peran admin.
+-- Pemeriksa tidak perlu akun. Hak operator platform terpisah dari keanggotaan organisasi.
 -- ---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` VARCHAR(150) NOT NULL UNIQUE,
   `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
   `last_login` DATETIME NULL,
+  `email_verified_at` DATETIME NULL,
+  `auth_version` INT UNSIGNED NOT NULL DEFAULT 1,
+  `guide_dismissed_at` DATETIME NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -26,11 +29,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Akun contoh untuk pengujian lokal (ganti atau nonaktifkan sebelum dipakai sungguhan):
 --   sekretaris / sekretaris123 (BEM + pribadi), admin / admin123 (anggota BEM; nama akun lama),
 --   anggota / sekretaris123 (hanya ruang pribadi). Baris yang sudah ada tidak diubah.
-INSERT INTO `users` (`id`, `username`, `password`, `nama_lengkap`, `email`, `status`) VALUES
-(1, 'admin', '$2y$12$0DHbmnAE/FyrZTuvXlqVtewf3en6seLuZ6WMxalycCejAUCWjCAam', 'Contoh Admin Organisasi', 'admin@pena.local', 'active'),
-(2, 'sekretaris', '$2y$12$DgNVpYjQyWvIrb2jrAE1FeLJ8zgmlg4YZjoZMIFcuP65MHwRUSsx.', 'Contoh Sekretaris', 'sekretaris@pena.local', 'active'),
-(3, 'anggota', '$2y$12$DgNVpYjQyWvIrb2jrAE1FeLJ8zgmlg4YZjoZMIFcuP65MHwRUSsx.', 'Contoh Mahasiswa', 'anggota@pena.local', 'active')
-ON DUPLICATE KEY UPDATE `id` = `id`;
+
 
 -- ---------------------------------------------------------------------
 -- Ruang kerja (nama tabel tetap organizations): pemilik kop, nomor, direktori pemeriksa, arsip.
@@ -112,6 +111,7 @@ CREATE TABLE IF NOT EXISTS `letter_templates` (
   `number_series` VARCHAR(20) NOT NULL DEFAULT 'UMUM',
   `number_format` VARCHAR(120) NOT NULL DEFAULT '{seq}/{org}/{code}/{month_roman}/{year}',
   `definition` JSON NOT NULL,
+  `is_generated` TINYINT(1) NOT NULL DEFAULT 0,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   -- organization_id NULL tidak dianggap sama oleh UNIQUE; kerangka bawaan dijaga lewat seed.
@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `letter_versions` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `letter_id` INT NOT NULL,
   `version_no` INT NOT NULL,
+  `title` VARCHAR(200) NULL,
   `fields` JSON NOT NULL,
   `blocks` JSON NOT NULL,
   `snapshot` JSON NULL,
@@ -361,14 +362,9 @@ CREATE TABLE IF NOT EXISTS `ai_generations` (
 -- =====================================================================
 -- DATA DEMO PENA (nama penanda tangan adalah contoh, bukan orang sungguhan)
 -- =====================================================================
-INSERT INTO `organizations` (`id`, `kind`, `name`, `short_name`, `owner_user_id`) VALUES
-(1, 'organization', 'Badan Eksekutif Mahasiswa Fakultas Ilmu Komputer', 'BEM-FILKOM', 2)
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
-INSERT INTO `organization_members` (`organization_id`, `user_id`, `role`) VALUES
-(1, 1, 'secretary'),
-(1, 2, 'secretary')
-ON DUPLICATE KEY UPDATE `role` = VALUES(`role`);
+
+
 
 -- Setiap akun punya tepat satu ruang pribadi (juga akun yang dibuat sebelum ruang kerja ada).
 INSERT INTO `organizations` (`kind`, `name`, `short_name`, `owner_user_id`)
@@ -383,16 +379,9 @@ UPDATE `organizations` o JOIN `users` u ON u.`id` = o.`owner_user_id`
    SET o.`profile` = JSON_OBJECT('nama_mahasiswa', u.`nama_lengkap`)
  WHERE o.`kind` = 'personal' AND o.`profile` IS NULL;
 
-INSERT INTO `letterheads` (`id`, `organization_id`, `name`, `address`, `contact`) VALUES
-(1, 1, 'BADAN EKSEKUTIF MAHASISWA FAKULTAS ILMU KOMPUTER', 'Alamat kampus (ubah di pengaturan kop)', 'Email organisasi (ubah di pengaturan kop)')
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
-INSERT INTO `signers` (`id`, `organization_id`, `name`, `position`) VALUES
-(1, 1, 'Contoh Ketua Panitia', 'Ketua Panitia'),
-(2, 1, 'Contoh Ketua BEM', 'Ketua BEM'),
-(3, 1, 'Contoh Advisor', 'Advisor Organisasi'),
-(4, 1, 'Contoh Dekan', 'Dekan Fakultas Ilmu Komputer')
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+
 
 -- Blok: source fixed = teks baku (penanda diisi sistem), ai = disusun AI dalam batas instruksi,
 -- field_table = tabel dari isian, signatures = dari alur persetujuan.
@@ -485,3 +474,79 @@ INSERT INTO `letter_templates` (`id`, `organization_id`, `audience`, `code`, `re
    {"id":"tanda_tangan","type":"signatures","source":"approval","required":true}
   ]}')
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+
+-- One-use account tokens; only hashes are persisted.
+CREATE TABLE IF NOT EXISTS account_tokens (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    purpose ENUM('verify_email','reset_password') NOT NULL,
+    token_hash CHAR(64) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    used_at DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_account_tokens_user (user_id, purpose),
+    INDEX idx_account_tokens_expiry (expires_at),
+    CONSTRAINT fk_account_tokens_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Signature images are private per-version evidence, distinct from approval.
+CREATE TABLE IF NOT EXISTS letter_signatures (
+ id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ version_id INT NOT NULL,
+ slot_key VARCHAR(80) NOT NULL,
+ content_hash CHAR(64) NOT NULL,
+ png MEDIUMBLOB NOT NULL,
+ image_sha256 CHAR(64) NOT NULL,
+ user_id INT NULL,
+ request_id INT NULL,
+ auth_method ENUM('account','link') NOT NULL,
+ consented_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY signature_per_slot (version_id,slot_key),
+ CONSTRAINT signature_version FOREIGN KEY (version_id) REFERENCES letter_versions(id) ON DELETE CASCADE,
+ CONSTRAINT signature_request FOREIGN KEY (request_id) REFERENCES approval_requests(id),
+ CONSTRAINT signature_user FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Platform authority is granted explicitly through the server console; no role seeds.
+CREATE TABLE IF NOT EXISTS platform_operators (
+ user_id INT NOT NULL PRIMARY KEY,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT fk_platform_operator_user FOREIGN KEY(user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS operator_events (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ actor_user_id INT NULL,
+ action VARCHAR(40) NOT NULL,
+ target_user_id INT NULL,
+ reason VARCHAR(300) NOT NULL,
+ before_status VARCHAR(20) NULL,
+ after_status VARCHAR(20) NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ INDEX idx_operator_event_time(created_at,id),
+ CONSTRAINT fk_operator_event_actor FOREIGN KEY(actor_user_id) REFERENCES users(id),
+ CONSTRAINT fk_operator_event_target FOREIGN KEY(target_user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS operator_checks (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ actor_user_id INT NOT NULL,
+ status ENUM('ok','error') NOT NULL,
+ model VARCHAR(150) NOT NULL,
+ latency_ms INT UNSIGNED NULL,
+ message VARCHAR(255) NOT NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT fk_operator_check_actor FOREIGN KEY(actor_user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user_ai_settings (
+ user_id INT NOT NULL PRIMARY KEY,
+ mode ENUM('platform','personal') NOT NULL DEFAULT 'platform',
+ provider VARCHAR(30) NOT NULL,
+ model VARCHAR(150) NOT NULL,
+ base_url VARCHAR(500) NOT NULL DEFAULT '',
+ encrypted_key TEXT NOT NULL,
+ revision CHAR(32) NOT NULL,
+ probe_at DATETIME NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ CONSTRAINT fk_user_ai_settings_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

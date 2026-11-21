@@ -15,7 +15,7 @@ $personal = ($letter['workspace_kind'] ?? '') === 'personal';
 $firstSubmit = $personal ? $vno === 1 : $letter['letter_number'] === null;
 $selfOnly = $personal && $data['stages'] === [];
 $eventLabels = [
-    'draft_created' => 'Draf dibuat', 'draft_updated' => 'Draf diperbarui', 'number_assigned' => 'Nomor diberikan',
+    'signature_added'=>'Gambar tanda tangan dibubuhkan', 'draft_created' => 'Draf dibuat', 'draft_updated' => 'Draf diperbarui', 'number_assigned' => 'Nomor diberikan',
     'submitted' => 'Diajukan', 'review_opened' => 'Dibuka pemeriksa', 'approved' => 'Disetujui',
     'revision_requested' => 'Minta revisi', 'revision_started' => 'Revisi dimulai', 'letter_approved' => 'Surat disetujui semua pihak',
     'cancelled' => 'Dibatalkan', 'signer_replaced' => 'Pemeriksa diganti', 'link_reissued' => 'Tautan dibuat',
@@ -83,6 +83,7 @@ $statusLine = match (true) {
     </div>
   <?php endif; ?>
 </header>
+<?php $helpTopic='status';require dirname(__DIR__).'/bantuan/_context.php'; ?>
 
 <?php pena_flash($data['flash']); ?>
 <?php if (!empty($data['errors'])): ?>
@@ -100,8 +101,8 @@ $statusLine = match (true) {
     <section id="langkah" class="plate scroll-mt-20 xl:order-2" aria-label="Langkah berikutnya">
       <?php if (!empty($data['links'])): ?>
         <?= pena_strip('Kirim tautan ini', 'ink'); ?>
-        <p class="mt-3">Tautan hanya ditampilkan sekali. Kirim langsung ke orangnya, misalnya lewat WhatsApp.</p>
-        <p class="mt-2">Siapa pun yang memegang tautan bisa memberi keputusan atas nama pemeriksa itu.</p>
+        <p class="mt-3">Salin tautan sebelum meninggalkan halaman. Kirim langsung kepada pemeriksa yang dituju.</p>
+        <p class="mt-2">Siapa pun yang memiliki tautan ini dapat memberi keputusan. Jangan bagikan di grup atau tempat umum.</p>
         <?php foreach ($data['links'] as $link): $lid = 'link' . substr(md5($link['url']), 0, 8); ?>
           <label for="<?= $lid; ?>" class="mt-4 block font-semibold"><?= e($link['signer_name']); ?><?= $link['kind'] === 'reconfirm' ? ' (konfirmasi ulang)' : ''; ?></label>
           <div class="mt-2 flex gap-2">
@@ -132,7 +133,7 @@ $statusLine = match (true) {
           <?php if (!empty($version['change_summary'])): ?><p class="mt-2">Ringkasan untuk pemeriksa: &ldquo;<?= e($version['change_summary']); ?>&rdquo;</p><?php endif; ?>
         <?php endif; ?>
         <div class="mt-4 flex flex-wrap gap-2">
-          <button type="button" class="btn btn-primary" data-open="dlg-ajukan"><?= $selfOnly ? 'Selesaikan surat' : ($firstSubmit ? 'Ajukan untuk review' : 'Ajukan versi ' . $vno); ?></button>
+          <button type="button" class="btn btn-primary" data-open="dlg-ajukan"><?= $selfOnly ? 'Selesaikan surat' : ($firstSubmit ? 'Ajukan untuk diperiksa' : 'Ajukan versi ' . $vno); ?></button>
           <a href="<?= $base; ?>/edit/<?= $id; ?>" class="btn btn-secondary">Ubah draf</a>
         </div>
 
@@ -141,7 +142,7 @@ $statusLine = match (true) {
         <?php if ($revisionNote): ?>
           <p class="mt-3"><?= e($revisionNote['author_name']); ?> meminta revisi<?= $revisionNote['block_ref'] ? ' pada bagian ' . e(str_replace('_', ' ', $revisionNote['block_ref'])) : ''; ?>: &ldquo;<?= e($revisionNote['body']); ?>&rdquo;</p>
         <?php else: ?>
-          <p class="mt-3">Pemeriksa diganti saat surat direview. Versi <?= $vno; ?> masih memuat pemeriksa lama, jadi surat perlu versi baru.</p>
+          <p class="mt-3">Pemeriksa diganti saat surat dalam proses pemeriksaan. Versi <?= $vno; ?> masih memuat pemeriksa lama, jadi surat perlu versi baru.</p>
         <?php endif; ?>
         <p class="mt-2">Mulai revisi untuk membuat versi <?= $vno + 1; ?>. Persetujuan yang sudah ada tetap tercatat dan penyetujunya diminta konfirmasi ulang.</p>
         <button type="button" class="btn btn-primary mt-4" data-open="dlg-revisi">Mulai revisi</button>
@@ -149,15 +150,16 @@ $statusLine = match (true) {
       <?php elseif ($status === 'approved'): ?>
         <?= pena_strip($selfOnly ? 'Selesai' : 'Disetujui semua pihak', 'ok'); ?>
         <?php if ($selfOnly): ?>
-          <p class="mt-3">Versi <?= $vno; ?> diselesaikan pada <?= e(pena_date($letter['approved_at'])); ?> dan isinya terkunci. Kirim ke penerima, atau cetak untuk tanda tangan basah.</p>
+          <p class="mt-3">Versi <?= $vno; ?> diselesaikan pada <?= e(pena_date($letter['approved_at'])); ?> dan isinya terkunci. Unduh surat untuk dikirim atau dicetak.</p>
         <?php else: ?>
         <p class="mt-3">Versi <?= $vno; ?> disetujui<?= $lastApproval ? ' ' . e($lastApproval['name']) . ' pada ' . e(pena_date($lastApproval['decided_at'])) : ''; ?>. Unduh untuk dicetak dan ditandatangani basah bila diperlukan.</p>
         <?php endif; ?>
-        <p class="mt-2 text-on-plate/80">Ekspor Word dan PDF disambungkan di tahap fitur berikutnya.</p>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <button type="button" class="btn btn-primary" disabled>Unduh PDF</button>
-          <button type="button" class="btn btn-secondary" disabled>Unduh Word</button>
-        </div>
+        <p class="mt-2 text-on-plate/80">Unduh versi yang telah disetujui.</p>
+        <form method="post" action="<?= APP_PATH; ?>/surat/unduh/<?= (int)$letter['id']; ?>" class="mt-4 flex flex-wrap gap-2">
+          <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>">
+          <button type="submit" name="format" value="pdf" class="btn btn-primary">Unduh PDF</button>
+          <button type="submit" name="format" value="docx" class="btn btn-secondary">Unduh Word</button>
+        </form>
 
       <?php elseif ($status === 'cancelled'): ?>
         <?= pena_strip('Dibatalkan', 'carbon'); ?>
@@ -206,8 +208,8 @@ $statusLine = match (true) {
   <div class="min-w-0 xl:col-start-1 xl:row-span-2 xl:row-start-1">
     <?php $preview = $data['preview']; include __DIR__ . '/_preview.php'; ?>
     <p class="mt-4 text-secondary"><?= $isWorking
-      ? 'Sidik konten dibuat saat diajukan. Persetujuan nanti hanya berlaku untuk isi dengan sidik itu.'
-      : 'Sidik konten versi ' . $vno . ': ' . e(substr((string)$version['content_hash'], 0, 16)) . '. Persetujuan hanya berlaku untuk isi dengan sidik ini.'; ?></p>
+      ? 'Isi versi ini akan dikunci saat diajukan.'
+      : 'Persetujuan berlaku untuk versi ' . $vno . '. Perubahan isi harus dibuat sebagai versi baru.'; ?></p>
   </div>
 
   <!-- Kanan bawah: komentar + riwayat -->
@@ -247,17 +249,19 @@ $statusLine = match (true) {
 <?php if ($open): ?>
   <?php if ($status === 'draft'): ?>
   <dialog id="dlg-ajukan" class="sheet" aria-labelledby="dlg-ajukan-t">
-    <form method="POST" action="<?= $base; ?>/ajukan/<?= $id; ?>" class="space-y-4">
+    <form method="POST" action="<?= $base; ?>/ajukan/<?= $id; ?>" enctype="multipart/form-data" class="space-y-4">
       <?= $csrf; ?>
       <?php if ($selfOnly): ?>
         <h2 id="dlg-ajukan-t" class="font-bold">Selesaikan surat?</h2>
         <p class="text-secondary">Isi surat dikunci dan tidak bisa diubah lagi. Bila ada yang salah setelah ini, buat surat baru.</p>
+        <?php include __DIR__.'/_signature.php'; ?>
         <div class="flex flex-wrap gap-3"><button class="btn btn-primary">Selesaikan</button><button type="button" class="btn btn-secondary" data-close>Kembali</button></div>
       <?php else: ?>
-      <h2 id="dlg-ajukan-t" class="font-bold"><?= $firstSubmit ? 'Ajukan surat untuk review?' : 'Ajukan versi ' . $vno . '?'; ?></h2>
+      <h2 id="dlg-ajukan-t" class="font-bold"><?= $firstSubmit ? 'Ajukan surat untuk diperiksa?' : 'Ajukan versi ' . $vno . '?'; ?></h2>
       <?php if (!$personal): ?><p class="text-secondary"><?= $letter['letter_number'] === null ? 'Nomor surat dibuat sekarang dan tetap tercatat terpakai, termasuk bila surat nanti dibatalkan.' : 'Nomor ' . e($letter['letter_number']) . ' tetap dipakai.'; ?></p><?php endif; ?>
       <p class="text-secondary">Isi versi <?= $vno; ?> dikunci. Perubahan setelah ini menjadi versi baru.</p>
       <p class="text-secondary">Tautan untuk pemeriksa yang sudah giliran tampil sekali di halaman ini; kirim sendiri lewat WhatsApp.</p>
+      <?php if ($personal) include __DIR__.'/_signature.php'; ?>
       <div class="flex flex-wrap gap-3"><button class="btn btn-primary">Ajukan sekarang</button><button type="button" class="btn btn-secondary" data-close>Kembali</button></div>
       <?php endif; ?>
     </form>
@@ -269,7 +273,7 @@ $statusLine = match (true) {
     <form method="POST" action="<?= $base; ?>/revisi/<?= $id; ?>" class="space-y-4">
       <?= $csrf; ?>
       <h2 id="dlg-revisi-t" class="font-bold">Mulai revisi ke versi <?= $vno + 1; ?></h2>
-      <p class="text-secondary">Versi <?= $vno; ?> berhenti direview dan tautan yang belum dipakai tidak berlaku lagi. Persetujuan yang sudah ada tetap tercatat untuk versi <?= $vno; ?>; penyetujunya diminta konfirmasi ulang setelah versi <?= $vno + 1; ?> diajukan.</p>
+      <p class="text-secondary">Versi <?= $vno; ?> keluar dari proses pemeriksaan dan tautan yang belum dipakai tidak berlaku lagi. Persetujuan yang sudah ada tetap tercatat untuk versi <?= $vno; ?>; penyetujunya diminta konfirmasi ulang setelah versi <?= $vno + 1; ?> diajukan.</p>
       <div>
         <label for="summary" class="field-label">Ringkasan perubahan (wajib)</label>
         <textarea id="summary" name="summary" rows="3" required class="field" aria-describedby="summary-h"></textarea>
@@ -307,7 +311,7 @@ $statusLine = match (true) {
         <p id="signer-h" class="field-help">Dari direktori penanda tangan organisasi.</p>
       </div>
       <?php if ($status === 'in_review'): ?>
-        <p class="text-rev">Surat sedang direview. Setelah diganti, status menjadi Diminta revisi: mulai revisi lalu ajukan ulang, karena versi <?= $vno; ?> masih memuat nama pemeriksa lama. Tautan yang belum dipakai tidak berlaku lagi.</p>
+        <p class="text-rev">Surat dalam proses pemeriksaan. Setelah diganti, surat perlu direvisi: mulai revisi lalu ajukan ulang, karena versi <?= $vno; ?> masih memuat nama pemeriksa lama. Tautan yang belum dipakai tidak berlaku lagi.</p>
       <?php endif; ?>
       <div class="flex flex-wrap gap-3"><button class="btn btn-primary">Ganti pemeriksa</button><button type="button" class="btn btn-secondary" data-close>Kembali</button></div>
     </form>

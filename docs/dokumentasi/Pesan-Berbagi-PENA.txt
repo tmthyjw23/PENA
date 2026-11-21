@@ -1,0 +1,22 @@
+UNTUK TEMAN YANG INGIN MEMBUAT SURAT
+
+Teman-teman, saya sedang mengembangkan PENA untuk menyusun surat pribadi dan organisasi, termasuk pemeriksaan dan tanda tangan gambar per versi.
+
+Bisa dicoba di https://pena.egg3l.site
+
+Untuk membuat surat:
+1. Daftar dengan email sendiri.
+2. Buka email dari PENA lalu konfirmasikan alamatnya.
+3. Pilih provider dan masukkan API key kalian di Pengaturan AI.
+4. Mulai dari surat pribadi dengan data fiktif dulu.
+
+Saya lampirkan panduan pengguna. Biaya dan kuota AI mengikuti provider masing-masing. Kalau ada kendala, kirim langkah yang dilakukan dan pesan errornya. Jangan kirim API key, kata sandi atau tautan pemeriksaan ke grup.
+
+
+UNTUK TEMAN YANG DIMINTA MEMERIKSA SURAT
+
+Saya meminta bantuanmu memeriksa surat berikut. Nama surat dan versi yang perlu diperiksa tertera pada halaman yang akan saya kirim melalui pesan pribadi.
+
+Kamu tidak perlu membuat akun atau menyiapkan API key. Baca isi lengkapnya, lalu pilih Setujui atau Minta revisi. Gambar tanda tangan bersifat opsional. Jika ada data yang salah, tulis perbaikannya secara spesifik. Jangan teruskan tautan pemeriksaannya kepada orang lain.
+
+Kirim tautan pemeriksaan khusus melalui pesan terpisah kepada pemeriksa yang benar. Contoh pesan ini sengaja tidak memuat tautan atau identitas surat nyata.

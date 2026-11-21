@@ -13,7 +13,7 @@ final class LetterQuery
     public function letters(int $orgId): array
     {
         return $this->db->all('SELECT l.id, l.title, l.status, l.letter_number, l.updated_at, t.name AS template_name,
-                                      t.code AS template_code, v.version_no
+                                      CASE WHEN t.is_generated=1 THEN \'AI\' ELSE t.code END AS template_code, v.version_no
                                  FROM letters l
                                  JOIN letter_templates t ON t.id = l.template_id
                                  LEFT JOIN letter_versions v ON v.id = l.current_version_id
@@ -46,8 +46,15 @@ final class LetterQuery
             $t['definition'] = json_decode($t['definition'], true);
             return $t;
         }, $this->db->all('SELECT id, code, name, description, definition FROM letter_templates
-                           WHERE is_active = 1 AND (organization_id IS NULL OR organization_id = ?)
+                           WHERE is_active = 1 AND is_generated = 0 AND (organization_id IS NULL OR organization_id = ?)
                              AND audience = (SELECT kind FROM organizations WHERE id = ?) ORDER BY name', [$orgId, $orgId]));
+    }
+
+    /** Includes private AI templates when opening their saved letter, without adding them to the catalogue. */
+    public function template(int $orgId,int $templateId): ?array {
+        $row=$this->db->one('SELECT id,code,name,description,definition,is_generated FROM letter_templates WHERE id=? AND is_active=1 AND (organization_id IS NULL OR organization_id=?) AND audience=(SELECT kind FROM organizations WHERE id=?)',[$templateId,$orgId,$orgId]);
+        if($row)$row['definition']=json_decode($row['definition'],true);
+        return $row;
     }
 
     public function signers(int $orgId): array
@@ -63,7 +70,7 @@ final class LetterQuery
     /** Full detail of a letter in $orgId, or null when it belongs elsewhere. */
     public function detail(int $letterId, int $orgId): ?array
     {
-        $letter = $this->db->one('SELECT l.*, t.name AS template_name, t.code AS template_code, t.definition AS template_definition,
+        $letter = $this->db->one('SELECT l.*, t.name AS template_name, CASE WHEN t.is_generated=1 THEN \'AI\' ELSE t.code END AS template_code, t.definition AS template_definition,
                                          o.kind AS workspace_kind, u.nama_lengkap AS author_name
                                     FROM letters l JOIN letter_templates t ON t.id = l.template_id
                                     JOIN organizations o ON o.id = l.organization_id
@@ -94,7 +101,7 @@ final class LetterQuery
             'letter' => $letter,
             'version' => $version,
             'stages' => array_values($stages),
-            'preview' => $this->preview($letter, $version),
+            'preview' => (new SignatureService($this->db))->decorate((int)$version['id'],$this->preview($letter, $version),$version['snapshot']['author']??null),
             'comments' => $this->db->all('SELECT c.*, v.version_no FROM letter_comments c JOIN letter_versions v ON v.id = c.version_id
                                           WHERE c.letter_id = ? ORDER BY c.created_at DESC, c.id DESC', [$letterId]),
             'events' => $this->db->all('SELECT e.*, v.version_no FROM letter_events e LEFT JOIN letter_versions v ON v.id = e.version_id
@@ -114,7 +121,7 @@ final class LetterQuery
         if ($snapshot !== null) {
             $personal = ($snapshot['organization']['kind'] ?? 'organization') === 'personal';
             return $this->renderer->render($snapshot['template']['definition'], $version['fields'], $version['blocks'],
-                $snapshot['letterhead'] ?? [], $snapshot['letter_number'], $letter['title'],
+                $snapshot['letterhead'] ?? [], $snapshot['letter_number'], $snapshot['title']??$version['title']??$letter['title'],
                 array_merge($snapshot['approval'] ?? [], !empty($snapshot['author']) ? [$snapshot['author']] : []),
                 $version['submitted_at'], !$personal);
         }
@@ -125,7 +132,7 @@ final class LetterQuery
         $letterhead = $letter['letterhead_id']
             ? $this->db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]) : [];
         // A personal letter is signed by its author below any "Mengetahui" reviewers.
-        if ($personal) $signers[] = ['name' => (string)($version['fields']['nama_mahasiswa'] ?? $letter['author_name'] ?? ''), 'position' => 'Hormat saya'];
+        if ($personal) $signers[] = ['name' => (string)($version['fields']['nama_pengirim'] ?? $version['fields']['nama_mahasiswa'] ?? $letter['author_name'] ?? ''), 'position' => (json_decode($letter['template_definition'],true)['presentation']['signature_label']??'Hormat saya')];
         return $this->renderer->render(json_decode($letter['template_definition'], true), $version['fields'], $version['blocks'],
             $letterhead ?? [], $letter['letter_number'], $letter['title'], $signers, null, !$personal);
     }

@@ -33,20 +33,24 @@ final class WordDocumentService
             'paperSize' => 'A4', 'marginTop' => 1700, 'marginBottom' => 1440,
             'marginLeft' => 1440, 'marginRight' => 1440, 'headerHeight' => 500,
         ]);
-        $header = $section->addHeader();
-        $header->addText($this->text($letterhead['name'] ?? ''), ['bold' => true, 'size' => 14], 'PenaCenter');
-        foreach (['address', 'contact'] as $field) {
-            if (!empty($letterhead[$field])) {
-                $header->addText($this->text($letterhead[$field]), ['size' => 10], 'PenaCenter');
+        if (!empty($letterhead['name'])) {
+            $header = $section->addHeader();
+            $header->addText($this->text($letterhead['name'] ?? ''), ['bold' => true, 'size' => 14], 'PenaCenter');
+            foreach (['address', 'contact'] as $field) {
+                if (!empty($letterhead[$field])) {
+                    $header->addText($this->text($letterhead[$field]), ['size' => 10], 'PenaCenter');
+                }
             }
         }
-        // No border options: borderSize 0 still renders a hairline grid in Word.
-        $table = $section->addTable();
-        foreach ($metadata as $label => $value) {
-            $table->addRow();
-            $table->addCell(1500)->addText($this->text($label), [], 'PenaBase');
-            $table->addCell(100)->addText(':', [], 'PenaBase');
-            $table->addCell(7000)->addText($this->text($value), [], 'PenaBase');
+        if ($metadata !== []) {
+            // No border options: borderSize 0 still renders a hairline grid in Word.
+            $table = $section->addTable();
+            foreach ($metadata as $label => $value) {
+                $table->addRow();
+                $table->addCell(1500)->addText($this->text($label), [], 'PenaBase');
+                $table->addCell(100)->addText(':', [], 'PenaBase');
+                $table->addCell(7000)->addText($this->text($value), [], 'PenaBase');
+            }
         }
         foreach ($blocks as $block) {
             switch ($block['type'] ?? '') {
@@ -84,7 +88,12 @@ final class WordDocumentService
                         foreach ($group as $signer) {
                             $cell = $table->addCell($span ? 9000 : 4500, $span);
                             $cell->addText($this->text($signer['role'] ?? ''), [], 'PenaSignRole');
-                            $cell->addTextBreak(3, [], 'PenaSign');
+                            if(!empty($signer['signature_png'])){
+                                $png=base64_decode(substr($signer['signature_png'],22),true);
+                                if($png===false)throw new InvalidArgumentException('Gambar tanda tangan tidak valid.');
+                                $size=getimagesizefromstring($png);$scale=min(180/$size[0],64/$size[1]);
+                                $cell->addTextRun('PenaSign')->addImage($png,['width'=>$size[0]*$scale,'height'=>$size[1]*$scale]);
+                            }else $cell->addTextBreak(3, [], 'PenaSign');
                             $cell->addText($this->text($signer['name'] ?? ''), ['bold' => true], $keep);
                         }
                     }

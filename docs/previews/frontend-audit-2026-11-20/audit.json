@@ -1,0 +1,4895 @@
+[
+  {
+    "name": "landing",
+    "route": "/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 1763,
+    "h1": [
+      {
+        "text": "Surat pribadi dan organisasi",
+        "size": "56px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat pribadi dan organisasi",
+        "size": "56px"
+      },
+      {
+        "level": "H2",
+        "text": "Dari draf ke surat selesai",
+        "size": "40px"
+      },
+      {
+        "level": "H3",
+        "text": "Buat draf",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "Kirim untuk diperiksa",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "Beri keputusan",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "Perbarui versi",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Yang perlu Anda ketahui",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 431.70000000298023,
+        "responseMs": 154.89999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 105.89999999850988
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 207.10000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 188.39999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 210.79999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 228.5
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 272.59999999403954
+      }
+    ],
+    "smallControls": [],
+    "accessibility": {
+      "passes": 29,
+      "incomplete": [],
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".pb-14"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<section class=\"mx-auto max-w-[1240px] px-4 pb-14 pt-6 lg:px-8 lg:pb-20 lg:pt-10\">"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "landing",
+    "route": "/",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 1070,
+    "h1": [
+      {
+        "text": "Surat pribadi dan organisasi",
+        "size": "96px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat pribadi dan organisasi",
+        "size": "96px"
+      },
+      {
+        "level": "H2",
+        "text": "Dari draf ke surat selesai",
+        "size": "40px"
+      },
+      {
+        "level": "H3",
+        "text": "Buat draf",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "Kirim untuk diperiksa",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "Beri keputusan",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "Perbarui versi",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Yang perlu Anda ketahui",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 411,
+        "responseMs": 195
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 187.60000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 190.60000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 184.39999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 207.20000000298023
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 200
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 245.60000000149012
+      }
+    ],
+    "smallControls": [],
+    "accessibility": {
+      "passes": 29,
+      "incomplete": [],
+      "violations": [
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".pb-14"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<section class=\"mx-auto max-w-[1240px] px-4 pb-14 pt-6 lg:px-8 lg:pb-20 lg:pt-10\">"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "login",
+    "route": "/login/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 905,
+    "h1": [
+      {
+        "text": "Kelola surat Anda",
+        "size": "40px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Kelola surat Anda",
+        "size": "40px"
+      },
+      {
+        "level": "H2",
+        "text": "Masuk",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 847.5,
+        "responseMs": 350.3999999985099
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 350.90000000596046
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 352.79999999701977
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 348
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 490.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 417.8999999985099
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 558
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lupa kata sandi?",
+        "width": 115.640625,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Daftar",
+        "width": 43.4375,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".mt-3"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #56554f, background color: #e7b53b, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1",
+              "html": "<p class=\"mt-3 max-w-[44ch] text-secondary\">Lihat draf, status pemeriksaan, dan surat selesai dalam ruang kerja Anda.</p>"
+            }
+          ]
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "help": "Document should have one main landmark",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/landmark-one-main?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                "html"
+              ],
+              "summary": "Fix all of the following:\n  Document does not have a main landmark",
+              "html": "<html lang=\"id\">"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".flex-col"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<section class=\"flex flex-col bg-rail px-4 py-5 lg:px-11 lg:py-10\">"
+            },
+            {
+              "target": [
+                "h2"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<h2 class=\"font-bold\">Masuk</h2>"
+            },
+            {
+              "target": [
+                ".mt-2.text-secondary"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-2 text-secondary\">Gunakan akun yang terdaftar di organisasi Anda.</p>"
+            },
+            {
+              "target": [
+                "form > div:nth-child(2)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>\n          <label for=\"username\" class=\"field-label\">Email atau nama pengguna</label>\n          <input type=\"text\" class=\"field\" id=\"username\" name=\"username\" autocomplete=\"username\" required=\"\" autofocus=\"\">\n        </div>"
+            },
+            {
+              "target": [
+                "div:nth-child(3)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>\n          <label for=\"password\" class=\"field-label\">Kata sandi</label>\n          <input type=\"password\" class=\"field\" id=\"password\" name=\"password\" autocomplete=\"current-password\" required=\"\">\n        </div>"
+            },
+            {
+              "target": [
+                ".mt-4:nth-child(4)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-4\"><a href=\"http://127.0.0.1:60884/akun/lupa/\" class=\"text-action underline\">Lupa kata sandi?</a></p>"
+            },
+            {
+              "target": [
+                ".mt-4:nth-child(5)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-4\">Belum punya akun? <a href=\"http://127.0.0.1:60884/daftar/\" class=\"text-action underline\">Daftar</a></p>"
+            },
+            {
+              "target": [
+                ".border-t > .text-secondary"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"text-secondary\">Akun contoh untuk pengujian lokal</p>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "login",
+    "route": "/login/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Kelola surat Anda",
+        "size": "64px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Kelola surat Anda",
+        "size": "64px"
+      },
+      {
+        "level": "H2",
+        "text": "Masuk",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 2097.89999999851,
+        "responseMs": 1764.5
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 244.40000000596046
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 239.5
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 248
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 289.8999999985099
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 166.79999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 202.39999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lupa kata sandi?",
+        "width": 115.640625,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Daftar",
+        "width": 43.4375,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".mt-3"
+              ],
+              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #56554f, background color: #e7b53b, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1",
+              "html": "<p class=\"mt-3 max-w-[44ch] text-secondary\">Lihat draf, status pemeriksaan, dan surat selesai dalam ruang kerja Anda.</p>"
+            }
+          ]
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "help": "Document should have one main landmark",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/landmark-one-main?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                "html"
+              ],
+              "summary": "Fix all of the following:\n  Document does not have a main landmark",
+              "html": "<html lang=\"id\">"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".flex-col"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<section class=\"flex flex-col bg-rail px-4 py-5 lg:px-11 lg:py-10\">"
+            },
+            {
+              "target": [
+                "h2"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<h2 class=\"font-bold\">Masuk</h2>"
+            },
+            {
+              "target": [
+                ".mt-2.text-secondary"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-2 text-secondary\">Gunakan akun yang terdaftar di organisasi Anda.</p>"
+            },
+            {
+              "target": [
+                "form > div:nth-child(2)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>\n          <label for=\"username\" class=\"field-label\">Email atau nama pengguna</label>\n          <input type=\"text\" class=\"field\" id=\"username\" name=\"username\" autocomplete=\"username\" required=\"\" autofocus=\"\">\n        </div>"
+            },
+            {
+              "target": [
+                "div:nth-child(3)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>\n          <label for=\"password\" class=\"field-label\">Kata sandi</label>\n          <input type=\"password\" class=\"field\" id=\"password\" name=\"password\" autocomplete=\"current-password\" required=\"\">\n        </div>"
+            },
+            {
+              "target": [
+                ".mt-4:nth-child(4)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-4\"><a href=\"http://127.0.0.1:60884/akun/lupa/\" class=\"text-action underline\">Lupa kata sandi?</a></p>"
+            },
+            {
+              "target": [
+                ".mt-4:nth-child(5)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-4\">Belum punya akun? <a href=\"http://127.0.0.1:60884/daftar/\" class=\"text-action underline\">Daftar</a></p>"
+            },
+            {
+              "target": [
+                ".border-t > .text-secondary"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"text-secondary\">Akun contoh untuk pengujian lokal</p>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "register",
+    "route": "/daftar/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Buat akun PENA",
+        "size": "40px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Buat akun PENA",
+        "size": "40px"
+      },
+      {
+        "level": "H2",
+        "text": "Daftar",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 374.30000000447035,
+        "responseMs": 143.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 200.60000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 205.39999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 187.79999999701977
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 224.10000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 109.09999999403954
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 147.09999999403954
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Masuk",
+        "width": 44.703125,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": [
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "help": "Document should have one main landmark",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/landmark-one-main?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                "html"
+              ],
+              "summary": "Fix all of the following:\n  Document does not have a main landmark",
+              "html": "<html lang=\"id\">"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".flex-col"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<section class=\"flex flex-col bg-rail px-4 py-5 lg:px-11 lg:py-10\">"
+            },
+            {
+              "target": [
+                "h2"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<h2 class=\"font-bold\">Daftar</h2>"
+            },
+            {
+              "target": [
+                ".mt-2"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-2 text-secondary\">Setelah mendaftar, pilih ruang pribadi atau buat ruang organisasi.</p>"
+            },
+            {
+              "target": [
+                "form > div:nth-child(2)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>\n          <label for=\"nama\" class=\"field-label\">Nama lengkap</label>\n          <input type=\"text\" class=\"field\" id=\"nama\" name=\"nama\" autocomplete=\"name\" maxlength=\"100\" required=\"\" autofocus=\"\" value=\"\" aria-describedby=\"\">\n                  </div>"
+            },
+            {
+              "target": [
+                "div:nth-child(3)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>"
+            },
+            {
+              "target": [
+                "div:nth-child(4)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>"
+            },
+            {
+              "target": [
+                ".border-t"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-6 border-t border-line pt-4\">Sudah punya akun? <a href=\"http://127.0.0.1:60884/login/\" class=\"font-semibold text-action underline\">Masuk</a></p>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "register",
+    "route": "/daftar/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Buat akun PENA",
+        "size": "64px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Buat akun PENA",
+        "size": "64px"
+      },
+      {
+        "level": "H2",
+        "text": "Daftar",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 402.1000000014901,
+        "responseMs": 166.29999999701977
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 201.80000000447035
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 209
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 189.60000000149012
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 228.09999999403954
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 136.89999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 179.5
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Masuk",
+        "width": 44.703125,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": [
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "help": "Document should have one main landmark",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/landmark-one-main?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                "html"
+              ],
+              "summary": "Fix all of the following:\n  Document does not have a main landmark",
+              "html": "<html lang=\"id\">"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "help": "All page content should be contained by landmarks",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/region?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".flex-col"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<section class=\"flex flex-col bg-rail px-4 py-5 lg:px-11 lg:py-10\">"
+            },
+            {
+              "target": [
+                "h2"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<h2 class=\"font-bold\">Daftar</h2>"
+            },
+            {
+              "target": [
+                ".mt-2"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-2 text-secondary\">Setelah mendaftar, pilih ruang pribadi atau buat ruang organisasi.</p>"
+            },
+            {
+              "target": [
+                "form > div:nth-child(2)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>\n          <label for=\"nama\" class=\"field-label\">Nama lengkap</label>\n          <input type=\"text\" class=\"field\" id=\"nama\" name=\"nama\" autocomplete=\"name\" maxlength=\"100\" required=\"\" autofocus=\"\" value=\"\" aria-describedby=\"\">\n                  </div>"
+            },
+            {
+              "target": [
+                "div:nth-child(3)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>"
+            },
+            {
+              "target": [
+                "div:nth-child(4)"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<div>"
+            },
+            {
+              "target": [
+                ".border-t"
+              ],
+              "summary": "Fix any of the following:\n  Some page content is not contained by landmarks",
+              "html": "<p class=\"mt-6 border-t border-line pt-4\">Sudah punya akun? <a href=\"http://127.0.0.1:60884/login/\" class=\"font-semibold text-action underline\">Masuk</a></p>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "forgot",
+    "route": "/akun/lupa/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Lupa kata sandi",
+        "size": "40px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Lupa kata sandi",
+        "size": "40px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 415.30000000447035,
+        "responseMs": 173.80000000447035
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 186.39999999850988
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 190.59999999403954
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 183
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 235.90000000596046
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 181.60000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "PENA",
+        "width": 43.671875,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "forgot",
+    "route": "/akun/lupa/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Lupa kata sandi",
+        "size": "40px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Lupa kata sandi",
+        "size": "40px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 396.8999999985099,
+        "responseMs": 176.89999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 188.29999999701977
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 191.30000000447035
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 185.10000000149012
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 212.79999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 160.5
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "PENA",
+        "width": 43.671875,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "ai-request",
+    "route": "/surat/buat/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 1864,
+    "h1": [
+      {
+        "text": "Buat surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Buat surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Tentang draf ini",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "CONTOH PERMINTAAN",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 399,
+        "responseMs": 229.60000000149012
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 135.89999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 137.79999999701977
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 142.39999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 152.5
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 185.59999999403954
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 193.40000000596046
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 237.39999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Atur koneksi",
+        "width": 86.15625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 43,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "ai-request",
+    "route": "/surat/buat/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Buat surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Buat surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Tentang draf ini",
+        "size": "16px"
+      },
+      {
+        "level": "H3",
+        "text": "CONTOH PERMINTAAN",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 604.5,
+        "responseMs": 346.6000000014901
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 207.60000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 210
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 196.29999999701977
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 251
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 153.10000000149012
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 157.29999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 165.09999999403954
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Atur koneksi",
+        "width": 86.15625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 42,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "settings",
+    "route": "/preferensi/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 1530,
+    "h1": [
+      {
+        "text": "Pengaturan AI",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Pengaturan AI",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Koneksi yang dipakai",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Tentang kunci Anda",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 269.70000000298023,
+        "responseMs": 90.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 86.30000000447035
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 126.89999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 112
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 172.79999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 149.39999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 179.69999999552965
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 35,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "settings",
+    "route": "/preferensi/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Pengaturan AI",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Pengaturan AI",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Koneksi yang dipakai",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Tentang kunci Anda",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 307.20000000298023,
+        "responseMs": 120.30000000447035
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 149.70000000298023
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 152.10000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 147
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 178.90000000596046
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 125.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 159.39999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 35,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-overview",
+    "route": "/operator/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 1060,
+    "h1": [
+      {
+        "text": "Ringkasan platform",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Ringkasan platform",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "24 jam terakhir",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 248.89999999850988,
+        "responseMs": 102.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 84.5
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 126.40000000596046
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 115.70000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 133.70000000298023
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 183
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 226.60000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 30,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-overview",
+    "route": "/operator/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Ringkasan platform",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Ringkasan platform",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "24 jam terakhir",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 308.70000000298023,
+        "responseMs": 128.90000000596046
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 151
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 153.59999999403954
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 137.60000000149012
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 170.20000000298023
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 201.30000000447035
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 243.10000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 29,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-users",
+    "route": "/operator/akun/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 1379,
+    "h1": [
+      {
+        "text": "Akun",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Akun",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 330.5,
+        "responseMs": 116
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 158.80000000447035
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 156.10000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 166.69999999552965
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 207.60000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 136.89999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 178.10000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Operator Pengganti Uji",
+        "width": 158.28125,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Akun Biasa Uji",
+        "width": 99.390625,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Penguji Browser",
+        "width": 113.71875,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Contoh Mahasiswa",
+        "width": 130.28125,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Contoh Sekretaris",
+        "width": 127.078125,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Contoh Admin Organisasi",
+        "width": 176.03125,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 37,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-users",
+    "route": "/operator/akun/",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 987,
+    "h1": [
+      {
+        "text": "Akun",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Akun",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 326.5,
+        "responseMs": 131.89999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 146.80000000447035
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 143.40000000596046
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 150.80000000447035
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 185.89999999850988
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 129.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 173.19999999552965
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Operator Pengganti Uji",
+        "width": 158.28125,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Akun Biasa Uji",
+        "width": 99.390625,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Penguji Browser",
+        "width": 113.71875,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Contoh Mahasiswa",
+        "width": 130.28125,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Contoh Sekretaris",
+        "width": 127.078125,
+        "height": 19
+      },
+      {
+        "tag": "A",
+        "text": "Contoh Admin Organisasi",
+        "width": 176.03125,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 37,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-services",
+    "route": "/operator/layanan/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 1144,
+    "h1": [
+      {
+        "text": "Layanan",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Layanan",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "AI",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Email",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "PDF",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 331.6000000014901,
+        "responseMs": 185.5
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 92.10000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 128.89999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 126
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 133.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 191.90000000596046
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 237.10000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 31,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-services",
+    "route": "/operator/layanan/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Layanan",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Layanan",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "AI",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Email",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "PDF",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 440.69999999552965,
+        "responseMs": 193.69999999552965
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 191.70000000298023
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 193.60000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 188.39999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 236.60000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 143.89999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 186.09999999403954
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 31,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-logs",
+    "route": "/operator/log/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Log",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Log",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 321.6000000014901,
+        "responseMs": 115.89999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 162.39999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 158
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 164.5
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 199.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 137.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 180.5
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 28,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "operator-logs",
+    "route": "/operator/log/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Log",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Log",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 340.8999999985099,
+        "responseMs": 134.60000000149012
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 172
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 172
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 171.20000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 198.20000000298023
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 124.10000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 164.79999999701977
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 27,
+      "incomplete": [],
+      "violations": []
+    }
+  },
+  {
+    "name": "dashboard-org",
+    "route": "/dashboard/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Semua surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 239.89999999850988,
+        "responseMs": 98.10000000149012
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 79.39999999850988
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 132.70000000298023
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 129.70000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 132.79999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 194.79999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 245.5
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 35,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "dashboard-org",
+    "route": "/dashboard/",
+    "width": 768,
+    "scrollWidth": 768,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Semua surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 250.39999999850988,
+        "responseMs": 104.10000000149012
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 81.19999999552965
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 124
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 121.60000000149012
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 129.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 179
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 224.09999999403954
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ]
+  },
+  {
+    "name": "dashboard-org",
+    "route": "/dashboard/",
+    "width": 1024,
+    "scrollWidth": 1024,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Semua surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 454.19999999552965,
+        "responseMs": 204.29999999701977
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 157.60000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 162.39999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 154.59999999403954
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 241.69999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 178
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 177.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 182
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ]
+  },
+  {
+    "name": "dashboard-org",
+    "route": "/dashboard/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Semua surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 242.39999999850988,
+        "responseMs": 105.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 81
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 128.70000000298023
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 125.60000000149012
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 128.89999999850988
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 176.89999999850988
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 196.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 238.60000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 34,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letters-org",
+    "route": "/surat/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      },
+      {
+        "tag": "LI",
+        "cls": "",
+        "text": "Draf\n1",
+        "width": 72.515625
+      },
+      {
+        "tag": "A",
+        "cls": "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control border border-line bg-surface px-3 no-underline hover:border-ink aria-[current=page]:border-plate aria-[current=page]:bg-plate aria-[current=page]:text-on-plate",
+        "text": "Draf\n1",
+        "width": 72.515625
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "text": "1",
+        "width": 8.4375
+      },
+      {
+        "tag": "LI",
+        "cls": "",
+        "text": "Sedang direview\n0",
+        "width": 158.34375
+      },
+      {
+        "tag": "A",
+        "cls": "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control border border-line bg-surface px-3 no-underline hover:border-ink aria-[current=page]:border-plate aria-[current=page]:bg-plate aria-[current=page]:text-on-plate",
+        "text": "Sedang direview\n0",
+        "width": 158.34375
+      },
+      {
+        "tag": "SPAN",
+        "cls": "font-semibold",
+        "text": "Sedang direview",
+        "width": 115.90625
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "text": "0",
+        "width": 8.4375
+      },
+      {
+        "tag": "LI",
+        "cls": "",
+        "text": "Disetujui\n0",
+        "width": 104.1875
+      },
+      {
+        "tag": "A",
+        "cls": "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control border border-line bg-surface px-3 no-underline hover:border-ink aria-[current=page]:border-plate aria-[current=page]:bg-plate aria-[current=page]:text-on-plate",
+        "text": "Disetujui\n0",
+        "width": 104.1875
+      },
+      {
+        "tag": "SPAN",
+        "cls": "font-semibold",
+        "text": "Disetujui",
+        "width": 61.75
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "text": "0",
+        "width": 8.4375
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 278.29999999701977,
+        "responseMs": 95
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 94
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 136.20000000298023
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 113.39999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 176.60000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 138.39999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 185.20000000298023
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 40,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letters-org",
+    "route": "/surat/",
+    "width": 768,
+    "scrollWidth": 768,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 238.89999999850988,
+        "responseMs": 96.89999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 83.10000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 122.60000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 119.09999999403954
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 125.60000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 183.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 224.39999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ]
+  },
+  {
+    "name": "letters-org",
+    "route": "/surat/",
+    "width": 1024,
+    "scrollWidth": 1024,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 368.29999999701977,
+        "responseMs": 141.70000000298023
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 153.29999999701977
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 201
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 150.10000000149012
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 203.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 213.60000000149012
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 217.29999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 262.1000000014901
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ]
+  },
+  {
+    "name": "letters-org",
+    "route": "/surat/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 297.29999999701977,
+        "responseMs": 103.5
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 77.30000000447035
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 138.79999999701977
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 134.69999999552965
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 184.90000000596046
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 140
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 145.10000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 180
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 167.15625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 38,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letter-detail",
+    "route": "/surat/detail/1",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 2181,
+    "h1": [
+      {
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jadwal persetujuan\nV1",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Komentar dan permintaan revisi",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      },
+      {
+        "tag": "TBODY",
+        "cls": "",
+        "text": "No\tNama Barang/Ruangan\tJumlah\tKeterangan\n1\tKursi\t5\tBaik",
+        "width": 304.703125
+      },
+      {
+        "tag": "TR",
+        "cls": "",
+        "text": "No\tNama Barang/Ruangan\tJumlah\tKeterangan",
+        "width": 303.703125
+      },
+      {
+        "tag": "TH",
+        "cls": "",
+        "text": "Keterangan",
+        "width": 87.765625
+      },
+      {
+        "tag": "TR",
+        "cls": "",
+        "text": "1\tKursi\t5\tBaik",
+        "width": 303.703125
+      },
+      {
+        "tag": "TD",
+        "cls": "",
+        "text": "Baik",
+        "width": 87.765625
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 278,
+        "responseMs": 102
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 84
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 126.60000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 117.5
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 168.20000000298023
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 223.69999999552965
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 270.80000000447035
+      },
+      {
+        "name": "tinos-700.woff2",
+        "bytes": 19200,
+        "ms": 219
+      },
+      {
+        "name": "tinos-400.woff2",
+        "bytes": 18148,
+        "ms": 220.69999999552965
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 38,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/scrollable-region-focusable?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".overflow-x-auto"
+              ],
+              "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+              "html": "<div class=\"overflow-x-auto\" data-block=\"daftar_barang\">"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "letter-detail",
+    "route": "/surat/detail/1",
+    "width": 768,
+    "scrollWidth": 753,
+    "height": 1837,
+    "h1": [
+      {
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jadwal persetujuan\nV1",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Komentar dan permintaan revisi",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 230.10000000149012,
+        "responseMs": 99.5
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80.5
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 117.10000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 121.19999999552965
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 121.5
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 175.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 179
+      },
+      {
+        "name": "tinos-700.woff2",
+        "bytes": 19200,
+        "ms": 181.89999999850988
+      },
+      {
+        "name": "tinos-400.woff2",
+        "bytes": 18148,
+        "ms": 224.29999999701977
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "name": "letter-detail",
+    "route": "/surat/detail/1",
+    "width": 1024,
+    "scrollWidth": 1009,
+    "height": 1721,
+    "h1": [
+      {
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jadwal persetujuan\nV1",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Komentar dan permintaan revisi",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 338.80000000447035,
+        "responseMs": 135
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 144.19999999552965
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 171
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 139.39999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 179.69999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 207.10000000149012
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 212.5
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 217.10000000149012
+      },
+      {
+        "name": "tinos-700.woff2",
+        "bytes": 19200,
+        "ms": 258.5
+      },
+      {
+        "name": "tinos-400.woff2",
+        "bytes": 18148,
+        "ms": 264.1000000014901
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Surat",
+        "width": 37.65625,
+        "height": 19
+      }
+    ]
+  },
+  {
+    "name": "letter-detail",
+    "route": "/surat/detail/1",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 982,
+    "h1": [
+      {
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jadwal persetujuan\nV1",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Komentar dan permintaan revisi",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 257.90000000596046,
+        "responseMs": 101.30000000447035
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 82.20000000298023
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 117.89999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 108.5
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 123.39999999850988
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 213.39999999850988
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 228.29999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 232.80000000447035
+      },
+      {
+        "name": "tinos-700.woff2",
+        "bytes": 19200,
+        "ms": 277.80000000447035
+      },
+      {
+        "name": "tinos-400.woff2",
+        "bytes": 18148,
+        "ms": 288.3999999985099
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Surat",
+        "width": 37.65625,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 38,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letter-edit",
+    "route": "/surat/edit/1",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 3554,
+    "h1": [
+      {
+        "text": "Ubah draf",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Ubah draf",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 237.80000000447035,
+        "responseMs": 104.20000000298023
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80.29999999701977
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 124.29999999701977
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 121.69999999552965
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 126.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 184.89999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 186.5
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 241.29999999701977
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 39,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letter-edit",
+    "route": "/surat/edit/1",
+    "width": 768,
+    "scrollWidth": 753,
+    "height": 2154,
+    "h1": [
+      {
+        "text": "Ubah draf",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Ubah draf",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 257.3999999985099,
+        "responseMs": 101.79999999701977
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80.5
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 126.39999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 122
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 128.5
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 178.79999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 186.89999999850988
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 225.70000000298023
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ]
+  },
+  {
+    "name": "letter-edit",
+    "route": "/surat/edit/1",
+    "width": 1024,
+    "scrollWidth": 1009,
+    "height": 2066,
+    "h1": [
+      {
+        "text": "Ubah draf",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Ubah draf",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 293.5,
+        "responseMs": 96.79999999701977
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 88.89999999850988
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 147.5
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 136.59999999403954
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 188.40000000596046
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 137.70000000298023
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 146.79999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 168.60000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 164.734375,
+        "height": 19
+      }
+    ]
+  },
+  {
+    "name": "letter-edit",
+    "route": "/surat/edit/1",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 2042,
+    "h1": [
+      {
+        "text": "Ubah draf",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Ubah draf",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 255.89999999850988,
+        "responseMs": 103
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 75.5
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 119.20000000298023
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 119.70000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 122.10000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 166.60000000149012
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 176.69999999552965
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 216.20000000298023
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Peminjaman uji browser",
+        "width": 164.734375,
+        "height": 19
+      }
+    ],
+    "accessibility": {
+      "passes": 40,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "manual",
+    "route": "/surat/manual/",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 5001,
+    "h1": [
+      {
+        "text": "Isi formulir surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Isi formulir surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jenis surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Alur persetujuan",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 239.19999999552965,
+        "responseMs": 98
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 89.39999999850988
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 134
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 128.80000000447035
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 134.10000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 190.39999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 196.39999999850988
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 237.39999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      }
+    ],
+    "accessibility": {
+      "passes": 40,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "manual",
+    "route": "/surat/manual/",
+    "width": 768,
+    "scrollWidth": 753,
+    "height": 3371,
+    "h1": [
+      {
+        "text": "Isi formulir surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Isi formulir surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jenis surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Alur persetujuan",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 293.70000000298023,
+        "responseMs": 93.10000000149012
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80.19999999552965
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 145.5
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 149.89999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 191.29999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 139
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 144.39999999850988
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 165.39999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      }
+    ]
+  },
+  {
+    "name": "manual",
+    "route": "/surat/manual/",
+    "width": 1024,
+    "scrollWidth": 1009,
+    "height": 3275,
+    "h1": [
+      {
+        "text": "Isi formulir surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Isi formulir surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jenis surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Alur persetujuan",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 241.39999999850988,
+        "responseMs": 93.5
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 83.20000000298023
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 116
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 113
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 122.5
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 179.5
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 190
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 231.29999999701977
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      }
+    ]
+  },
+  {
+    "name": "manual",
+    "route": "/surat/manual/",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 2248,
+    "h1": [
+      {
+        "text": "Isi formulir surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Isi formulir surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Jenis surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Data surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Isi surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Alur persetujuan",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 267.1000000014901,
+        "responseMs": 93.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 82.5
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 116.5
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 124.89999999850988
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 164.19999999552965
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 131.79999999701977
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 142.79999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 144.5
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      },
+      {
+        "tag": "A",
+        "text": "Buat draf dengan AI",
+        "width": 138.109375,
+        "height": 19
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[0][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[1][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      },
+      {
+        "tag": "INPUT",
+        "text": "stages[2][signer_ids][]",
+        "width": 20,
+        "height": 20
+      }
+    ],
+    "accessibility": {
+      "passes": 41,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "guest-review",
+    "route": "/review/lihat/{token-uji}",
+    "width": 320,
+    "scrollWidth": 305,
+    "height": 2612,
+    "h1": [
+      {
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "JADWAL PERSETUJUAN",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "BERI KEPUTUSAN",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Minta revisi",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Komentar",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "TBODY",
+        "cls": "",
+        "text": "No\tNama Barang/Ruangan\tJumlah\tKeterangan\n1\tKursi\t5\tBaik",
+        "width": 304.703125
+      },
+      {
+        "tag": "TR",
+        "cls": "",
+        "text": "No\tNama Barang/Ruangan\tJumlah\tKeterangan",
+        "width": 303.703125
+      },
+      {
+        "tag": "TH",
+        "cls": "",
+        "text": "Keterangan",
+        "width": 87.765625
+      },
+      {
+        "tag": "TR",
+        "cls": "",
+        "text": "1\tKursi\t5\tBaik",
+        "width": 303.703125
+      },
+      {
+        "tag": "TD",
+        "cls": "",
+        "text": "Baik",
+        "width": 87.765625
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 441.1000000014901,
+        "responseMs": 108.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 242.89999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 231.80000000447035
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 255.30000000447035
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 283
+      },
+      {
+        "name": "signature.js",
+        "bytes": 2852,
+        "ms": 270
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 208.29999999701977
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 211.39999999850988
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 214.5
+      },
+      {
+        "name": "tinos-700.woff2",
+        "bytes": 19200,
+        "ms": 216.70000000298023
+      },
+      {
+        "name": "tinos-400.woff2",
+        "bytes": 18148,
+        "ms": 308.30000000447035
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "INPUT",
+        "text": "signature_method",
+        "width": 13,
+        "height": 13
+      },
+      {
+        "tag": "INPUT",
+        "text": "signature_method",
+        "width": 13,
+        "height": 13
+      },
+      {
+        "tag": "INPUT",
+        "text": "signature_consent",
+        "width": 13,
+        "height": 13
+      }
+    ],
+    "accessibility": {
+      "passes": 41,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "help": "Scrollable region must have keyboard access",
+          "url": "https://dequeuniversity.com/rules/axe/4.14/scrollable-region-focusable?application=axeAPI",
+          "nodes": [
+            {
+              "target": [
+                ".overflow-x-auto"
+              ],
+              "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+              "html": "<div class=\"overflow-x-auto\" data-block=\"daftar_barang\">"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "guest-review",
+    "route": "/review/lihat/{token-uji}",
+    "width": 1440,
+    "scrollWidth": 1425,
+    "height": 1330,
+    "h1": [
+      {
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Peminjaman uji browser",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "JADWAL PERSETUJUAN",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "BERI KEPUTUSAN",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Minta revisi",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Komentar",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 275.19999999552965,
+        "responseMs": 98.79999999701977
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 115.70000000298023
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 112.70000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 124.5
+      },
+      {
+        "name": "signature.js",
+        "bytes": 2852,
+        "ms": 133.29999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 145.39999999850988
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 151.69999999552965
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 159.29999999701977
+      },
+      {
+        "name": "tinos-700.woff2",
+        "bytes": 19200,
+        "ms": 166.79999999701977
+      },
+      {
+        "name": "tinos-400.woff2",
+        "bytes": 18148,
+        "ms": 182.59999999403954
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "INPUT",
+        "text": "signature_method",
+        "width": 13,
+        "height": 13
+      },
+      {
+        "tag": "INPUT",
+        "text": "signature_method",
+        "width": 13,
+        "height": 13
+      },
+      {
+        "tag": "INPUT",
+        "text": "signature_consent",
+        "width": 13,
+        "height": 13
+      }
+    ],
+    "accessibility": {
+      "passes": 40,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "dashboard-empty",
+    "route": "/dashboard/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Belum ada surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Semua surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 346.79999999701977,
+        "responseMs": 182.19999999552965
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 81.29999999701977
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 123
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 126.20000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 156.5
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 135.10000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 172.79999999701977
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 33,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "dashboard-empty",
+    "route": "/dashboard/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Perlu ditindaklanjuti",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Belum ada surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Semua surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 325,
+        "responseMs": 117.79999999701977
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 81.10000000149012
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 153.60000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 157.70000000298023
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 199.10000000149012
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 133.60000000149012
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 140.60000000149012
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 176.89999999850988
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 34,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letters-empty",
+    "route": "/surat/",
+    "width": 320,
+    "scrollWidth": 320,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Belum ada surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [
+      {
+        "tag": "DIV",
+        "cls": "absolute left-0 top-11 w-64 sm:w-72 z-50 rounded-panel border border-line bg-surface p-2 shadow-paper",
+        "text": "",
+        "width": 256
+      },
+      {
+        "tag": "LI",
+        "cls": "",
+        "text": "Draf\n0",
+        "width": 72.515625
+      },
+      {
+        "tag": "A",
+        "cls": "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control border border-line bg-surface px-3 no-underline hover:border-ink aria-[current=page]:border-plate aria-[current=page]:bg-plate aria-[current=page]:text-on-plate",
+        "text": "Draf\n0",
+        "width": 72.515625
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "text": "0",
+        "width": 8.4375
+      },
+      {
+        "tag": "LI",
+        "cls": "",
+        "text": "Sedang direview\n0",
+        "width": 158.34375
+      },
+      {
+        "tag": "A",
+        "cls": "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control border border-line bg-surface px-3 no-underline hover:border-ink aria-[current=page]:border-plate aria-[current=page]:bg-plate aria-[current=page]:text-on-plate",
+        "text": "Sedang direview\n0",
+        "width": 158.34375
+      },
+      {
+        "tag": "SPAN",
+        "cls": "font-semibold",
+        "text": "Sedang direview",
+        "width": 115.90625
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "text": "0",
+        "width": 8.4375
+      },
+      {
+        "tag": "LI",
+        "cls": "",
+        "text": "Disetujui\n0",
+        "width": 104.1875
+      },
+      {
+        "tag": "A",
+        "cls": "inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-control border border-line bg-surface px-3 no-underline hover:border-ink aria-[current=page]:border-plate aria-[current=page]:bg-plate aria-[current=page]:text-on-plate",
+        "text": "Disetujui\n0",
+        "width": 104.1875
+      },
+      {
+        "tag": "SPAN",
+        "cls": "font-semibold",
+        "text": "Disetujui",
+        "width": 61.75
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "text": "0",
+        "width": 8.4375
+      }
+    ],
+    "navigation": [
+      {
+        "domMs": 271.29999999701977,
+        "responseMs": 93.5
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80.70000000298023
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 109.10000000149012
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 157.80000000447035
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 159.80000000447035
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 181.59999999403954
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 219.10000000149012
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 40,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "name": "letters-empty",
+    "route": "/surat/",
+    "width": 1440,
+    "scrollWidth": 1440,
+    "height": 900,
+    "h1": [
+      {
+        "text": "Surat",
+        "size": "16px"
+      }
+    ],
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Surat",
+        "size": "16px"
+      },
+      {
+        "level": "H2",
+        "text": "Belum ada surat",
+        "size": "16px"
+      }
+    ],
+    "errors": [],
+    "overflow": [],
+    "navigation": [
+      {
+        "domMs": 285.29999999701977,
+        "responseMs": 99.39999999850988
+      }
+    ],
+    "resources": [
+      {
+        "name": "barlow-400.woff2",
+        "bytes": 22496,
+        "ms": 80.89999999850988
+      },
+      {
+        "name": "barlow-600.woff2",
+        "bytes": 23072,
+        "ms": 159.89999999850988
+      },
+      {
+        "name": "app.css?v=1795133196",
+        "bytes": 39392,
+        "ms": 112.29999999701977
+      },
+      {
+        "name": "feedback.js?v=1795132115",
+        "bytes": 7554,
+        "ms": 162.29999999701977
+      },
+      {
+        "name": "barlow-condensed-700.woff2",
+        "bytes": 22744,
+        "ms": 182.29999999701977
+      },
+      {
+        "name": "barlow-condensed-600.woff2",
+        "bytes": 22608,
+        "ms": 185.69999999552965
+      },
+      {
+        "name": "barlow-700.woff2",
+        "bytes": 23088,
+        "ms": 228
+      }
+    ],
+    "smallControls": [
+      {
+        "tag": "A",
+        "text": "Lompat ke konten",
+        "width": 1,
+        "height": 1
+      }
+    ],
+    "accessibility": {
+      "passes": 38,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "violations": []
+    }
+  }
+]

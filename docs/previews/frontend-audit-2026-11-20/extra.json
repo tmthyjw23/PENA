@@ -1,0 +1,23 @@
+{
+  "guestSignatureAxe": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": [
+        [
+          "button[type=\"button\"]"
+        ]
+      ]
+    }
+  ],
+  "hiddenUrlBlocksValidGoogle": {
+    "valid": false,
+    "invalid": [
+      {
+        "name": "base_url",
+        "hidden": true
+      }
+    ],
+    "model": "gemini-3.5-flash-lite"
+  }
+}

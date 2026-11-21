@@ -8,18 +8,21 @@ $err = static fn(string $k) => isset($errors[$k]) ? '<p class="field-error" id="
 $aria = static fn(string $k, string $help = '') => ' aria-describedby="' . trim($help . (isset($errors[$k]) ? ' o-' . $k . '-err' : '')) . '"' . (isset($errors[$k]) ? ' aria-invalid="true"' : '');
 ?>
 <header class="mb-6">
-  <h1 class="font-bold"><?= $onlyOrg ? 'Ruang organisasi baru' : 'Surat ini untuk siapa?'; ?></h1>
+  <?php if ($onlyOrg): ?>
+    <nav aria-label="Lokasi" class="mb-1 text-secondary"><a href="<?= APP_PATH; ?>/dashboard/" class="no-underline hover:underline">Beranda</a> / Ruang organisasi baru</nav>
+  <?php endif; ?>
+  <h1 class="font-bold"><?= $onlyOrg ? 'Ruang organisasi baru' : 'Pilih ruang kerja'; ?></h1>
   <p class="text-secondary"><?= $onlyOrg
-      ? 'Ruang organisasi punya kop, nomor surat berseri, dan arsip sendiri. Anda menjadi pemiliknya.'
-      : 'Pilih salah satu untuk memulai. Anda tetap bisa memakai keduanya; pindah ruang lewat menu Ruang kerja kapan saja.'; ?></p>
+      ? 'Setiap organisasi memiliki kop, penomoran, pemeriksa, dan arsip surat sendiri.'
+      : 'Gunakan ruang pribadi untuk surat atas nama sendiri, atau ruang organisasi untuk surat bersama. Anda dapat berpindah ruang lewat menu Ruang kerja.'; ?></p>
 </header>
 <?php pena_flash($data['flash']); ?>
 
 <div class="grid items-start gap-6 <?= $onlyOrg ? 'max-w-[560px]' : 'lg:grid-cols-2'; ?>">
   <?php if (!$onlyOrg): ?>
   <section class="panel p-4 lg:p-5" aria-labelledby="pribadi">
-    <h2 id="pribadi" class="flex items-center gap-3 font-bold"><?= pena_strip('Pribadi', 'ink'); ?>Diri sendiri</h2>
-    <p class="mt-2 text-secondary">Surat izin tidak hadir, dispensasi, atau permohonan ke dosen. Tanpa kop dan nomor surat. Bisa langsung jadi, atau minta dosen wali mengetahui lebih dulu.</p>
+    <h2 id="pribadi" class="flex items-center gap-3 font-bold"><?= pena_strip('Pribadi', 'ink'); ?>Surat pribadi</h2>
+    <p class="mt-2 text-secondary">Buat surat atas nama sendiri, tanpa kop dan nomor organisasi. Tambahkan pemeriksa jika surat memerlukan persetujuan.</p>
     <form method="POST" action="<?= APP_PATH; ?>/ruang/pribadi/" class="mt-4 space-y-5">
       <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>">
       <div>
@@ -36,8 +39,8 @@ $aria = static fn(string $k, string $help = '') => ' aria-describedby="' . trim(
           <input id="program_studi" name="program_studi" class="field" maxlength="150" value="<?= e($profile['program_studi'] ?? ''); ?>">
         </div>
       </div>
-      <p class="text-secondary">Opsional. Diisi sekali, lalu masuk otomatis ke setiap surat pribadi.</p>
-      <button class="btn btn-primary">Mulai surat pribadi</button>
+      <p class="text-secondary">Opsional. Data disimpan di profil dan digunakan bila jenis surat membutuhkannya.</p>
+      <button class="btn btn-primary">Gunakan ruang pribadi</button>
     </form>
   </section>
   <?php endif; ?>
@@ -61,7 +64,10 @@ $aria = static fn(string $k, string $help = '') => ' aria-describedby="' . trim(
         <?= $err('singkatan'); ?>
       </div>
       <p class="text-secondary">Kop surat diisi bersama surat pertama. Mengundang pengurus lain ke ruang ini belum tersedia.</p>
-      <button class="btn <?= $onlyOrg ? 'btn-primary' : 'btn-secondary'; ?>">Buat ruang organisasi</button>
+      <div class="flex flex-wrap items-center gap-3">
+        <button class="btn <?= $onlyOrg ? 'btn-primary' : 'btn-secondary'; ?>">Buat ruang organisasi</button>
+        <?php if ($onlyOrg): ?><a href="<?= APP_PATH; ?>/dashboard/" class="btn btn-quiet">Batal</a><?php endif; ?>
+      </div>
     </form>
   </section>
 </div>

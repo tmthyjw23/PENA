@@ -26,8 +26,8 @@ final class WorkspaceService
         $errors = [];
         if ($name === '' || mb_strlen($name) > 100) $errors['nama'] = 'Nama wajib diisi (maksimal 100 karakter).';
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 150) $errors['email'] = 'Email tidak valid.';
-        if (mb_strlen($password) < 8) $errors['password'] = 'Password minimal 8 karakter.';
-        elseif (mb_strlen($password) > 72) $errors['password'] = 'Password maksimal 72 karakter.';
+        if (mb_strlen($password) < 8) $errors['password'] = 'Kata sandi minimal 8 karakter.';
+        elseif (strlen($password) > 72) $errors['password'] = 'Kata sandi terlalu panjang. Gunakan kata sandi yang lebih singkat.';
         if ($errors !== []) throw new PenaException('Periksa kembali isian pendaftaran.', $errors);
 
         return $this->db->transaction(function (Db $db) use ($name, $email, $password) {

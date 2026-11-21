@@ -71,9 +71,9 @@ final class LetterService
     }
 
     /** Edits the working (unsubmitted) version only. */
-    public function updateDraft(int $letterId, int $userId, array $fields, array $blocks, ?string $changeSummary = null): void
+    public function updateDraft(int $letterId, int $userId, array $fields, array $blocks, ?string $changeSummary = null, ?string $title = null): void
     {
-        $this->db->transaction(function (Db $db) use ($letterId, $userId, $fields, $blocks, $changeSummary) {
+        $this->db->transaction(function (Db $db) use ($letterId, $userId, $fields, $blocks, $changeSummary, $title) {
             $letter = $this->lockLetter($letterId);
             $this->requireManagerOf((int)$letter['organization_id'], $userId);
             $version = $this->currentVersion($letter);
@@ -81,6 +81,11 @@ final class LetterService
                 throw new PenaException('Versi ini sudah diajukan dan tidak bisa diubah. Mulai revisi untuk membuat versi baru.');
             }
             $this->assertValid($this->template((int)$letter['template_id'], (int)$letter['organization_id']), $fields, $blocks, false);
+            if($title!==null){
+                $title=trim($title);
+                if($title===''||mb_strlen($title)>200)throw new PenaException('Perihal wajib diisi, maksimal 200 karakter.',['title'=>'Periksa perihal surat.']);
+                $db->run('UPDATE letters SET title=? WHERE id=?',[$title,$letterId]);
+            }
             $db->run('UPDATE letter_versions SET fields = ?, blocks = ?, change_summary = COALESCE(?, change_summary) WHERE id = ?',
                      [self::json($fields), self::json($blocks), $changeSummary, $version['id']]);
             $this->event($letterId, (int)$version['id'], $userId, 'draft_updated');
@@ -91,9 +96,9 @@ final class LetterService
      * Freezes the working version, assigns the number on first submission, and opens review.
      * @return array{letter_number:?string, version_id:int, links:array<int,string>, approved:bool} links: requestId => raw token
      */
-    public function submit(int $letterId, int $userId): array
+    public function submit(int $letterId, int $userId, ?array $signature = null): array
     {
-        return $this->db->transaction(function (Db $db) use ($letterId, $userId) {
+        return $this->db->transaction(function (Db $db) use ($letterId, $userId, $signature) {
             $now = ($this->clock)();
             $letter = $this->lockLetter($letterId);
             $orgId = (int)$letter['organization_id'];
@@ -111,6 +116,11 @@ final class LetterService
             $this->assertValid($template, $fields, $blocks, true);
             $org = $db->one('SELECT kind, name, short_name FROM organizations WHERE id = ?', [$orgId]);
             $personal = $org['kind'] === 'personal';
+            if($signature!==null){
+                if(!$personal||(int)$letter['created_by']!==$userId)throw new PenaException('Hanya pembuat surat pribadi yang dapat membubuhkan tanda tangan pengirim.');
+                $read=(new LetterQuery($db))->detail($letterId,$orgId);
+                if(($signature['version_id']??0)!==(int)$version['id']||!hash_equals(SignatureService::previewHash($read['preview']),(string)($signature['preview_hash']??'')))throw new PenaException('Draf berubah sejak dibuka. Muat ulang dan periksa kembali sebelum menandatangani.');
+            }
             if (!$personal && $letter['letterhead_id'] === null) throw new PenaException('Pilih kop surat sebelum mengajukan.');
 
             if (!$personal && $letter['letter_number'] === null) {
@@ -124,23 +134,29 @@ final class LetterService
             $members = $this->activeMembers($letterId);
             if ($members === [] && !$personal) throw new PenaException('Alur persetujuan belum memiliki pemeriksa.');
             $snapshot = [
+                'title'=>$letter['title'],
                 'organization' => $org,
                 'letter_number' => $letter['letter_number'],
                 'letterhead' => $letter['letterhead_id'] === null ? null
                     : $db->one('SELECT name, address, contact, logo_path FROM letterheads WHERE id = ?', [$letter['letterhead_id']]),
                 // A personal letter is signed by its author, after any "Mengetahui" reviewers.
-                'author' => $personal ? ['name' => (string)($fields['nama_mahasiswa'] ?? $db->value('SELECT nama_lengkap FROM users WHERE id = ?', [$userId])),
-                                         'position' => 'Hormat saya'] : null,
+                'author' => $personal ? ['signature_key'=>'author','name' => (string)($fields['nama_pengirim'] ?? $fields['nama_mahasiswa'] ?? $db->value('SELECT nama_lengkap FROM users WHERE id = ?', [$userId])),
+                                         'position' => (json_decode($template['definition'],true)['presentation']['signature_label']??'Hormat saya')] : null,
                 'template' => ['id' => (int)$template['id'], 'code' => $template['code'], 'revision' => (int)$template['revision'],
                                'name' => $template['name'], 'definition' => json_decode($template['definition'], true)],
                 'approval' => array_map(static fn($m) => [
-                    'stage_order' => (int)$m['stage_order'], 'stage' => $m['stage_name'],
+                    'signature_key'=>'reviewer:'.$m['member_id'], 'stage_order' => (int)$m['stage_order'], 'stage' => $m['stage_name'],
                     'name' => $m['signer_name'], 'position' => $m['signer_position'],
                 ], $members),
             ];
             $hash = hash('sha256', self::json(['fields' => $fields, 'blocks' => $blocks, 'snapshot' => $snapshot]));
-            $db->run('UPDATE letter_versions SET snapshot = ?, content_hash = ?, submitted_at = ? WHERE id = ?',
-                     [self::json($snapshot), $hash, $now->format('Y-m-d H:i:s'), $version['id']]);
+            $db->run('UPDATE letter_versions SET snapshot = ?, content_hash = ?, submitted_at = ?, title = ? WHERE id = ?',
+                     [self::json($snapshot), $hash, $now->format('Y-m-d H:i:s'), $letter['title'], $version['id']]);
+
+            if($signature!==null){
+                (new SignatureService($db))->record((int)$version['id'],'author',$hash,$signature,$userId,null);
+                $this->event($letterId,(int)$version['id'],$userId,'signature_added',['auth_method'=>'account','image_sha256'=>hash('sha256',$signature['png'])]);
+            }
 
             // Whoever approved the previous submitted version reconfirms in parallel.
             $approvedBefore = [];

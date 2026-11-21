@@ -29,7 +29,7 @@ try {
     Database::applyStrictMode($db); // same session mode the application uses
     $mode = $db->query('SELECT @@SESSION.sql_mode m')->fetch_assoc()['m'];
     check(str_contains($mode, 'STRICT_TRANS_TABLES'), 'Strict mode not applied');
-    $pena = (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql');
+    $pena = (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql') . (string)file_get_contents(dirname(__DIR__) . '/database/demo_seed.sql');
     runSql($db, $pena);
     runSql($db, $pena); // re-running setup must not fail or duplicate seeds
     check((int)$db->query('SELECT COUNT(*) c FROM letter_templates')->fetch_assoc()['c'] === 4, 'Seeds duplicated on re-run');

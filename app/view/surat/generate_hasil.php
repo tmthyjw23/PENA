@@ -25,20 +25,24 @@ $personal = ($data['org']['kind'] ?? '') === 'personal';
 $missing = array_values($s['missing'] ?? []);
 ?>
 <header class="mb-4">
-  <h1 class="font-bold">Periksa hasil susunan</h1>
-  <p class="text-secondary">Ubah apa pun yang kurang tepat. Belum ada yang tersimpan atau terkirim.</p>
+  <h1 class="font-bold">Periksa draf</h1>
+  <p class="text-secondary">Periksa data dan isi surat. Draf belum disimpan atau diajukan.</p>
 </header>
+<?php $helpTopic='periksa';require dirname(__DIR__).'/bantuan/_context.php'; ?>
 <?php require __DIR__ . '/_steps.php'; ?>
 
 <?php if (!empty($data['error_message'])): ?>
-  <div class="mb-6 rounded-panel bg-rev-soft px-4 py-3" role="alert">
+  <div class="mb-6 rounded-panel bg-rev-soft px-4 py-3" role="alert" tabindex="-1" data-error-summary>
     <p class="font-semibold"><?= e($data['error_message']); ?></p>
     <ul class="mt-1 list-disc pl-5"><?php foreach ($errors as $msg): ?><li><?= e($msg); ?></li><?php endforeach; ?></ul>
   </div>
 <?php endif; ?>
 
-<form method="POST" action="<?= APP_PATH; ?>/surat/simpan_ai/" class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,420px)]" novalidate>
+<form data-draft-guard method="POST" action="<?= APP_PATH; ?>/surat/simpan_ai/" class="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,420px)]" novalidate>
   <input type="hidden" name="csrf_token" value="<?= e($data['csrf_token']); ?>">
+      <input type="hidden" name="ai_run" value="<?= e($data['ai_run']); ?>">
+      <input type="hidden" name="ai_revision" value="<?= (int)$data['ai_revision']; ?>">
+      <input type="hidden" name="workspace_id" value="<?= (int)$data['org']['id']; ?>">
   <input type="hidden" name="template_id" value="<?= (int)$data['template']['id']; ?>">
   <?php if (count($letterheads) === 1): ?><input type="hidden" name="letterhead_id" value="<?= (int)$letterheads[0]['id']; ?>"><?php endif; ?>
 
@@ -46,7 +50,7 @@ $missing = array_values($s['missing'] ?? []);
     <section class="flex items-start gap-3 rounded-panel bg-raised p-4" aria-label="Permintaan Anda">
       <?= pena_strip('Anda'); ?>
       <p class="min-w-0 flex-1">&ldquo;<?= e(mb_strimwidth($s['prompt'], 0, 260, '...')); ?>&rdquo;</p>
-      <a href="<?= APP_PATH; ?>/surat/buat/" class="font-semibold text-action underline">Ubah</a>
+      <a href="<?= APP_PATH; ?>/surat/buat/?proses=<?= e($data['ai_run']); ?>" class="font-semibold text-action underline">Ubah</a>
     </section>
 
     <section class="panel p-4 lg:p-5" aria-labelledby="kerangka">
@@ -55,9 +59,9 @@ $missing = array_values($s['missing'] ?? []);
         <?= pena_strip($data['template']['code'], 'ink'); ?>
         <div class="min-w-0">
           <p class="font-semibold"><?= e($data['template']['name']); ?></p>
-          <?php if ($s['reason'] !== ''): ?><p class="text-secondary">Dipilih karena: <?= e($s['reason']); ?></p><?php endif; ?>
+          <?php if ($s['reason'] !== '' && empty($def['ai_designed'])): ?><p class="text-secondary"><?= e($s['reason']); ?></p><?php endif; ?>
           <?php if (count($letterheads) === 1): ?><p class="text-secondary">Kop surat: <?= e(ucwords(strtolower($letterheads[0]['name']))); ?>, satu-satunya kop aktif.</p><?php endif; ?>
-          <p class="text-secondary">Kerangka salah? Ubah permintaan Anda lalu susun lagi, atau isi manual.</p>
+          <p class="text-secondary"><?= !empty($def['ai_designed']) ? 'Jika susunannya belum sesuai, ubah permintaan lalu buat draf kembali.' : 'Kerangka salah? Ubah permintaan Anda lalu susun lagi, atau isi manual.'; ?></p>
         </div>
       </div>
       <?php if (!$personal && !$letterheads): $kop = $s['kop'] ?? []; ?>
@@ -67,13 +71,13 @@ $missing = array_values($s['missing'] ?? []);
           <div class="mt-3 grid gap-x-4 gap-y-5 sm:grid-cols-2">
             <div class="sm:col-span-2">
               <label class="field-label" for="kop_name">Nama di kop</label>
-              <input id="kop_name" name="kop[name]" class="field" maxlength="150" value="<?= e($kop['name'] ?? mb_strtoupper($data['org']['name'])); ?>"<?= isset($errors['kop.name']) ? ' aria-invalid="true"' : ''; ?>>
-              <?php if (isset($errors['kop.name'])): ?><p class="field-error"><?= e($errors['kop.name']); ?></p><?php endif; ?>
+              <input id="kop_name" name="kop[name]" class="field" maxlength="150" value="<?= e($kop['name'] ?? mb_strtoupper($data['org']['name'])); ?>"<?= isset($errors['kop.name']) ? ' aria-invalid="true" aria-describedby="kop_name-err"' : ''; ?>>
+              <?php if (isset($errors['kop.name'])): ?><p class="field-error" id="kop_name-err"><?= e($errors['kop.name']); ?></p><?php endif; ?>
             </div>
             <div>
               <label class="field-label" for="kop_address">Alamat</label>
-              <input id="kop_address" name="kop[address]" class="field" maxlength="255" value="<?= e($kop['address'] ?? ''); ?>"<?= isset($errors['kop.address']) ? ' aria-invalid="true"' : ''; ?>>
-              <?php if (isset($errors['kop.address'])): ?><p class="field-error"><?= e($errors['kop.address']); ?></p><?php endif; ?>
+              <input id="kop_address" name="kop[address]" class="field" maxlength="255" value="<?= e($kop['address'] ?? ''); ?>"<?= isset($errors['kop.address']) ? ' aria-invalid="true" aria-describedby="kop_address-err"' : ''; ?>>
+              <?php if (isset($errors['kop.address'])): ?><p class="field-error" id="kop_address-err"><?= e($errors['kop.address']); ?></p><?php endif; ?>
             </div>
             <div>
               <label class="field-label" for="kop_contact">Kontak <span class="font-normal text-secondary">(opsional)</span></label>
@@ -88,12 +92,13 @@ $missing = array_values($s['missing'] ?? []);
       <?php endif; ?>
     </section>
 
+    <?php if ($def['fields']!==[]): ?>
     <section class="panel p-4 lg:p-5" aria-labelledby="data">
       <h2 id="data" class="flex items-center justify-between font-bold">Data surat <?= pena_strip($filled . ' dari ' . count($s['fields'])); ?></h2>
-      <p class="mt-2 text-secondary">Diambil dari kalimat Anda. Yang tidak Anda sebut tidak dikarang; kutipan sumber hanya ditampilkan bila benar-benar ada di kalimat Anda.</p>
+      <p class="mt-2 text-secondary">Periksa setiap isian. Data yang disimpulkan ditandai perlu dicek.</p>
       <div class="mt-4">
-        <label for="title" class="field-label">Perihal</label>
-        <input id="title" name="title" class="field" maxlength="200" value="<?= e($s['title']); ?>" required>
+        <label for="title" class="field-label"><?= !empty($def['ai_designed']) ? 'Judul draf' : 'Perihal'; ?></label>
+        <input id="title" name="title" class="field" maxlength="200" value="<?= e($s['title']); ?>" required<?= isset($errors['title'])?' aria-invalid="true" aria-describedby="title-err"':''; ?>><?php if(isset($errors['title'])): ?><p id="title-err" class="field-error"><?= e($errors['title']); ?></p><?php endif; ?>
       </div>
       <div class="mt-2">
         <?php foreach ($def['fields'] as $spec): $key = $spec['key']; $f = $s['fields'][$key] ?? ['value' => null, 'quote' => null, 'flag' => 'kosong', 'note' => 'Tidak disebut'];
@@ -106,45 +111,46 @@ $missing = array_values($s['missing'] ?? []);
             </div>
             <?php if ($spec['type'] === 'table'): $cols = array_map(static fn($c) => ['key' => $c['key'], 'label' => $c['label']], $spec['columns']); ?>
               <textarea id="<?= e($id); ?>" name="fields[<?= e($key); ?>]" rows="3" class="field mt-2" data-rows-editor="<?= e(json_encode($cols, JSON_UNESCAPED_UNICODE)); ?>"
-                aria-describedby="<?= e($id); ?>-src"<?= $err ? ' aria-invalid="true"' : ''; ?>><?= e($tableText($spec, $f['value'])); ?></textarea>
+                aria-describedby="<?= e($id); ?>-src<?= $err?' '.e($id).'-err':''; ?>"<?= $err ? ' aria-invalid="true"' : ''; ?>><?= e($tableText($spec, $f['value'])); ?></textarea>
             <?php else: ?>
               <input id="<?= e($id); ?>" type="<?= $spec['type'] === 'date' ? 'date' : 'text'; ?>" name="fields[<?= e($key); ?>]" class="field mt-2"
                 value="<?= e(is_scalar($f['value']) ? (string)$f['value'] : ''); ?>"<?= $spec['type'] === 'money' ? ' inputmode="numeric"' : ''; ?>
-                aria-describedby="<?= e($id); ?>-src"<?= $err ? ' aria-invalid="true"' : ''; ?>>
+                aria-describedby="<?= e($id); ?>-src<?= $err?' '.e($id).'-err':''; ?>"<?= $err ? ' aria-invalid="true"' : ''; ?>>
             <?php endif; ?>
             <p id="<?= e($id); ?>-src" class="mt-2 text-secondary"><?php
               if ($f['quote'] !== null) echo 'Dari: &ldquo;' . e($f['quote']) . '&rdquo;' . ($f['flag'] === 'cek' ? '. ' . e($f['note'] ?? 'Disimpulkan') : '');
               elseif ($f['value'] !== null) echo e($f['note'] ?? 'Disimpulkan') . ': ' . e($display($spec, $f['value']));
               else echo e($f['note'] ?? 'Tidak disebut') . (isset($help[$key]) ? '. ' . e($help[$key]) : '');
             ?></p>
-            <?php if ($err): ?><p class="field-error"><?= e($err); ?></p><?php endif; ?>
+            <?php if ($err): ?><p class="field-error" id="<?= e($id); ?>-err"><?= e($err); ?></p><?php endif; ?>
           </div>
         <?php endforeach; ?>
       </div>
     </section>
 
+    <?php endif; ?>
     <section class="panel p-4 lg:p-5" aria-labelledby="paragraf">
       <h2 id="paragraf" class="flex items-center justify-between font-bold">Paragraf <?= pena_strip('Ditulis AI'); ?></h2>
-      <p class="mt-2 text-secondary">Fakta ditulis lewat penanda seperti {{tanggal_mulai}}, jadi selalu sama dengan data di atas. PENA menolak paragraf yang mengetik tanggal, angka, atau nama secara langsung.</p>
+      <p class="mt-2 text-secondary">Teks seperti {{nama}} mengambil nilai dari data surat. Periksa kalimatnya setelah isian dilengkapi.</p>
       <?php foreach ($def['blocks'] as $b): if ($b['type'] !== 'paragraph') continue; $bid = 'b_' . $b['id']; ?>
         <?php if ($b['source'] === 'fixed'): ?>
           <div class="mt-4 rounded-control bg-raised p-3"><p class="colhead">Teks baku kerangka, terkunci</p><p><?= e($b['text']); ?></p></div>
         <?php else: $blk = $s['blocks'][$b['id']] ?? ['text' => '', 'warnings' => []]; $err = $errors['block.' . $b['id']] ?? null; ?>
           <div class="mt-4" data-block-wrap="<?= e($b['id']); ?>">
             <div class="flex items-center justify-between gap-3">
-              <label for="<?= e($bid); ?>" class="font-semibold"><?= e(ucfirst(str_replace('_', ' ', $b['id']))); ?><?= empty($b['required']) ? ' <span class="font-normal text-secondary">(opsional)</span>' : ''; ?></label>
+              <label for="<?= e($bid); ?>" class="font-semibold"><?= e($b['label']??ucfirst(str_replace('_', ' ', $b['id']))); ?><?= empty($b['required']) ? ' <span class="font-normal text-secondary">(opsional)</span>' : ''; ?></label>
               <button type="button" class="min-h-11 font-semibold text-action underline" data-rewrite="<?= e($b['id']); ?>">Tulis ulang</button>
             </div>
-            <textarea id="<?= e($bid); ?>" name="blocks[<?= e($b['id']); ?>]" rows="4" class="field mt-2"<?= $err ? ' aria-invalid="true"' : ''; ?>><?= e($blk['text']); ?></textarea>
+            <textarea id="<?= e($bid); ?>" name="blocks[<?= e($b['id']); ?>]" rows="4" class="field mt-2"<?= $err ? ' aria-describedby="'.e($bid).'-err"' : ''; ?><?= $err ? ' aria-invalid="true"' : ''; ?>><?= e($blk['text']); ?></textarea>
             <div class="mt-2 hidden gap-2" data-rewrite-panel>
               <label class="sr-only" for="<?= e($bid); ?>-ins">Instruksi tulis ulang</label>
-              <input id="<?= e($bid); ?>-ins" class="field" placeholder="Misal: lebih singkat, sebut kesanggupan menjaga barang">
+              <input id="<?= e($bid); ?>-ins" class="field" placeholder="Misal: lebih hangat, lebih formal, atau lebih singkat">
               <button type="button" class="btn btn-secondary" data-rewrite-go="<?= e($b['id']); ?>">Tulis ulang</button>
             </div>
-            <ul class="mt-2 space-y-1" data-warnings>
+            <ul class="mt-2 space-y-1" data-warnings aria-live="polite">
               <?php foreach ($blk['warnings'] as $w): ?><li class="flex items-start gap-2 text-secondary"><?= pena_mark('waiting', 'mt-1'); ?><?= e($w); ?></li><?php endforeach; ?>
             </ul>
-            <?php if ($err): ?><p class="field-error"><?= e($err); ?></p><?php endif; ?>
+            <?php if ($err): ?><p class="field-error" id="<?= e($bid); ?>-err"><?= e($err); ?></p><?php endif; ?>
           </div>
         <?php endif; ?>
       <?php endforeach; ?>
@@ -153,7 +159,7 @@ $missing = array_values($s['missing'] ?? []);
     <section class="panel p-4 lg:p-5" aria-labelledby="alur">
       <h2 id="alur" class="font-bold"><?= $personal ? 'Pemeriksa (opsional)' : 'Alur persetujuan'; ?></h2>
       <p class="mt-2 text-secondary"><?= $personal
-          ? 'Kosongkan bila surat tidak perlu diketahui siapa pun; surat langsung jadi saat Anda menyelesaikannya.'
+          ? 'Tambahkan pemeriksa jika surat memerlukan persetujuan. Tanpa pemeriksa, Anda dapat menyelesaikan surat sendiri.'
           : 'Dibaca dari kalimat Anda. Tahap berjalan berurutan; ubah nama tahap atau pemeriksanya bila perlu.'; ?></p>
       <?php if (!empty($s['missing'])): ?>
         <p class="mt-2 flex items-start gap-2 rounded-control bg-hl p-3"><?= pena_mark('waiting', 'mt-1'); ?>Belum ada di daftar pemeriksa: <?= e(implode(', ', $s['missing'])); ?>. Tambahkan sebagai pemeriksa baru pada tahapnya di bawah.</p>
@@ -186,14 +192,14 @@ $missing = array_values($s['missing'] ?? []);
   <div class="min-w-0 space-y-6 xl:sticky xl:top-6 sm:[&_article]:px-6">
     <section class="plate" aria-label="Langkah berikutnya">
       <?= pena_strip('Berikutnya', 'ink'); ?>
-      <p class="mt-3"><?= $flagged || $empty ? 'Periksa ' . implode(' dan ', array_filter([$flagged ? $flagged . ' isian bertanda' : '', $empty ? $empty . ' isian wajib yang kosong' : ''])) . ', lalu simpan sebagai draf.' : 'Semua isian punya sumber di kalimat Anda. Periksa sekali lagi, lalu simpan sebagai draf.'; ?> Anda masih bisa mengubah semuanya setelah disimpan.</p>
+      <p class="mt-3"><?= $flagged || $empty ? 'Periksa ' . implode(' dan ', array_filter([$flagged ? $flagged . ' isian bertanda' : '', $empty ? $empty . ' isian wajib yang kosong' : ''])) . ', lalu simpan sebagai draf.' : 'Periksa data, susunan, dan bahasa sebelum menyimpan.'; ?> Draf dapat diubah sebelum diajukan.</p>
       <div class="mt-4 flex flex-wrap gap-2">
         <button class="btn btn-primary">Simpan draf</button>
-        <a href="<?= APP_PATH; ?>/surat/buat/" class="btn btn-secondary">Susun ulang</a>
+        <a href="<?= APP_PATH; ?>/surat/buat/?proses=<?= e($data['ai_run']); ?>" class="btn btn-secondary">Buat ulang draf</a>
       </div>
     </section>
     <?php $preview = $data['preview']; include __DIR__ . '/_preview.php'; ?>
-    <p class="text-secondary">Pratinjau dari hasil susunan; perubahan Anda di kiri terlihat setelah disimpan. Permintaan, model<?= $data['model'] ? ' (' . e($data['model']) . ')' : ''; ?>, dan waktu penyusunan dicatat di riwayat surat. Isi surat tetap tanggung jawab sekretaris.</p>
+    <p class="text-secondary">Pratinjau diperbarui setelah draf disimpan.</p>
   </div>
 </form>
 <?php require __DIR__ . '/_rows_editor.php'; ?>
@@ -206,22 +212,32 @@ $missing = array_values($s['missing'] ?? []);
       panel.classList.toggle('hidden'); panel.classList.toggle('flex');
       if (!panel.classList.contains('hidden')) panel.querySelector('input').focus();
     }));
+    document.querySelectorAll('[data-rewrite-panel] input').forEach(input=>input.addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();input.closest('[data-rewrite-panel]').querySelector('[data-rewrite-go]').click();}}));
     document.querySelectorAll('[data-rewrite-go]').forEach(b => b.addEventListener('click', async () => {
       const wrap = b.closest('[data-block-wrap]'), area = wrap.querySelector('textarea'), list = wrap.querySelector('[data-warnings]');
-      const body = new FormData();
+      const body = new FormData(b.closest('form'));
       body.append('csrf_token', csrf); body.append('block', b.dataset.rewriteGo);
       body.append('current', area.value); body.append('instruction', wrap.querySelector('[data-rewrite-panel] input').value);
-      b.disabled = true; b.textContent = 'Menulis...';
+      const owner=b.closest('form');
+      if(owner.dataset.rewriting||wrap.dataset.busy){window.PenaFeedback?.notice('Tunggu penulisan ulang selesai.');return;}owner.dataset.rewriting='true';
+      wrap.dataset.busy='true'; wrap.setAttribute('aria-busy','true');
+      const skeleton=document.createElement('div');skeleton.className='inline-skeleton';skeleton.setAttribute('aria-hidden','true');skeleton.innerHTML='<div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line"></div>';
+      skeleton.style.minHeight=area.getBoundingClientRect().height+'px';
+      area.hidden=true;area.after(skeleton);b.disabled=true;
       try {
         const res = await fetch('<?= APP_PATH; ?>/surat/tulis_ulang/', { method: 'POST', body, headers: { 'Accept': 'application/json' } });
         const out = await res.json();
         const items = out.status === 'ok' ? out.warnings : [out.message];
-        if (out.status === 'ok') area.value = out.text;
+        if (out.status === 'ok') {
+          area.value = out.text;area.dispatchEvent(new Event('input',{bubbles:true}));
+          b.closest('form').elements.ai_revision.value = out.revision;
+          window.PenaFeedback?.notice('Paragraf diperbarui. Periksa isinya sebelum menyimpan.');
+        }
         list.innerHTML = '';
         items.forEach(w => { const li = document.createElement('li'); li.className = 'flex items-start gap-2 ' + (out.status === 'ok' ? 'text-secondary' : 'text-rev'); li.innerHTML = waitMark; li.append(w); list.append(li); });
       } catch (e) {
-        list.innerHTML = ''; const li = document.createElement('li'); li.className = 'text-rev'; li.textContent = 'Server tidak bisa dihubungi. Paragraf lama tetap dipakai.'; list.append(li);
-      } finally { b.disabled = false; b.textContent = 'Tulis ulang'; }
+        list.innerHTML = ''; const li = document.createElement('li'); li.className = 'text-rev'; li.textContent = 'Paragraf belum diperbarui. Periksa koneksi, lalu coba lagi. Teks sebelumnya tetap tersedia.'; list.append(li);
+      } finally { b.disabled = false; area.hidden=false; skeleton.remove(); delete wrap.dataset.busy; delete owner.dataset.rewriting; wrap.removeAttribute('aria-busy'); }
     }));
   })();
 </script>

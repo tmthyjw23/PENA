@@ -97,7 +97,6 @@ class Security {
 
     /** Blocked requests go to the PHP error log (no database table needed). */
     public static function log_incident($type, $payloadSnippet, $actionTaken = 'Blocked') {
-        error_log(sprintf('[security] %s %s %s %s: %s', $actionTaken, $type, $_SERVER['REMOTE_ADDR'] ?? '-',
-            $_SERVER['REQUEST_URI'] ?? '-', substr((string)$payloadSnippet, 0, 300)));
+        error_log(sprintf('[security] %s %s %s', $actionTaken, $type, $_SERVER['REMOTE_ADDR'] ?? '-'));
     }
 }

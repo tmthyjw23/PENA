@@ -26,7 +26,7 @@ if (!function_exists('pena_status')) {
     function pena_status(string $status): array {
         return match ($status) {
             'draft' => ['Draf', 'waiting', 'text-secondary'],
-            'in_review' => ['Sedang direview', 'pending', 'text-action'],
+            'in_review' => ['Proses pemeriksaan', 'pending', 'text-action'],
             'revision_requested' => ['Diminta revisi', 'revision', 'text-rev'],
             'approved' => ['Disetujui', 'approved', 'text-ok'],
             'cancelled' => ['Dibatalkan', 'cancelled', 'text-secondary'],

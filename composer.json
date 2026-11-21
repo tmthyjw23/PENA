@@ -12,7 +12,8 @@
     "ext-mysqli": "*",
     "ext-zip": "*",
     "phpoffice/phpword": "^1.4",
-    "vlucas/phpdotenv": "^5.6"
+    "vlucas/phpdotenv": "^5.6",
+    "ext-openssl": "*"
   },
   "autoload": {
     "psr-4": {
@@ -35,6 +36,21 @@
     "test:workspace": "@php tests/pena_workspace.php",
     "setup:local": "@php scripts/setup-local.php",
     "db:install": "@php scripts/install-db.php",
-    "serve": "@php -S 127.0.0.1:8787 scripts/router.php"
+    "serve": "@php -S 127.0.0.1:8787 scripts/router.php",
+    "test:exports": "@php tests/pena_exports.php",
+    "test:accounts": "@php tests/pena_accounts.php",
+    "test:ai-drafts": "@php tests/pena_ai_drafts.php",
+    "test:ai-controller": "@php tests/pena_ai_controller.php",
+    "test:saved-rewrite": "@php tests/pena_saved_rewrite.php",
+    "test:ai-clarify": "@php tests/pena_ai_clarify.php",
+    "test:personal-ai": "@php tests/pena_personal_ai.php",
+    "test:ai-client": "@php tests/pena_ai_client.php",
+    "test:signatures": "@php tests/pena_signatures.php",
+    "test:architecture": "@php scripts/check-architecture.php",
+    "test:operator": "@php tests/pena_operator.php",
+    "test:ai-settings": "@php tests/pena_ai_settings.php",
+    "test:ai-endpoint": "@php tests/pena_ai_endpoint.php",
+    "test:ai-transport": "@php tests/pena_ai_transport.php",
+    "test:ux": "@php tests/pena_ux.php"
   }
 }

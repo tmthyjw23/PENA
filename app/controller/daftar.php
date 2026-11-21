@@ -26,7 +26,11 @@ class daftar extends Controller {
         if (!$this->verify_csrf_token()) $this->_back($name, $email, ['form' => 'Sesi formulir kedaluwarsa. Silakan coba lagi.']);
 
         $database = new Database();
-        if (!$database->isConnected()) $this->_back($name, $email, ['form' => 'Database belum terhubung. Coba lagi nanti.']);
+        if (!$database->isConnected()) $this->_back($name, $email, ['form' => 'Pendaftaran belum tersedia. Coba lagi nanti.']);
+        $limiter = new \Pena\Service\RateLimiter(Db::fromTemplate($database));
+        if (!$limiter->allow('signup:' . ($_SERVER['REMOTE_ADDR'] ?? ''), 5, 3600)) {
+            $this->_back($name, $email, ['form' => 'Terlalu banyak pendaftaran. Coba lagi nanti.']);
+        }
         try {
             $userId = (new WorkspaceService(Db::fromTemplate($database)))->register($name, $email, (string)($_POST['password'] ?? ''));
         } catch (PenaException $e) {
@@ -34,12 +38,19 @@ class daftar extends Controller {
         }
 
         session_regenerate_id(true);
-        $user = Db::fromTemplate($database)->one('SELECT id, username, nama_lengkap, email FROM users WHERE id = ?', [$userId]);
+        $user = Db::fromTemplate($database)->one('SELECT id, username, nama_lengkap, email, auth_version FROM users WHERE id = ?', [$userId]);
         $_SESSION['user-id'] = (int)$user['id'];
         $_SESSION['user-name'] = $user['nama_lengkap'];
         $_SESSION['user-username'] = $user['username'];
         $_SESSION['user-email'] = $user['email'];
-        $this->_go('/ruang/mulai/');
+        $_SESSION['user-auth-version'] = (int)$user['auth_version'];
+        try {
+            (new \Pena\Service\AccountService(Db::fromTemplate($database), null, (string)($_ENV['APP_URL'] ?? '')))->sendVerification($userId);
+        } catch (PenaException) {
+            // Account persists; the verification page provides a safe retry when email is unavailable.
+            error_log('PENA registration: verification email could not be processed');
+        }
+        $this->_go('/akun/verifikasi/');
     }
 
     private function _back(string $name, string $email, array $errors): never {

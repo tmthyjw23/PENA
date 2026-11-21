@@ -27,13 +27,14 @@ final class ApprovalService
     public function open(string $token): array
     {
         $request = $this->findByToken($token, false);
-        $version = $this->db->one('SELECT id, version_no, fields, blocks, snapshot, content_hash, change_summary, submitted_at
+        $version = $this->db->one('SELECT id, version_no, title, fields, blocks, snapshot, content_hash, change_summary, submitted_at
                                    FROM letter_versions WHERE id = ?', [$request['version_id']]);
         $letter = $this->db->one('SELECT id, title, letter_number, status FROM letters WHERE id = ?', [$request['letter_id']]);
+        $letter['title']=$version['title']??$letter['title'];
         $previous = null;
         if ($request['kind'] === 'reconfirm') {
             // Reconfirming reviewers see what changed plus the full new document.
-            $previous = $this->db->one('SELECT version_no, fields, blocks FROM letter_versions
+            $previous = $this->db->one('SELECT version_no, title, fields, blocks FROM letter_versions
                                         WHERE letter_id = ? AND version_no < ? AND submitted_at IS NOT NULL
                                         ORDER BY version_no DESC LIMIT 1', [$letter['id'], $version['version_no']]);
         }
@@ -44,13 +45,14 @@ final class ApprovalService
                           'expires_at' => $request['token_expires_at']],
             'letter' => $letter,
             'version' => [
-                'id' => (int)$version['id'], 'version_no' => (int)$version['version_no'],
+                'id' => (int)$version['id'], 'version_no' => (int)$version['version_no'], 'title'=>$version['title'],
                 'fields' => json_decode($version['fields'], true), 'blocks' => json_decode($version['blocks'], true),
                 'snapshot' => json_decode($version['snapshot'], true), 'content_hash' => $version['content_hash'],
                 'change_summary' => $version['change_summary'],
+                'submitted_at' => $version['submitted_at'],
             ],
             'previous' => $previous === null ? null : [
-                'version_no' => (int)$previous['version_no'],
+                'version_no' => (int)$previous['version_no'], 'title'=>$previous['title'],
                 'fields' => json_decode($previous['fields'], true), 'blocks' => json_decode($previous['blocks'], true),
             ],
             'comments' => $this->db->all('SELECT author_name, kind, block_ref, body, created_at FROM letter_comments
@@ -70,12 +72,17 @@ final class ApprovalService
      * The secretary creates them from the letter page (LetterService::reissueLink).
      * @return array{letter_status:string, opened:int} number of requests that became pending
      */
-    public function approve(string $token, string $contentHash, ?string $note, string $ip, string $userAgent): array
+    public function approve(string $token, string $contentHash, ?string $note, string $ip, string $userAgent, ?array $signature = null): array
     {
-        return $this->db->transaction(function (Db $db) use ($token, $contentHash, $note, $ip, $userAgent) {
+        return $this->db->transaction(function (Db $db) use ($token, $contentHash, $note, $ip, $userAgent, $signature) {
             $now = ($this->clock)();
             $request = $this->findByToken($token, true);
             $this->assertSameVersion($request, $contentHash);
+            if($signature!==null){
+                if(($signature['version_id']??0)!==(int)$request['version_id'])throw new PenaException('Tanda tangan ditujukan untuk versi lain. Muat ulang halaman.');
+                (new SignatureService($db))->record((int)$request['version_id'],'reviewer:'.$request['stage_member_id'],$contentHash,$signature,null,(int)$request['id']);
+                $this->event((int)$request['letter_id'],(int)$request['version_id'],$request,'signature_added',['auth_method'=>'link','image_sha256'=>hash('sha256',$signature['png'])]);
+            }
             $this->decide($request, 'approved', $note, $ip, $userAgent, $now);
             $this->event((int)$request['letter_id'], (int)$request['version_id'], $request, 'approved');
 

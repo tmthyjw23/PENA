@@ -50,7 +50,7 @@ try {
           && $sent[0]['body']['model'] === 'pena-combo' && $sent[0]['body']['stream'] === false, 'OpenAI-compatible request to 9router');
     $queue[] = json_encode(['status' => 'ok', 'template' => 'XYZ', 'reason' => '-', 'title' => '-']);
     try { $ai->recommendTemplate($org, $user, $prompt, $templates); check(false, 'unknown template accepted'); } catch (AiException) {}
-    $queue[] = json_encode(['status' => 'clarify', 'question' => 'Surat ini untuk meminjam atau memohon?', 'options' => ['Meminjam barang atau ruang', 'Memohon izin atau dana']]);
+    $queue[] = json_encode(['status' => 'clarify', 'question' => 'Surat ini untuk meminjam atau memohon?', 'options' => ['PMJ', 'PMH']]);
     $c = $ai->recommendTemplate($org, $user, 'bikin surat buat acara minggu depan', $templates);
     check($c['status'] === 'clarify' && count($c['options']) === 2, 'vague request asks for clarification');
     echo "PASS recommend: template from the organization list only, clarification for vague requests, OpenAI-compatible call\n";

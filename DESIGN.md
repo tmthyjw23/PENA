@@ -403,3 +403,10 @@ Ajukan, Mulai revisi, Batalkan, Ganti pemeriksa; `?buka=dlg-...` membukanya saat
 - **Don't** memuat huruf dari Google Fonts atau CDN; huruf ada di `public/assets/fonts`.
 - **Don't** memakai mode gelap: kertas surat harus sama dengan cetakan.
 - **Don't** menulis em dash di teks antarmuka.
+
+## Penyesuaian antarmuka — 20 November 2026
+
+Judul halaman aplikasi memakai 24/32 px, judul bagian 18/26 px, teks utama tetap 16/24 px.
+Identitas kuning/karbon, huruf Barlow dan kertas surat dipertahankan. Petunjuk awal berupa panel
+inline yang dapat ditutup; bantuan kontekstual memakai disclosure native. Tidak ada tour modal
+yang muncul otomatis. Detail evaluasi dan batas pengujian: docs/UX-GUIDANCE-2026-11-20.md.

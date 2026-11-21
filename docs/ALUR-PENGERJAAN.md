@@ -54,3 +54,46 @@ Ekspor Word/PDF untuk surat disetujui, bantuan AI di form surat, dan fitur lain 
 | 3 Database | Tidak perlu perubahan: `ai_generations` dan `letters.source_prompt` sudah ada sejak Fase 0. |
 | 4 AI 9router | Kode selesai 17 Nov 2026 (AiClient, LetterAiService, halaman Buat surat dan Periksa hasil yang tersambung, `composer test:ai` lulus). Uji nyata lewat 9router (WSL): pipeline lengkap jalan untuk PMJ dan PMH dengan `flash-medium` (26 sampai 36 detik); `flash-high` terlalu lambat. Ditemukan dan diperbaiki: batas 30 detik PHP memutus permintaan tanpa log; nilai yang tidak tertulis di kalimat kini selalu "Perlu dicek"; nama tahap dari jabatan. Uji browser dengan `AI_MODEL=ag/gemini-3.8-flash-medium` berhasil penuh: ceritakan → tiga langkah (sekitar 31 detik) → periksa hasil → tulis ulang → koreksi isian → simpan draf (surat #4), empat log AI tertaut dan riwayat mencatat "Disusun dengan AI". Semua suite tes lulus. |
 | 5 Fitur | Dimulai 18 Nov 2026 atas keputusan pemilik (peran tanpa admin, pengguna perorangan, daftar bebas): migrasi berversi `001_ruang_kerja`, ruang pribadi/organisasi, daftar satu formulir, pilih/pindah ruang, kop saat surat pertama, "Pemeriksa baru" di form, kerangka pribadi IZN dan DSP, surat pribadi tanpa nomor (tanpa pemeriksa langsung jadi). `test:workspace` dan semua suite lulus; diuji di browser lewat `http://localhost/pena`. Belum: batas percobaan login, verifikasi email, undangan anggota, verifikasi surat publik, ekspor Word/PDF. |
+
+### Pembaruan Fase 5 — Codex, 18 Nov malam WITA
+
+Ekspor Word/PDF serta pembatasan permintaan telah tersedia pada rilis VPS malam 18 Nov.
+Verifikasi email dan reset password kini sudah diimplementasikan/diuji lokal; belum diaktifkan
+di VPS karena konfigurasi Resend belum terpasang. Pengguna menyetujui kewajiban verifikasi
+sebelum ruang kerja, juga untuk akun lama. Detail dan batas pengujian: [laporan akun/email](EMAIL-ACCOUNT-2026-11-18.md).
+Status historis tabel di atas tidak otomatis menggambarkan implementasi terbaru ini.
+
+### Aktivasi akun/email — 19 Nov 2026 WITA
+
+Fitur verifikasi/reset sudah dirilis ke VPS dengan backup, uji restore dan semua tes server lulus.
+Satu email verifikasi nyata dikirim atas izin eksplisit pengguna, diterima dan dikonfirmasi; DB
+menunjukkan akun verified dan token telah digunakan. Reset dari email nyata di publik belum diuji.
+Lihat [laporan aktivasi](DEPLOY-EMAIL-2026-11-19.md).
+
+### AI website — 19 Nov 2026 WITA
+
+Pengguna memilih prioritas cerita → koreksi → draf. Konfigurasi model/key VPS disimpan pengguna,
+alur service nyata IZN dan PMJ diuji berhasil pada database sementara; isolasi proses/revisi dan
+regresi controller dirilis. Konfirmasi klik browser publik masih menunggu. Lihat [laporan AI website](AI-WEBSITE-2026-11-19.md).
+
+### Kerangka pribadi dinamis — 19 Nov 2026 WITA
+
+Pengguna memperluas pribadi melampaui IZN/DSP. AI merancang skema pribadi formal/informal,
+organisasi tetap katalog. Migrasi 004 dan rilis aktif; pemeriksaan dan batas provider nyata
+tercatat di [laporan kerangka pribadi](PERSONAL-AI-2026-11-19.md).
+
+### Gambar tanda tangan — 19 Nov 2026 WITA
+
+Pilihan gambar langsung/unggah PNG dirilis; konfirmasi per versi, gambar privat, pratinjau dan
+ekspor Word/PDF. Bukan integrasi tersertifikasi. [Implementasi dan verifikasi](SIGNATURES-2026-11-19.md).
+
+### UI dan arsitektur — 20 Nov 2026 WITA
+
+Skeleton/feedback, audit copy dan favicon dirilis; [laporan UI](UI-FEEDBACK-2026-11-20.md).
+[Bukti MVC](BUKTI-MVC-2026-11-20.md) membedakan implementasi dan batasnya. Pengguna memilih
+operator platform; [rancangannya](RENCANA-OPERATOR-2026-11-20.md) belum mengaktifkan hak baru.
+
+### Operator platform — 20 Nov 2026 WITA
+
+Panel awal dan guard dirilis, pengguna memilih akun pembuat surat #2 untuk hak awal. Akun/metadata
+organisasi/status layanan/log tersedia; [verifikasi dan batas](OPERATOR-2026-11-20.md).

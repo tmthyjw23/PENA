@@ -1,0 +1,58 @@
+{
+  "dropdown": {
+    "left": 67.671875,
+    "right": 323.671875,
+    "width": 256,
+    "viewport": 320,
+    "pageWidth": 324
+  },
+  "keyboard": [
+    {
+      "tag": "BUTTON",
+      "text": "Simpan pengaturan AI",
+      "behindSkeleton": true,
+      "x": 272,
+      "y": 470
+    },
+    {
+      "tag": "BODY",
+      "text": "Lompat ke konten\nPENA\nRuang surat\nBeranda\nSurat\nBuat surat\n\n",
+      "behindSkeleton": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "tag": "A",
+      "text": "Lompat ke konten",
+      "behindSkeleton": true,
+      "x": 16,
+      "y": 16
+    },
+    {
+      "tag": "A",
+      "text": "PENA\nRuang surat",
+      "behindSkeleton": true,
+      "x": 16,
+      "y": 20
+    },
+    {
+      "tag": "A",
+      "text": "Beranda",
+      "behindSkeleton": true,
+      "x": 16,
+      "y": 88
+    }
+  ],
+  "unsaved": {
+    "originalTitle": "Kegiatan uji browser",
+    "valueAfterReopen": "Kegiatan uji browser",
+    "beforeUnloadListener": "no handler found in source",
+    "saved": false
+  },
+  "hiddenUrlValidation": {
+    "hidden": true,
+    "disabled": false,
+    "willValidate": true,
+    "valid": false
+  }
+}

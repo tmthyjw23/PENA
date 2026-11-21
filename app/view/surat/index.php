@@ -3,9 +3,12 @@ require dirname(__DIR__) . '/layout/app_top.php';
 $base = APP_PATH . '/surat/';
 $link = static fn(string $tab) => $base . '?' . http_build_query(array_filter(['status' => $tab === 'semua' ? null : $tab, 'q' => $data['q'] ?: null]));
 ?>
-<header class="mb-6 flex items-center justify-between gap-4">
-  <h1 class="font-bold">Surat</h1>
-  <a href="<?= $base; ?>buat/" class="btn btn-primary">Buat surat</a>
+<header class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <h1 class="font-bold">Surat</h1>
+    <p class="text-secondary"><?= $data['org'] ? ($data['org']['kind'] === 'personal' ? 'Ruang pribadi' : e($data['org']['name'])) : ''; ?></p>
+  </div>
+  <a href="<?= $base; ?>buat/" class="btn btn-primary self-start sm:self-auto">Buat surat</a>
 </header>
 
 <?php pena_flash($data['flash']); ?>

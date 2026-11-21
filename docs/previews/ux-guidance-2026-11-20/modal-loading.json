@@ -1,0 +1,11 @@
+{
+  "during": {
+    "focusInLayer": true,
+    "layerVisibleAtPoint": true,
+    "dialogOpen": false
+  },
+  "restored": {
+    "dialogOpen": true,
+    "focus": "reason"
+  }
+}

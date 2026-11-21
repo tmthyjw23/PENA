@@ -18,6 +18,9 @@ class dashboard extends Controller {
             exit();
         }
 
+        $flash=$_SESSION['flash_message']??null;unset($_SESSION['flash_message']);
+        $showGuide=false;
+        $loadError = null;
         $org = null;
         $letters = [];
         $needsLink = [];
@@ -25,6 +28,7 @@ class dashboard extends Controller {
         $workspaces = [];
         try {
             $db = Db::fromTemplate(new Database());
+            $showGuide=(new \Pena\Service\UserGuide($db))->needsIntroduction((int)$_SESSION['user-id']) || ($_GET['petunjuk']??'')==='1';
             $query = new LetterQuery($db);
             $spaces = new WorkspaceService($db);
             $org = $spaces->current((int)$_SESSION['user-id'], isset($_SESSION['workspace-id']) ? (int)$_SESSION['workspace-id'] : null);
@@ -43,13 +47,15 @@ class dashboard extends Controller {
             }
         } catch (\Throwable $e) {
             error_log('Dashboard: ' . $e->getMessage());
+            $loadError='Daftar surat belum dapat dimuat. Muat ulang halaman atau coba lagi nanti.';
         }
 
         $this->display('dashboard/index', [
             'title' => 'Beranda - PENA',
-            'active_menu' => 'dashboard',
+            'active_menu' => 'dashboard', 'show_guide'=>$showGuide, 'flash'=>$flash,
             'org' => $org,
             'letters' => $letters,
+            'load_error'=>$loadError,
             'needs_link' => $needsLink,
             'revisions' => $revisions,
             'workspaces' => $workspaces,

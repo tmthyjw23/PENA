@@ -17,7 +17,7 @@ foreach ($letters as $l) {
         $todo[] = [0, $l, pena_strip('Revisi', 'rev'), $why, 'Mulai revisi', $detail($l) . '?buka=dlg-revisi', 'btn-primary'];
     } elseif (isset($data['needs_link'][$id])) {
         $n = $data['needs_link'][$id];
-        $todo[] = [1, $l, pena_strip('Tautan', 'ink'), 'Tahap ' . $n['stage'] . ' terbuka, ' . implode(', ', $n['names']) . ' belum menerima tautan', 'Buat tautan', $detail($l) . '#langkah', 'btn-secondary'];
+        $todo[] = [1, $l, pena_strip('Tautan', 'ink'), 'Tahap ' . $n['stage'] . ' terbuka, ' . implode(', ', $n['names']) . ' masih perlu dikirimi tautan', 'Buat tautan', $detail($l) . '#langkah', 'btn-secondary'];
     } elseif ($l['status'] === 'draft') {
         $todo[] = [2, $l, pena_strip('Draf'), 'Draf belum diajukan sejak ' . pena_date($l['updated_at'], false), 'Lanjutkan draf', APP_PATH . '/surat/edit/' . (int)$l['id'], 'btn-secondary'];
     }
@@ -27,24 +27,28 @@ $count = static fn(string $s) => count(array_filter($letters, static fn($l) => $
 ?>
 <header class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
   <div>
-    <h1 class="font-bold">Perlu tindakan Anda</h1>
+    <h1 class="font-bold">Perlu ditindaklanjuti</h1>
     <p class="text-secondary"><?= $data['org'] ? e($data['org']['name']) . ', ' : ''; ?><?= e($today); ?></p>
   </div>
   <a href="<?= APP_PATH; ?>/surat/buat/" class="btn btn-primary self-start sm:self-auto">Buat surat</a>
 </header>
+<?php pena_flash($data['flash']??null); ?>
+<?php if(!empty($data['show_guide']))require dirname(__DIR__).'/bantuan/_introduction.php'; ?>
 
-<?php if (!$data['org']): ?>
+<?php if (!empty($data['load_error'])): ?>
+  <section class="panel p-5" role="alert"><h2 class="font-bold">Surat belum dapat dimuat</h2><p class="mt-2"><?= e($data['load_error']); ?></p><a href="<?= APP_PATH; ?>/dashboard/" class="btn btn-secondary mt-4">Muat ulang</a></section>
+<?php elseif (!$data['org']): ?>
   <section class="panel max-w-[640px] p-6">
-    <h2 class="font-bold">Akun ini belum terdaftar di organisasi</h2>
-    <p class="mt-2 text-secondary">Halaman surat hanya untuk sekretaris atau admin organisasi. Minta admin mendaftarkan akun Anda sebagai pengurus.</p>
+    <h2 class="font-bold">Belum ada ruang kerja</h2>
+    <p class="mt-2 text-secondary">Pilih ruang pribadi atau buat ruang organisasi untuk mulai menyusun surat.</p>
   </section>
 <?php else: ?>
 <div class="grid items-start gap-6 xl:grid-cols-[1fr_360px]">
   <section class="panel" aria-label="Surat yang perlu tindakan">
     <?php if (!$todo): ?>
       <div class="p-6">
-        <h2 class="font-bold"><?= $letters ? 'Tidak ada yang menunggu Anda' : 'Belum ada surat'; ?></h2>
-        <p class="mt-2 text-secondary"><?= $letters ? 'Semua surat sedang di tangan pemeriksa atau sudah selesai.' : 'Ceritakan surat yang Anda butuhkan, atau isi manual dari kerangka. Nomor surat dibuat saat diajukan.'; ?></p>
+        <h2 class="font-bold"><?= $letters ? 'Tidak ada tindakan tertunda' : 'Belum ada surat'; ?></h2>
+        <p class="mt-2 text-secondary"><?= $letters ? 'Surat yang ada masih diperiksa atau sudah selesai.' : 'Buat draf pertama dari permintaan Anda atau melalui formulir.'; ?></p>
         <a href="<?= APP_PATH; ?>/surat/buat/" class="btn btn-primary mt-4">Buat surat</a>
       </div>
     <?php else: ?>

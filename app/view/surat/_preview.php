@@ -13,6 +13,7 @@ $hl = $highlight ?? null;
     <?php if (!empty($lh['contact'])): ?><p><?= e($lh['contact']); ?></p><?php endif; ?>
   </header>
   <?php endif; ?>
+  <?php if ($preview['metadata']!==[] || $preview['date']!==''): ?>
   <div class="mt-5 flex flex-wrap justify-between gap-x-6 gap-y-1">
     <table>
       <?php foreach ($preview['metadata'] as $label => $value): ?>
@@ -21,6 +22,7 @@ $hl = $highlight ?? null;
     </table>
     <p><?= e($preview['date']); ?></p>
   </div>
+  <?php endif; ?>
   <?php if (!empty($preview['recipient'])): ?>
     <p class="mt-5">Kepada<br><?php foreach ($preview['recipient'] as $line): ?><?= e($line); ?><br><?php endforeach; ?>di Tempat</p>
   <?php endif; ?>
@@ -29,7 +31,7 @@ $hl = $highlight ?? null;
       <?php if ($block['type'] === 'paragraph'): ?>
         <p data-block="<?= e($block['id']); ?>" class="<?= $mark; ?>"><?= nl2br(e($block['text'])); ?></p>
       <?php elseif ($block['type'] === 'table'): ?>
-        <div class="overflow-x-auto<?= $mark; ?>" data-block="<?= e($block['id']); ?>">
+        <div class="overflow-x-auto<?= $mark; ?>" tabindex="0" role="region" aria-label="<?= e('Tabel '.str_replace('_',' ',$block['id'])); ?>" data-block="<?= e($block['id']); ?>">
           <table class="grid">
             <?php foreach ($block['rows'] as $i => $row): ?>
               <tr><?php foreach ($row as $cell): ?><?= $i === 0 ? '<th>' . e($cell) . '</th>' : '<td>' . e($cell) . '</td>'; ?><?php endforeach; ?></tr>
@@ -40,7 +42,7 @@ $hl = $highlight ?? null;
         <div class="grid grid-cols-2 gap-x-8 gap-y-6 pt-4 text-center" data-block="<?= e($block['id']); ?>">
           <?php foreach ($block['signers'] as $i => $s): ?>
             <div class="<?= ($n % 2 === 1 && $i === $n - 1) ? 'col-span-2' : ''; ?>">
-              <p><?= e($s['role']); ?></p><div class="h-14" aria-hidden="true"></div><p class="font-bold"><?= e($s['name']); ?></p>
+              <p><?= e($s['role']); ?></p><div class="flex h-20 items-center justify-center"><?php if(!empty($s['signature_png'])): ?><img src="<?= e($s['signature_png']); ?>" alt="Gambar tanda tangan <?= e($s['name']); ?>" style="width:180px;max-width:100%;max-height:72px;object-fit:contain"><?php endif; ?></div><p class="font-bold"><?= e($s['name']); ?></p>
             </div>
           <?php endforeach; ?>
         </div>

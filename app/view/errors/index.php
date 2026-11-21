@@ -2,11 +2,11 @@
 require_once dirname(__DIR__) . '/surat/_helpers.php';
 $code = (int)($data['code'] ?? 404);
 $title = match (true) {
-    $code === 404 => 'Halaman ini tidak ada',
+    $code === 404 => 'Halaman tidak ditemukan',
     $code === 403 => 'Anda tidak punya akses ke halaman ini',
     $code === 400 => 'Permintaan ditolak',
-    $code === 405 => 'Cara membuka halaman ini tidak diizinkan',
-    $code >= 500 => 'Ada kendala di server',
+    $code === 405 => 'Tindakan tidak tersedia',
+    $code >= 500 => 'Halaman belum dapat dimuat',
     default => trim(preg_replace('/\s*\(.*\)$/', '', (string)($data['status_title'] ?? "Kesalahan $code"))),
 };
 ?>
@@ -18,7 +18,7 @@ $title = match (true) {
 </head>
 <body class="min-h-dvh">
 <header class="flex h-14 items-center gap-3 bg-rail px-4 lg:px-8">
-  <a href="<?= APP_PATH; ?>/" class="flex min-h-11 items-center gap-3 font-semibold no-underline"><span class="strip strip-carbon">PENA</span>Surat organisasi</a>
+  <a href="<?= APP_PATH; ?>/" class="flex min-h-11 items-center gap-3 font-semibold no-underline"><span class="strip strip-carbon">PENA</span>Ruang surat</a>
 </header>
 <main class="px-4 py-10 lg:px-8 lg:py-16">
   <section class="mx-auto max-w-[1160px]">

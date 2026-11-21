@@ -27,6 +27,7 @@ function pena_throwaway_db(string $prefix): array
         Database::applyStrictMode($db);
         \Pena\Support\Migrator::forProject($db)->run();
         pena_run_sql($db, (string)file_get_contents(dirname(__DIR__, 2) . '/database/pena_schema.sql'));
+        pena_run_sql($db, (string)file_get_contents(dirname(__DIR__, 2) . '/database/demo_seed.sql'));
         return [$db, $drop];
     } catch (Throwable $error) {
         $drop();

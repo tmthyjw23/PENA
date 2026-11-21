@@ -32,13 +32,14 @@ $rowState = static function (array $r): array {
     <?php if ($req['kind'] === 'reconfirm'): ?><?= pena_strip('Konfirmasi ulang', 'rev'); ?><?php endif; ?>
   </div>
 </header>
+<?php $helpTopic='review';$guestHelp=true;require dirname(__DIR__).'/bantuan/_context.php'; ?>
 
 <?php pena_flash($data['flash']); ?>
 
 <?php if (!$actionable): ?>
   <section class="mb-6 max-w-[640px] rounded-panel bg-surface p-4 lg:p-5" role="status">
-    <p class="flex items-center gap-3 font-bold"><?= pena_mark('revision'); ?>Proses sedang berhenti</p>
-    <p class="mt-2 text-secondary">Pemeriksa lain di tahap ini meminta revisi, atau sekretaris sedang mengubah surat. Keputusan Anda belum diperlukan. Setelah surat diperbaiki, sekretaris mengirim tautan baru untuk versi berikutnya. Halaman ini hanya bisa dibaca.</p>
+    <p class="flex items-center gap-3 font-bold"><?= pena_mark('revision'); ?>Keputusan belum diperlukan</p>
+    <p class="mt-2 text-secondary">Surat belum dapat disetujui pada tahap ini. Jika ada revisi, pembuat surat akan mengirim tautan untuk versi berikutnya. Halaman ini hanya dapat dibaca.</p>
   </section>
 <?php endif; ?>
 
@@ -61,7 +62,7 @@ $rowState = static function (array $r): array {
         <?php endforeach; ?>
       </dl>
     <?php endif; ?>
-    <p class="mt-3 text-secondary">Surat lengkap versi <?= $vno; ?> ada di bawah. Mohon periksa seluruhnya.</p>
+    <p class="mt-3 text-secondary">Dokumen versi <?= $vno; ?> ada di bawah. Mohon periksa seluruhnya.</p>
   </section>
 <?php endif; ?>
 
@@ -89,12 +90,13 @@ $rowState = static function (array $r): array {
   <div class="space-y-6 lg:sticky lg:top-20">
     <?php if ($actionable): ?>
       <section id="setuju" class="plate scroll-mt-20" aria-labelledby="keputusan">
-        <h2 id="keputusan"><?= pena_strip('Keputusan Anda', 'ink'); ?></h2>
-        <p class="mt-3">Berlaku untuk versi <?= $vno; ?> yang Anda baca. PENA tidak memeriksa identitas: keputusan dicatat atas nama pemegang tautan ini.</p>
-        <form method="POST" action="<?= $base; ?>/setuju/<?= $token; ?>" class="mt-4">
+        <h2 id="keputusan"><?= pena_strip('Beri keputusan', 'ink'); ?></h2>
+        <p class="mt-3">Berlaku untuk versi <?= $vno; ?> yang Anda baca. Identitas pemegang tautan belum diverifikasi. Pastikan surat dan nama pemeriksa sudah sesuai.</p>
+        <form method="POST" action="<?= $base; ?>/setuju/<?= $token; ?>" enctype="multipart/form-data" class="mt-4">
           <?= $csrf; ?>
           <label for="note-ok" class="field-label">Catatan (opsional)</label>
           <textarea id="note-ok" name="note" rows="2" class="field"></textarea>
+          <?php include dirname(__DIR__).'/surat/_signature.php'; ?>
           <button class="btn btn-primary btn-block mt-4">Setujui versi <?= $vno; ?></button>
         </form>
       </section>

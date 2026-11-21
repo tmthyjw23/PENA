@@ -35,7 +35,7 @@ try {
     pena_run_sql($c, (string)file_get_contents(__DIR__ . '/fixtures/pena_schema_2026-11-17.sql'));
     $c->query("INSERT INTO organization_members (organization_id, user_id, role) VALUES (1, 3, 'member')");
     $applied = Migrator::forProject($c)->run();
-    check($applied === ['001_ruang_kerja'], 'Migration 001 not applied: ' . json_encode($applied));
+    check($applied === ['001_ruang_kerja', '002_request_limits', '003_account_email', '004_personal_ai_templates', '005_letter_signatures', '006_platform_operators', '007_user_ai_settings', '008_user_guide', '009_version_titles'], 'Migration 001 not applied: ' . json_encode($applied));
     pena_run_sql($c, (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql'));
     check(Migrator::forProject($c)->run() === [], 'Migration applied twice');
     pena_run_sql($c, (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql')); // re-run stays safe
@@ -146,6 +146,15 @@ try {
     fails(fn() => $letters->createDraft(2, $hima, $pmj, 'X', $orgFields, $orgBlocks, [['name' => 'Ketua', 'signer_ids' => [$ketua]]]), 'secretary of another organization');
     check($query->detail($withKop, 1) === null, 'Letter visible from another workspace');
     echo "PASS isolation: no access to another workspace's letters\n";
+    $limiter = new \Pena\Service\RateLimiter($db);
+    check($limiter->allow('test-user-a', 2, 3600), 'First budget request rejected');
+    check($limiter->allow('test-user-a', 2, 3600), 'Second budget request rejected');
+    check(!$limiter->allow('test-user-a', 2, 3600), 'Budget exceeded');
+    check($limiter->allow('test-user-b', 2, 3600), 'Independent budget rejected');
+    $db->run("UPDATE organizations SET name='Identitas pengguna' WHERE id=1");
+    pena_run_sql($conn, (string)file_get_contents(dirname(__DIR__) . '/database/pena_schema.sql'));
+    check($db->value('SELECT name FROM organizations WHERE id=1') === 'Identitas pengguna', 'Production schema overwrote user identity');
+    echo "PASS budgets and migration: shared request limits, independent accounts, user identity preserved\n";
 } finally {
     $drop();
 }

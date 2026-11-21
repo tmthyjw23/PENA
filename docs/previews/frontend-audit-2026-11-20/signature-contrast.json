@@ -1,0 +1,20 @@
+{
+  "button": {
+    "text": "Hapus gambar",
+    "color": "rgb(246, 242, 228)",
+    "background": "rgb(255, 255, 255)"
+  },
+  "violations": [
+    {
+      "id": "color-contrast",
+      "nodes": [
+        {
+          "target": [
+            "button[type=\"button\"]"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 1.12 (foreground color: #f6f2e4, background color: #ffffff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ]
+}

@@ -33,7 +33,7 @@ class ruang extends Controller {
             'program_studi' => (string)($_POST['program_studi'] ?? ''),
         ]);
         $_SESSION['workspace-id'] = $id;
-        $this->_flash('success', 'Ruang pribadi siap. Ceritakan surat yang Anda butuhkan.');
+        $this->_flash('success', 'Ruang pribadi dibuka. Anda dapat mulai membuat surat.');
         $this->_go('/surat/buat/');
     }
 
